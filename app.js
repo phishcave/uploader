@@ -42,6 +42,32 @@ var UploadFile = function(file) {
     this.hashCalculatedCallback(hash);
   }.bind(this));
 
+
+  this.type = function() {
+    switch (true) {
+      case /^image\//.test(file.type):
+        return 'image';
+      case /^audio\//.test(file.type):
+        return 'music';
+      case /^video\//.test(file.type):
+        return 'video';
+      case /^text\/html/.test(file.type):
+        return 'html';
+      case /^text/.test(file.type):
+        return 'text';
+      case /^application\/zip/.test(file.type):
+        return 'zip';
+      case /^application\/x-rar/.test(file.type):
+        return 'rar';
+      case /^application\/pdf/.test(file.type):
+        return 'pdf';
+      case /^application/.test(file.type):
+        return 'binary';
+      default:
+        return 'unknown';
+    }
+  };
+
   this.name = function() {
     return file.name;
   };
