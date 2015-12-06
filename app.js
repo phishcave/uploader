@@ -35,10 +35,11 @@ var UploadFile = function(file) {
   var reader = new FileReader();
   var hash = "";
 
+  // Calculate SHA1 sum of file. (CPU Intensive QQ)
   sha1sum(file, function(sha1) {
     hash  = sha1;
     state = 'ready';
-    this.hashCalculated(hash);
+    this.hashCalculatedCallback(hash);
   }.bind(this));
 
   this.name = function() {
@@ -55,13 +56,14 @@ var UploadFile = function(file) {
 
   this.hash = function() {
     return hash;
-  }
+  };
 
   this.isReady = function() {
     return state == 'ready';
-  }
+  };
 
-  this.hashCalculated = function(hash) {};
+  // Overwritten, hopefully
+  this.hashCalculatedCallback = function(hash) {};
 
   this.upload = function() {
   
@@ -73,7 +75,7 @@ var UploaderEntry = function(file, actions) {
   var buttons = span({cls: 'btn-group'});
   var label = span({cls: 'label'});
 
-  file.hashCalculated = function() {
+  file.hashCalculatedCallback = function() {
     this.updateLabel();
     this.updateButtons();
   }.bind(this);
@@ -85,15 +87,19 @@ var UploaderEntry = function(file, actions) {
 
     label.appendChild(
       span({cls:'name'}, file.name(), file.size())
-    )
+    );
 
     label.appendChild(
       span({cls:'state'}, state)
-    )
+    );
+
+    label.appendChild(
+      span({cls:'type'}, file.type())
+    );
     
     label.appendChild(
-      span({cls:'state'}, file.hash())
-    )
+      span({cls:'hash'}, file.hash())
+    );
   };
 
   this.start = function() {
