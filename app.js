@@ -1,5 +1,38 @@
+function sha1sum(file, callback) {
+	var sha1 = CryptoJS.algo.SHA1.create();
+	var read = 0;
+	var unit = 1024 * 1024;
+	var blob;
+	var reader = new FileReader();
+
+	reader.readAsArrayBuffer(file.slice(read, read + unit));
+	reader.onload = function(e) {
+		var bytes = CryptoJS.lib.WordArray.create(e.target.result);
+
+		sha1.update(bytes);
+		read += unit;
+		if (read < file.size) {
+			blob = file.slice(read, read + unit);
+			reader.readAsArrayBuffer(blob);
+		} else {
+			var hash = sha1.finalize();
+			console.log(hash.toString(CryptoJS.enc.Hex)); // print the result
+			callback(hash.toString(CryptoJS.enc.Hex));
+    }
+  }
+};
+
 var UploadFile = function(file) {
-	var chunkSize = 100000;
+  var state = 'processing';
+  var chunkSize = 100000;
+  var reader = new FileReader();
+  var hash = "";
+
+  sha1sum(file, function(sha1) {
+    hash  = sha1;
+    state = 'ready';
+    this.hashCalculated(hash);
+  }.bind(this));
 
   this.name = function() {
     return file.name;
@@ -13,17 +46,47 @@ var UploadFile = function(file) {
     return filesize(file.size);
   };
 
+  this.hash = function() {
+    return hash;
+  }
+
+  this.isReady = function() {
+    return state == 'ready';
+  }
+
+  this.hashCalculated = function(hash) {};
+
   this.upload = function() {
-    
+  
   };
 };
 
 var UploaderEntry = function(file, actions) {
   var state = 'queued';
   var buttons = span({cls: 'btn-group'});
+  var label = span({cls: 'label'});
 
-  this.name = function() {
-    return "File: " + file.name() + " - " + file.size();
+  file.hashCalculated = function() {
+    this.updateLabel();
+    this.updateButtons();
+  }.bind(this);
+
+  this.updateLabel = function() {
+    while(label.firstChild) {
+      label.removeChild(label.firstChild);
+    }
+
+    label.appendChild(
+      span({cls:'name'}, file.name(), file.size())
+    )
+
+    label.appendChild(
+      span({cls:'state'}, state)
+    )
+    
+    label.appendChild(
+      span({cls:'state'}, file.hash())
+    )
   };
 
   this.start = function() {
@@ -61,9 +124,11 @@ var UploaderEntry = function(file, actions) {
         buttons.appendChild(
           span({cls:'btn remove', onclick: this.remove.bind(this)}, 'REMOVE')
         );
-        buttons.appendChild(
-          span({cls:'btn start', onclick: this.start.bind(this)}, 'START')
-        );
+        if (file.isReady()) {
+          buttons.appendChild(
+            span({cls:'btn start', onclick: this.start.bind(this)}, 'START')
+          );
+        }
         break;
       case 'uploading':
         buttons.appendChild(
@@ -95,10 +160,11 @@ var UploaderEntry = function(file, actions) {
   };
 
   this.render = function() {
+    this.updateLabel();
     this.updateButtons();
 
     return (
-      div({cls: 'upload-entry'}, this.name(), buttons)
+      div({cls: 'upload-entry'}, label, buttons)
     );
   };
 };
