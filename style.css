@@ -1,0 +1,19 @@
+body {
+  background-color: black;
+  color: white; }
+
+.btn {
+  cursor: pointer;
+  padding: 4px;
+  display: inline-block;
+  background-color: green; }
+  .btn:hover {
+    background-color: #004d00; }
+
+.btn-group .btn {
+  margin-left: 5px; }
+  .btn-group .btn:first-child {
+    margin-left: 0; }
+
+.upload-input {
+  display: none; }

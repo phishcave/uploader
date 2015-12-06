@@ -1,0 +1,32 @@
+body {
+  background-color: black;
+  color: white;
+}
+
+.btn {
+  $btn-bg: green;
+  cursor: pointer;
+  padding: 4px;
+  display: inline-block;
+  background-color: $btn-bg;
+
+  &:hover {
+    background-color: darken($btn-bg, 10%);
+  }
+}
+
+.btn-group {
+  $btn-spacing: 5px;
+
+  .btn {
+    &:first-child {
+      margin-left: 0;
+    }
+
+    margin-left: $btn-spacing;
+  }
+}
+
+.upload-input {
+  display: none;
+}
