@@ -1,38 +1,31 @@
-function sha1sum(file, callback) {
-	var sha1 = CryptoJS.algo.SHA1.create();
-	var read = 0;
-	var unit = 1024 * 1024;
-	var blob;
-	var reader = new FileReader();
+var ProgressEvent = function(e, startTime) {
+  var loaded = e.loaded;
+  var total = e.total;
+  var time = e.timeStamp;
 
-	reader.readAsArrayBuffer(file.slice(read, read + unit));
-	reader.onload = function(e) {
-		var bytes = CryptoJS.lib.WordArray.create(e.target.result);
-
-		sha1.update(bytes);
-		read += unit;
-		if (read < file.size) {
-			blob = file.slice(read, read + unit);
-			reader.readAsArrayBuffer(blob);
-		} else {
-			var hash = sha1.finalize();
-			console.log(hash.toString(CryptoJS.enc.Hex)); // print the result
-			callback(hash.toString(CryptoJS.enc.Hex));
+  this.speed = function() {
+    if ( startTime === undefined ) {
+      return "Unknown";
     }
+
+    var durationSeconds = Math.floor((time - startTime)/1000);
+    var bytesPerSecond = loaded / durationSeconds;
+
+    return filesize(bytesPerSecond) + "/S"
+  }
+
+  this.percent = function() {
+    return loaded / total;
+  };
+
+  this.percentage = function() {
+    return (this.percent() * 100).toFixed(2) + "%";
   };
 }
 
-function icon(name) {
-  var e = document.createElement('i');
-  e.classList.add('material-icons');
-  e.appendChild(document.createTextNode(name));
-  return e;
-}
-
 var UploadFile = function(file) {
+  var startTime = undefined;
   var state = 'processing';
-  var chunkSize = 100000;
-  var reader = new FileReader();
   var hash = "";
 
   // Calculate SHA1 sum of file. (CPU Intensive QQ)
@@ -42,30 +35,8 @@ var UploadFile = function(file) {
     this.hashCalculatedCallback(hash);
   }.bind(this));
 
-
   this.type = function() {
-    switch (true) {
-      case /^image\//.test(file.type):
-        return 'image';
-      case /^audio\//.test(file.type):
-        return 'music';
-      case /^video\//.test(file.type):
-        return 'video';
-      case /^text\/html/.test(file.type):
-        return 'html';
-      case /^text/.test(file.type):
-        return 'text';
-      case /^application\/zip/.test(file.type):
-        return 'zip';
-      case /^application\/x-rar/.test(file.type):
-        return 'rar';
-      case /^application\/pdf/.test(file.type):
-        return 'pdf';
-      case /^application/.test(file.type):
-        return 'binary';
-      default:
-        return 'unknown';
-    }
+    return mime2name(file.type);
   };
 
   this.name = function() {
@@ -90,21 +61,76 @@ var UploadFile = function(file) {
 
   // Overwritten, hopefully
   this.hashCalculatedCallback = function(hash) {};
+  this.progressCallback = function(progress) {};
+  this.finishedCallback = function() {};
 
   this.upload = function() {
-  
+    var formData = new FormData();
+    formData.append('file_no', file.slice(0, file.length));
+
+    var req = new XMLHttpRequest();
+
+    req.open('POST', 'http://localhost:9292/api/upload');
+
+    req.upload.addEventListener('progress', function(e) {
+      p = new ProgressEvent(e, startTime);
+
+      this.progressCallback(p);
+
+      console.log(p.percentage());
+    }.bind(this));
+
+    req.upload.addEventListener('error', function(e) {
+      console.log("erroring")
+    });
+
+    req.upload.addEventListener('load', function(e) {
+      // finished uploading.
+      console.log("loading")
+    });
+
+    req.addEventListener('load', function(e) {
+      // got response from server
+      console.log("not upload loadin enendnedng")
+    });
+
+    req.upload.addEventListener('abort', function(e) {
+      console.log("aborty")
+    });
+
+    state = 'uploading';
+    startTime = Date.now();
+
+    req.send(formData);
   };
 };
 
 var UploaderEntry = function(file, actions) {
-  var state = 'queued';
-  var buttons = span({cls: 'btn-group'});
-  var label = span({cls: 'label'});
+  var state    = 'queued';
+  var buttons  = span({cls: 'btn-group'});
+  var label    = span({cls: 'label'});
+  var progress = span({cls: 'progress'});
 
   file.hashCalculatedCallback = function() {
     this.updateLabel();
     this.updateButtons();
   }.bind(this);
+
+  file.progressCallback = function(progressEvent) {
+    this.updateProgress(progressEvent);
+  }.bind(this);
+
+  this.updateProgress = function(progressEvent) {
+    while(progress.firstChild) {
+      progress.removeChild(progress.firstChild);
+    }
+
+    progress.appendChild(
+      document.createTextNode(
+        progressEvent.speed() + " " + progressEvent.percentage()
+      )
+    )
+  };
 
   this.updateLabel = function() {
     while(label.firstChild) {
@@ -122,7 +148,9 @@ var UploaderEntry = function(file, actions) {
     label.appendChild(
       span({cls:'type'}, file.type())
     );
-    
+
+    label.appendChild(progress);
+
     label.appendChild(
       span({cls:'hash'}, file.hash())
     );
@@ -130,6 +158,7 @@ var UploaderEntry = function(file, actions) {
 
   this.start = function() {
     state = 'uploading';
+    file.upload();
     this.updateButtons();
   };
 
