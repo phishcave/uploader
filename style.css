@@ -24,6 +24,10 @@ body {
 .upload-input {
   display: none; }
 
+.upload-entry {
+  padding: 10px;
+  background-color: red; }
+
 .material-icons {
   vertical-align: middle;
   font-family: 'Material Icons';

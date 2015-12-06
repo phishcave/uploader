@@ -11,8 +11,8 @@ var ProgressEvent = function(e, startTime) {
     var durationSeconds = Math.floor((time - startTime)/1000);
     var bytesPerSecond = loaded / durationSeconds;
 
-    return filesize(bytesPerSecond) + "/S"
-  }
+    return filesize(bytesPerSecond) + "/S";
+  };
 
   this.percent = function() {
     return loaded / total;
@@ -21,10 +21,10 @@ var ProgressEvent = function(e, startTime) {
   this.percentage = function() {
     return (this.percent() * 100).toFixed(2) + "%";
   };
-}
+};
 
 var UploadFile = function(file) {
-  var startTime = undefined;
+  var startTime;
   var state = 'processing';
   var hash = "";
 
@@ -81,21 +81,21 @@ var UploadFile = function(file) {
     }.bind(this));
 
     req.upload.addEventListener('error', function(e) {
-      console.log("erroring")
+      console.log("erroring");
     });
 
     req.upload.addEventListener('load', function(e) {
       // finished uploading.
-      console.log("loading")
+      console.log("loading");
     });
 
     req.addEventListener('load', function(e) {
       // got response from server
-      console.log("not upload loadin enendnedng")
-    });
+      this.finishedCallback();
+    }.bind(this));
 
     req.upload.addEventListener('abort', function(e) {
-      console.log("aborty")
+      console.log("aborty");
     });
 
     state = 'uploading';
@@ -108,16 +108,24 @@ var UploadFile = function(file) {
 var UploaderEntry = function(file, actions) {
   var state    = 'queued';
   var buttons  = span({cls: 'btn-group'});
-  var label    = span({cls: 'label'});
+  var label    = div({cls: 'label'});
+  var info     = div({cls: 'div'});
   var progress = span({cls: 'progress'});
 
   file.hashCalculatedCallback = function() {
-    this.updateLabel();
+    this.updateLabel(); // not needed
+    this.updateInfo();
     this.updateButtons();
   }.bind(this);
 
   file.progressCallback = function(progressEvent) {
     this.updateProgress(progressEvent);
+  }.bind(this);
+
+  file.finishedCallback = function() {
+    state = 'finished';
+    this.updateInfo();
+    this.updateButtons();
   }.bind(this);
 
   this.updateProgress = function(progressEvent) {
@@ -129,7 +137,7 @@ var UploaderEntry = function(file, actions) {
       document.createTextNode(
         progressEvent.speed() + " " + progressEvent.percentage()
       )
-    )
+    );
   };
 
   this.updateLabel = function() {
@@ -144,14 +152,20 @@ var UploaderEntry = function(file, actions) {
     label.appendChild(
       span({cls:'state'}, state)
     );
+  };
 
-    label.appendChild(
+  this.updateInfo = function() {
+    while(info.firstChild) {
+      info.removeChild(info.firstChild);
+    }
+
+    info.appendChild(
       span({cls:'type'}, file.type())
     );
 
-    label.appendChild(progress);
+    info.appendChild(progress);
 
-    label.appendChild(
+    info.appendChild(
       span({cls:'hash'}, file.hash())
     );
   };
@@ -190,11 +204,11 @@ var UploaderEntry = function(file, actions) {
     switch (state) {
       case 'queued':
         buttons.appendChild(
-          span({cls:'btn remove', onclick: this.remove.bind(this)}, icon('delete'), 'Remove')
+          span({cls:'btn remove', onclick: this.remove.bind(this)}, icon('clear'), 'Remove')
         );
         if (file.isReady()) {
           buttons.appendChild(
-            span({cls:'btn start', onclick: this.start.bind(this)}, icon('file_upload'), 'Start')
+            span({cls:'btn start', onclick: this.start.bind(this)}, icon('file_upload'), 'Upload')
           );
         }
         break;
@@ -219,7 +233,12 @@ var UploaderEntry = function(file, actions) {
           span({cls:'btn restart', onclick: this.start.bind(this)}, icon('file_upload'), 'Restart')
         );
         buttons.appendChild(
-          span({cls:'btn remove', onclick: this.remove.bind(this)}, icon('delete'),'Remove')
+          span({cls:'btn remove', onclick: this.remove.bind(this)}, icon('clear'), 'Remove')
+        );
+        break;
+      case 'finished':
+        buttons.appendChild(
+          span({cls:'btn remove', onclick: this.remove.bind(this)}, icon('clear'), 'Remove from list')
         );
         break;
       default:
@@ -229,10 +248,11 @@ var UploaderEntry = function(file, actions) {
 
   this.render = function() {
     this.updateLabel();
+    this.updateInfo();
     this.updateButtons();
 
     return (
-      div({cls: 'upload-entry'}, label, buttons)
+      div({cls: 'upload-entry'}, label, info, buttons)
     );
   };
 };
@@ -330,5 +350,14 @@ var Uploader = function() {
 var root= div({cls:'foo'}, "hello");
 var body = document.body;
 var u = new Uploader();
+
+var mockedFile = {
+    name: 'Mocked File',
+    size: '1231',
+    type: 'image/jpg',
+    slice: function() { return new Blob(["ddawd"], { type: 'text/plain' }); }
+};
+
+u.addFile(new UploadFile(mockedFile));
 
 body.appendChild(u.render());

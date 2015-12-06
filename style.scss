@@ -36,10 +36,15 @@ body {
   }
 }
 
+// This is the input field which is used to fetch files.
 .upload-input {
   display: none;
 }
 
+.upload-entry {
+  padding: 10px;
+  background-color: red;
+}
 
 .material-icons {
   vertical-align: middle;
