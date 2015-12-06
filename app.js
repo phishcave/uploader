@@ -19,8 +19,15 @@ function sha1sum(file, callback) {
 			console.log(hash.toString(CryptoJS.enc.Hex)); // print the result
 			callback(hash.toString(CryptoJS.enc.Hex));
     }
-  }
-};
+  };
+}
+
+function icon(name) {
+  var e = document.createElement('i');
+  e.classList.add('material-icons');
+  e.appendChild(document.createTextNode(name));
+  return e;
+}
 
 var UploadFile = function(file) {
   var state = 'processing';
@@ -122,36 +129,36 @@ var UploaderEntry = function(file, actions) {
     switch (state) {
       case 'queued':
         buttons.appendChild(
-          span({cls:'btn remove', onclick: this.remove.bind(this)}, 'REMOVE')
+          span({cls:'btn remove', onclick: this.remove.bind(this)}, icon('delete'), 'Remove')
         );
         if (file.isReady()) {
           buttons.appendChild(
-            span({cls:'btn start', onclick: this.start.bind(this)}, 'START')
+            span({cls:'btn start', onclick: this.start.bind(this)}, icon('file_upload'), 'Start')
           );
         }
         break;
       case 'uploading':
         buttons.appendChild(
-          span({cls:'btn pause', onclick: this.pause.bind(this)}, 'PAUSE')
+          span({cls:'btn pause', onclick: this.pause.bind(this)}, icon('pause'), 'Pause')
         );
         buttons.appendChild(
-          span({cls:'btn cancel', onclick: this.cancel.bind(this)}, 'CANCEL')
+          span({cls:'btn cancel', onclick: this.cancel.bind(this)}, icon('cancel'), 'Cancel')
         );
         break;
       case 'paused':
         buttons.appendChild(
-          span({cls:'btn resume', onclick: this.resume.bind(this)}, 'RESUME')
+          span({cls:'btn resume', onclick: this.resume.bind(this)}, icon('play_arrow'), 'Resume')
         );
         buttons.appendChild(
-          span({cls:'btn cancel', onclick: this.cancel.bind(this)}, 'CANCEL')
+          span({cls:'btn cancel', onclick: this.cancel.bind(this)}, icon('cancel'), 'Cancel')
         );
         break;
       case 'canceled':
         buttons.appendChild(
-          span({cls:'btn restart', onclick: this.start.bind(this)}, 'RESTART')
+          span({cls:'btn restart', onclick: this.start.bind(this)}, icon('file_upload'), 'Restart')
         );
         buttons.appendChild(
-          span({cls:'btn remove', onclick: this.remove.bind(this)}, 'REMOVE')
+          span({cls:'btn remove', onclick: this.remove.bind(this)}, icon('delete'),'Remove')
         );
         break;
       default:
@@ -192,7 +199,7 @@ var Uploader = function() {
     }
 
     buttons.appendChild(
-      span({cls:'btn', onclick: this.browse.bind(this)}, 'BROWSE')
+      span({cls:'btn', onclick: this.browse.bind(this)}, icon('folder'), 'BROWSE')
     );
 
     if (this.hasFiles()) {
