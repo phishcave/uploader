@@ -1,23 +1,23 @@
 function sha1sum(file, callback) {
-	var sha1 = CryptoJS.algo.SHA1.create();
-	var read = 0;
-	var unit = 1024 * 1024;
-	var blob;
-	var reader = new FileReader();
+  var sha1 = CryptoJS.algo.SHA1.create();
+  var read = 0;
+  var unit = 1024 * 1024;
+  var blob;
+  var reader = new FileReader();
 
-	reader.readAsArrayBuffer(file.slice(read, read + unit));
-	reader.onload = function(e) {
-		var bytes = CryptoJS.lib.WordArray.create(e.target.result);
+  reader.readAsArrayBuffer(file.slice(read, read + unit));
+  reader.onload = function(e) {
+    var bytes = CryptoJS.lib.WordArray.create(e.target.result);
 
-		sha1.update(bytes);
-		read += unit;
-		if (read < file.size) {
-			blob = file.slice(read, read + unit);
-			reader.readAsArrayBuffer(blob);
-		} else {
-			var hash = sha1.finalize();
-			console.log(hash.toString(CryptoJS.enc.Hex)); // print the result
-			callback(hash.toString(CryptoJS.enc.Hex));
+    sha1.update(bytes);
+    read += unit;
+    if (read < file.size) {
+      blob = file.slice(read, read + unit);
+      reader.readAsArrayBuffer(blob);
+    } else {
+      var hash = sha1.finalize();
+      console.log(hash.toString(CryptoJS.enc.Hex)); // print the result
+      callback(hash.toString(CryptoJS.enc.Hex));
     }
   };
 }
