@@ -1,265 +1,10 @@
-var ProgressEvent = function(e, startTime) {
-  var loaded = e.loaded;
-  var total = e.total;
-  var time = e.timeStamp;
-
-  this.speed = function() {
-    if ( startTime === undefined ) {
-      return "Unknown";
-    }
-
-    var durationSeconds = Math.floor((time - startTime)/1000);
-    var bytesPerSecond = loaded / durationSeconds;
-
-    return filesize(bytesPerSecond) + "/S";
-  };
-
-  this.percent = function() {
-    return loaded / total;
-  };
-
-  this.percentage = function() {
-    return (this.percent() * 100).toFixed(2) + "%";
-  };
-};
-
-var UploadFile = function(file) {
-  var startTime;
-  var state = 'processing';
-  var hash = "";
-
-  // Calculate SHA1 sum of file. (CPU Intensive QQ)
-  sha1sum(file, function(sha1) {
-    hash  = sha1;
-    state = 'ready';
-    this.hashCalculatedCallback(hash);
-  }.bind(this));
-
-  this.type = function() {
-    return mime2name(file.type);
-  };
-
-  this.name = function() {
-    return file.name;
-  };
-
-  this.chunks = function() {
-    return 3;
-  };
-
-  this.size = function() {
-    return filesize(file.size);
-  };
-
-  this.hash = function() {
-    return hash;
-  };
-
-  this.isReady = function() {
-    return state == 'ready';
-  };
-
-  // Overwritten, hopefully
-  this.hashCalculatedCallback = function(hash) {};
-  this.progressCallback = function(progress) {};
-  this.finishedCallback = function() {};
-
-  this.upload = function() {
-    var formData = new FormData();
-    formData.append('file_no', file.slice(0, file.length));
-
-    var req = new XMLHttpRequest();
-
-    req.open('POST', 'http://localhost:9292/api/upload');
-
-    req.upload.addEventListener('progress', function(e) {
-      p = new ProgressEvent(e, startTime);
-
-      this.progressCallback(p);
-
-      console.log(p.percentage());
-    }.bind(this));
-
-    req.upload.addEventListener('error', function(e) {
-      console.log("erroring");
-    });
-
-    req.upload.addEventListener('load', function(e) {
-      // finished uploading.
-      console.log("loading");
-    });
-
-    req.addEventListener('load', function(e) {
-      // got response from server
-      this.finishedCallback();
-    }.bind(this));
-
-    req.upload.addEventListener('abort', function(e) {
-      console.log("aborty");
-    });
-
-    state = 'uploading';
-    startTime = Date.now();
-
-    req.send(formData);
-  };
-};
-
-var UploaderEntry = function(file, actions) {
-  var state    = 'queued';
-  var buttons  = span({cls: 'btn-group'});
-  var label    = div({cls: 'label'});
-  var info     = div({cls: 'div'});
-  var progress = span({cls: 'progress'});
-
-  file.hashCalculatedCallback = function() {
-    this.updateLabel(); // not needed
-    this.updateInfo();
-    this.updateButtons();
-  }.bind(this);
-
-  file.progressCallback = function(progressEvent) {
-    this.updateProgress(progressEvent);
-  }.bind(this);
-
-  file.finishedCallback = function() {
-    state = 'finished';
-    this.updateInfo();
-    this.updateButtons();
-  }.bind(this);
-
-  this.updateProgress = function(progressEvent) {
-    while(progress.firstChild) {
-      progress.removeChild(progress.firstChild);
-    }
-
-    progress.appendChild(
-      document.createTextNode(
-        progressEvent.speed() + " " + progressEvent.percentage()
-      )
-    );
-  };
-
-  this.updateLabel = function() {
-    while(label.firstChild) {
-      label.removeChild(label.firstChild);
-    }
-
-    label.appendChild(
-      span({cls:'name'}, file.name(), file.size())
-    );
-
-    label.appendChild(
-      span({cls:'state'}, state)
-    );
-  };
-
-  this.updateInfo = function() {
-    while(info.firstChild) {
-      info.removeChild(info.firstChild);
-    }
-
-    info.appendChild(
-      span({cls:'type'}, file.type())
-    );
-
-    info.appendChild(progress);
-
-    info.appendChild(
-      span({cls:'hash'}, file.hash())
-    );
-  };
-
-  this.start = function() {
-    state = 'uploading';
-    file.upload();
-    this.updateButtons();
-  };
-
-  this.pause = function() {
-    state = 'paused';
-    this.updateButtons();
-  };
-
-  this.resume = function() {
-    state = 'uploading';
-    this.updateButtons();
-  };
-
-  this.cancel = function() {
-    state = 'canceled';
-    this.updateButtons();
-  };
-
-  this.remove = function() {
-    this.onRemove();
-  };
-
-  this.updateButtons = function() {
-    // remove all buttons
-    while(buttons.firstChild) {
-      buttons.removeChild(buttons.firstChild);
-    }
-
-    switch (state) {
-      case 'queued':
-        buttons.appendChild(
-          span({cls:'btn remove', onclick: this.remove.bind(this)}, icon('clear'), 'Remove')
-        );
-        if (file.isReady()) {
-          buttons.appendChild(
-            span({cls:'btn start', onclick: this.start.bind(this)}, icon('file_upload'), 'Upload')
-          );
-        }
-        break;
-      case 'uploading':
-        buttons.appendChild(
-          span({cls:'btn pause', onclick: this.pause.bind(this)}, icon('pause'), 'Pause')
-        );
-        buttons.appendChild(
-          span({cls:'btn cancel', onclick: this.cancel.bind(this)}, icon('cancel'), 'Cancel')
-        );
-        break;
-      case 'paused':
-        buttons.appendChild(
-          span({cls:'btn resume', onclick: this.resume.bind(this)}, icon('play_arrow'), 'Resume')
-        );
-        buttons.appendChild(
-          span({cls:'btn cancel', onclick: this.cancel.bind(this)}, icon('cancel'), 'Cancel')
-        );
-        break;
-      case 'canceled':
-        buttons.appendChild(
-          span({cls:'btn restart', onclick: this.start.bind(this)}, icon('file_upload'), 'Restart')
-        );
-        buttons.appendChild(
-          span({cls:'btn remove', onclick: this.remove.bind(this)}, icon('clear'), 'Remove')
-        );
-        break;
-      case 'finished':
-        buttons.appendChild(
-          span({cls:'btn remove', onclick: this.remove.bind(this)}, icon('clear'), 'Remove from list')
-        );
-        break;
-      default:
-        break;
-    }
-  };
-
-  this.render = function() {
-    this.updateLabel();
-    this.updateInfo();
-    this.updateButtons();
-
-    return (
-      div({cls: 'upload-entry'}, label, info, buttons)
-    );
-  };
-};
-
 var Uploader = function() {
   // List of files in the queue.
   var files = [];
+  // List of chunks currently being uploaded.
+  var uploading = [];
+  // List of chunks for all uploads.
+  var chunks = [];
   // The buttons for the uploader (start, pause, stop, etc..)
   var buttons   = div({id: 'options', cls: 'btn-group'});
   // The list of files in the upload queue.
@@ -268,6 +13,8 @@ var Uploader = function() {
   var fileInput = input({cls: 'upload-input', type:'file', multiple:'true'});
   // The entire uploader dom. This is what is appended to root.
   var dom       = div({id: 'uploader'}, buttons, queue, fileInput);
+  // How many chunks will be uploaded at once.
+  var concurrency = 1;
 
   this.hasFiles = function() {
     return files.length > 0;
@@ -298,6 +45,31 @@ var Uploader = function() {
   // Starts uploading all files.
   this.start = function() {
     console.log("start");
+    for ( var i = 0; i < chunks.length; i++ ) {
+      var c = chunks[i];
+
+      if ( c.isUploading() || c.isFinished() ) {
+        continue;
+      }
+
+      this.startChunk(c);
+    }
+  };
+
+  this.addChunks = function(newChunks) {
+    for ( var i = 0; i < newChunks.length; i ++ ) {
+      var c = newChunks[i];
+
+      // Don't add chunk twice.
+      if ( chunks.indexOf(c) > 0 ) {
+        console.log("chunk already in queue");
+        continue;
+      }
+
+      chunks.push(c);
+    }
+
+    this.start();
   };
 
   // Handler for when file input changes.
@@ -305,21 +77,98 @@ var Uploader = function() {
     var _files = event.target.files;
 
     for (var i = 0; i < _files.length; i++) {
-      this.addFile(new UploadFile(_files[i]));
+      var f = new UploadFile(_files[i]);
+      this.addFile(f);
     }
 
     fileInput.value = '';
     this.updateButtons();
+  };
 
-    console.log("browserino");
+  this.chunksFinished = function() {
+    var count = 0;
+
+    for ( var i = 0; i < chunks.length; i++ ) {
+      if ( chunks[i].isFinished() ) {
+        count += 1;
+      }
+    }
+
+    return count;
+  };
+
+  this.chunksInProgress = function() {
+    var count = 0;
+
+    for ( var i = 0; i < chunks.length; i++ ) {
+      if ( chunks[i].isUploading() ) {
+        count += 1;
+      }
+    }
+
+    return count;
+  };
+
+  this.totalChunks = function() {
+    return chunks.length;
+  };
+
+  this.startChunk = function(chunk) {
+    if ( this.chunksInProgress() >= concurrency ) {
+      console.log("cannt upload more than " + concurrency + " chunks at once");
+      return false;
+    }
+
+    if ( chunk.isUploading() ) {
+      console.log(chunk);
+      console.log("chunk is already uploading");
+      return false;
+    }
+
+    // Add callbacks
+    chunk.addProgressCallback(this.onChunkProgress.bind(this, chunk));
+    chunk.addFinishCallback(this.onChunkFinished.bind(this, chunk));
+    chunk.addStartCallback(this.onChunkStarted.bind(this, chunk));
+    chunk.upload();
+
+    return true;
+  };
+
+
+  this.onChunkProgress = function(chunk, progress) {
+
+  };
+
+  this.onChunkStarted = function(chunk) {
+
+  };
+
+  this.onChunkFinished = function(chunk) {
+    console.log("chunk finished");
+    this.start();
+  };
+
+  // Removes a chunk from the global chunk list
+  this.removeChunk = function(chunk) {
+    if ( chunk === undefined ) { return; }
+
+    chunks = U.filter(chunks, function(g) {
+      return g != chunk;
+    });
   };
 
   // Removes a file from the Uploader.
   this.removeFile = function(file) {
     if ( file === undefined ) { return; }
 
+    // remove chunks from our global list.
+    for ( var i = 0; i < file.chunks.length; i++ ) {
+      removeChunk(file.chunks[i]);
+    }
+
+    // remove file
     files = U.filter(files, function(g) {
-      return g != file; 
+      return g != file;
     });
 
     this.updateButtons();
@@ -331,6 +180,11 @@ var Uploader = function() {
 
     var e = new UploaderEntry(file);
     var e_dom = e.render();
+
+    e.startChunks = function(chunks) {
+      this.addChunks(chunks);
+      console.log("adding " + chunks.length + " chunks")
+    }.bind(this);
 
     e.onRemove = function() {
       this.removeFile(file);
