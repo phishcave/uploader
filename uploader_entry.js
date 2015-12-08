@@ -3,6 +3,7 @@ var UploaderEntry = function(file, actions) {
   var buttons  = span({cls: 'btn-group'});
   var label    = div({cls: 'label'});
   var info     = div({cls: 'div'});
+  var chunks   = div({cls:'chunks'});
   var progress = span({cls: 'progress'});
 
   file.hashCalculatedCallback = function() {
@@ -22,9 +23,7 @@ var UploaderEntry = function(file, actions) {
   }.bind(this);
 
   this.updateProgress = function(progressEvent) {
-    while(progress.firstChild) {
-      progress.removeChild(progress.firstChild);
-    }
+    H.empty(progress);
 
     progress.appendChild(
       document.createTextNode(
@@ -34,9 +33,7 @@ var UploaderEntry = function(file, actions) {
   };
 
   this.updateLabel = function() {
-    while(label.firstChild) {
-      label.removeChild(label.firstChild);
-    }
+    H.empty(label);
 
     label.appendChild(
       span({cls:'name'}, file.name(), file.size())
@@ -48,27 +45,45 @@ var UploaderEntry = function(file, actions) {
   };
 
   this.updateInfo = function() {
-    while(info.firstChild) {
-      info.removeChild(info.firstChild);
+    H.empty(info);
+
+    if (state == 'queued') {
+      info.appendChild(
+        span({cls:'type'}, file.type())
+      );
+
+      info.appendChild(progress);
+
+      info.appendChild(
+        span({cls:'hash'}, file.hash())
+      );
     }
 
-    info.appendChild(
-      span({cls:'type'}, file.type())
-    );
+    if (state == 'uploading') {
+      info.appendChild(chunks);
+    }
 
-    info.appendChild(progress);
-
-    info.appendChild(
-      span({cls:'hash'}, file.hash())
-    );
+    if (state == 'finished') {
+      info.appendChild(
+        document.createTextNode("finished")
+      );
+    }
   };
 
   this.start = function() {
     state = 'uploading';
 
-    var chunks = file.chunkFile();
+    var fileChunks = file.chunkFile();
+    var numChunks = fileChunks.length;
 
-    this.startChunks(chunks);
+    for ( var i = 0; i < numChunks; i++ ) {
+      var chunk = fileChunks[i];
+      var chunk_dom = new ChunkEntry(chunk);
+      chunks.appendChild(chunk_dom.render());
+    }
+
+    this.startChunks(fileChunks);
+    this.updateInfo();
     this.updateButtons();
   };
 
@@ -93,9 +108,7 @@ var UploaderEntry = function(file, actions) {
 
   this.updateButtons = function() {
     // remove all buttons
-    while(buttons.firstChild) {
-      buttons.removeChild(buttons.firstChild);
-    }
+    H.empty(buttons);
 
     switch (state) {
       case 'queued':

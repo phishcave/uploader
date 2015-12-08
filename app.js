@@ -14,7 +14,7 @@ var Uploader = function() {
   // The entire uploader dom. This is what is appended to root.
   var dom       = div({id: 'uploader'}, buttons, queue, fileInput);
   // How many chunks will be uploaded at once.
-  var concurrency = 1;
+  var concurrency = 5;
 
   this.hasFiles = function() {
     return files.length > 0;
@@ -22,9 +22,7 @@ var Uploader = function() {
 
   // Changes visible buttons for the uploader by rebuilding the button dom.
   this.updateButtons = function() {
-    while(buttons.firstChild) {
-      buttons.removeChild(buttons.firstChild);
-    }
+    H.empty(buttons);
 
     buttons.appendChild(
       span({cls:'btn', onclick: this.browse.bind(this)}, icon('folder'), 'BROWSE')
@@ -45,6 +43,7 @@ var Uploader = function() {
   // Starts uploading all files.
   this.start = function() {
     console.log("start");
+
     for ( var i = 0; i < chunks.length; i++ ) {
       var c = chunks[i];
 
@@ -52,7 +51,9 @@ var Uploader = function() {
         continue;
       }
 
-      this.startChunk(c);
+      if ( c.isQueued() ) {
+        this.startChunk(c);
+      }
     }
   };
 

@@ -2,13 +2,17 @@ var UploadChunk = function(chunk, i) {
   var chunkId = i; // id of upload (used internally)
   var loaded;      // how many bytes were sent
   var startTime;   // when
-  var state = 'processing';
+  var state = 'queued';
   var xhr;         // only keep track to abort
 
   var callbacks = {
     start: [],
     finish: [],
     progress: []
+  };
+
+  this.isQueued = function() {
+    return state == 'queued';
   };
 
   this.isFinished = function() {
@@ -63,11 +67,22 @@ var UploadChunk = function(chunk, i) {
 
   // got response from server
   this.onComplete = function(e) {
-    this.state = 'finished';
+    state = 'finished';
 
     for ( var i = 0; i < callbacks.finish.length; i++ ) {
       var callback = callbacks.finish[i];
       callback(p);
+    }
+  };
+
+  this.onStart = function() {
+    state = 'uploading';
+    startTime = Date.now();
+    loaded = 0;
+
+    for ( var i = 0; i < callbacks.start.length; i++ ) {
+      var callback = callbacks.start[i];
+      callback();
     }
   };
 
@@ -88,9 +103,7 @@ var UploadChunk = function(chunk, i) {
     req.upload.addEventListener('abort', this.onAbort.bind(this));
     req.addEventListener('load', this.onComplete.bind(this));
 
-    state = 'uploading';
-    loaded = 0;
-    startTime = Date.now();
+    this.onStart();
 
     req.send(formData);
   };
