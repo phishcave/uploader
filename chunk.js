@@ -1,4 +1,4 @@
-var UploadChunk = function(chunk, i) {
+var Chunk = function(chunk, i) {
   var chunkId = i; // id of upload (used internally)
   var loaded;      // how many bytes were sent
   var startTime;   // when

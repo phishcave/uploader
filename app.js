@@ -179,7 +179,7 @@ var Uploader = function() {
   this.addFile = function(file) {
     files.push(file);
 
-    var e = new UploaderEntry(file);
+    var e = new UploadFileComponent(file);
     var e_dom = e.render();
 
     e.startChunks = function(chunks) {

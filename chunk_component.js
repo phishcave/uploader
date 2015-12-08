@@ -1,4 +1,4 @@
-var ChunkEntry = function(chunk) {
+var ChunkComponent = function(chunk) {
   var chunk_dom = div({cls: 'chunk'});
   var chunk_progress_val = span({cls:'val'}, '50%');
   var chunk_progress_bar = span({cls:'bar'}, '');

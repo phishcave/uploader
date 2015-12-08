@@ -1,4 +1,4 @@
-var UploaderEntry = function(file, actions) {
+var UploadFileComponent = function(file, actions) {
   var state    = 'queued';
   var buttons  = span({cls: 'btn-group'});
   var label    = div({cls: 'label'});
@@ -78,7 +78,7 @@ var UploaderEntry = function(file, actions) {
 
     for ( var i = 0; i < numChunks; i++ ) {
       var chunk = fileChunks[i];
-      var chunk_dom = new ChunkEntry(chunk);
+      var chunk_dom = new ChunkComponent(chunk);
       chunks.appendChild(chunk_dom.render());
     }
 

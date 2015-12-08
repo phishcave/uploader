@@ -71,7 +71,7 @@ var UploadFile = function(file) {
   this.chunkFile = function() {
     for(var i = 0; i < this.numChunks(); i++) {
       var chunkData = file.slice(i*chunkSize, (i+1)*chunkSize);
-      var chunk = new UploadChunk(i, chunkData);
+      var chunk = new Chunk(i, chunkData);
 
       chunk.addStartCallback(this.onChunkStarted.bind(this, chunk));
       chunk.addFinishCallback(this.onChunkFinished.bind(this, chunk));
