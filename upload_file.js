@@ -5,12 +5,17 @@ var UploadFile = function(file) {
   var state  = 'processing';
   var hash   = "";
 
-  // Calculate SHA1 sum of file. (CPU Intensive QQ)
-  sha1sum(file, function(sha1) {
-    hash  = sha1;
+  var sha = new Worker('lib/rusha.js');
+
+  sha.onmessage = function(e) {
+    hash  = e.data.hash;
     state = 'ready';
     this.hashCalculatedCallback(hash);
-  }.bind(this));
+    console.log("got hasherino")
+    console.log(e)
+  }.bind(this);
+
+  sha.postMessage({id: '1231', data: file.slice()});
 
   // Progress in relation to all chunks.
   this.progressPercent = function() {
