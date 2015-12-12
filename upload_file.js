@@ -1,21 +1,26 @@
+var __upload_id = 10000;
+
 var UploadFile = function(file) {
   var chunkSize = 1024 * 1024;
   var startTime;
   var chunks = [];
   var state  = 'processing';
   var hash   = "";
+  var id     = __upload_id += 1;
 
-  var sha = new Worker('lib/rusha.js');
+  this.id = function() {
+    return id;
+  };
 
-  sha.onmessage = function(e) {
-    hash  = e.data.hash;
+  this.blob = function() {
+    return file.slice();
+  };
+
+  this.onHashCalculated = function(sha) {
+    hash  = sha;
     state = 'ready';
     this.hashCalculatedCallback(hash);
-    console.log("got hasherino")
-    console.log(e)
   }.bind(this);
-
-  sha.postMessage({id: '1231', data: file.slice()});
 
   // Progress in relation to all chunks.
   this.progressPercent = function() {
@@ -38,7 +43,7 @@ var UploadFile = function(file) {
 
   this.numChunks = function() {
     return Math.ceil(file.size / chunkSize);
-  }
+  };
 
   this.chunks = function() {
     return chunks;

@@ -16,6 +16,21 @@ var Uploader = function() {
   // How many chunks will be uploaded at once.
   var concurrency = 5;
 
+  var sha = new Worker('lib/rusha.js');
+
+  sha.onmessage = function(evt) {
+    id = evt.data.id;
+    hash = evt.data.hash;
+
+    for(var i = 0; i < files.length; i++) {
+      if (files[i].id() == id) {
+        files[i].onHashCalculated(hash);
+      }
+    }
+
+    console.log(evt);
+  }.bind(this);
+
   this.hasFiles = function() {
     return files.length > 0;
   };
@@ -175,9 +190,14 @@ var Uploader = function() {
     this.updateButtons();
   };
 
+  this.hashBlob = function(id, blob) {
+    sha.postMessage({id: id, data: blob});
+  };
+
   // Adds a file to the uploader.
   this.addFile = function(file) {
     files.push(file);
+    this.hashBlob(file.id(), file.blob())
 
     var e = new UploadFileComponent(file);
     var e_dom = e.render();
