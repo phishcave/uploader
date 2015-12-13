@@ -34,7 +34,7 @@ var ChunkComponent = function(chunk) {
 
     if ( chunk.isQueued() ) {
       chunk_dom.appendChild(
-        document.createTextNode("queued")
+        div({cls:'text'}, 'queued')
       );
     }
 

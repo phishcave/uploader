@@ -2,11 +2,20 @@ var __upload_id = 10000;
 
 var UploadFile = function(file) {
   var chunkSize = 1024 * 1024;
+  var chunkSize = 100;
   var startTime;
   var chunks = [];
   var state  = 'queued';
   var hash   = "";
   var id     = __upload_id += 1;
+
+  this.fakeUpload= function() {
+    state = 'uploading';
+    var b = new Blob(["ddawd"], { type: 'text/plain' });
+    chunks.push(new Chunk(1, b));
+    chunks.push(new Chunk(2, b));
+    chunks.push(new Chunk(3, b));
+  }
 
   this.canStart = function() {
     // has been hashed

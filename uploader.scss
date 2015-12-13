@@ -1,0 +1,67 @@
+#uploader {
+  padding: 5px;
+
+  .options {
+    margin-bottom: 5px;
+  }
+}
+
+#queue {
+  .upload-file {
+    padding: 5px;
+    border: solid 1px #c1c1c1;
+    border-radius: 4px;
+    margin-bottom: 5px;
+  }
+}
+
+.chunks {
+  font-family: 'Montserrat', 'sans-serif';
+  text-transform: uppercase;
+  font-size: 0.7em;
+  font-weight: bold;
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: -5px;
+
+  .chunk {
+    flex: 1 0 calc(25% - 5px);
+    border-radius: 3px;
+    color: white;
+    box-sizing: border-box;
+    padding: 2px;
+    height: 20px;
+    margin-left: 5px;
+    margin-bottom: 5px;
+    background-color: darken(green, 10%);
+
+    .text {
+      padding: 3px;
+      text-align: center;
+    }
+
+    .progress {
+      position: relative;
+
+      .val {
+        padding: 3px;
+        float: right;
+        z-index: 5;
+      }
+
+      .bar {
+        z-index: 0;
+        // background-color: blue;
+        height: 10px;
+        position: absolute;
+      }
+
+    }
+
+  }
+}
+
+// This is the input field which is used to fetch files.
+.upload-input {
+  display: none;
+}

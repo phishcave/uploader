@@ -161,7 +161,7 @@ var UploadFileComponent = function(file, actions) {
     this.updateButtons();
 
     return (
-      div({cls: 'upload-entry'}, label, info, buttons)
+      div({cls: 'upload-file'}, label, info, buttons)
     );
   };
 };

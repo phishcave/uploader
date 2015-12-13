@@ -6,9 +6,9 @@ var Uploader = function() {
   // List of chunks for all uploads.
   var chunks = [];
   // The buttons for the uploader (start, pause, stop, etc..)
-  var buttons   = div({id: 'options', cls: 'btn-group'});
+  var buttons   = div({cls: 'options btn-group'});
   // The list of files in the upload queue.
-  var queue     = div({id: 'upload-list', cls: 'list'});
+  var queue     = div({id: 'queue', cls: 'list'});
   // The hidden file input form used for fetching files.
   var fileInput = input({cls: 'upload-input', type:'file', multiple:'true'});
   // The entire uploader dom. This is what is appended to root.
@@ -40,12 +40,16 @@ var Uploader = function() {
     H.empty(buttons);
 
     buttons.appendChild(
-      span({cls:'btn', onclick: this.browse.bind(this)}, icon('folder'), 'BROWSE')
+      span({cls:'btn', onclick: this.browse.bind(this)}, icon('folder'), 'Browse')
     );
 
     if (this.hasFiles()) {
       buttons.appendChild(
-        span({cls:'btn', onclick: this.start.bind(this)}, 'START')
+        span({cls:'btn', onclick: this.start.bind(this)}, 'Start All')
+      );
+
+      buttons.appendChild(
+        span({cls:'btn', onclick: this.removeAll.bind(this)}, 'Remove All')
       );
     }
   };
@@ -53,6 +57,20 @@ var Uploader = function() {
   // Opens the file browse dialog.
   this.browse = function() {
     fileInput.click();
+  };
+
+  this.removeAll = function() {
+    for ( var i = 0; i < files.length; i++ ) {
+      this.removeFile(file[i]);
+    }
+
+    for ( var i = 0; i < chunks.length; i++ ) {
+      this.removeChunk(chunks[i]);
+    }
+
+    H.empty(queue);
+
+    this.updateButtons();
   };
 
   // Starts uploading all files.

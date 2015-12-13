@@ -1,6 +1,10 @@
 var Menu = function() {
+  heading = function(text) {
+    return div({cls:'heading'}, text);
+  };
+
   var menuEntries = div({cls: 'entries'});
-  var dom = div({cls:'menu'}, 'Menu', menuEntries);
+  var dom = div({cls:'menu'}, heading('Menu'), menuEntries);
 
   this.addEntry = function(text, path) {
     var entry = div({cls:'entry', url: path}, text);

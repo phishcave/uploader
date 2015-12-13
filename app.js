@@ -6,12 +6,14 @@ var App = function() {
   var menu     = new Menu();
   var auth     = new Authentication();
 
-  var header  = div({id:'header'});
-  var sidebar = div({id:'sidebar'});
-  var footer  = div({id:'footer'}, "footerino");
+  var header  = div({id:'header'}, 'yolo');
+  var sidebar = div({id:'sidebar-fixed'});
+  var sidebar_container = div({id:'sidebar'}, sidebar)
+  var footer  = div({id:'footer'}, div({cls:'text-tiny center'}, 'copyright 2015 zqz.ca'));
   var content = div({id:'content'});
+  var content_container = div({id:'content-container'}, content, footer);
 
-  var dom = div({id: 'app'}, header, div({cls:'middle'},sidebar, content), footer);
+  var dom = div({id: 'app'}, sidebar_container, content_container);
 
   var mockedFile = {
       name: 'Mocked File',
@@ -21,20 +23,21 @@ var App = function() {
       slice: function() { return new Blob(["ddawd"], { type: 'text/plain' }); }
   };
 
-  for ( var i = 0; i < 13; i++ ) {
-    uploader.addFile(new UploadFile(mockedFile));
+  for ( var i = 0; i < 3; i++ ) {
+    var f = new UploadFile(mockedFile);
+    uploader.addFile(f);
   }
 
+  sidebar.appendChild(auth.render());
   sidebar.appendChild(menu.render());
   content.appendChild(uploader.render());
-  footer.appendChild(auth.render());
 
   body.appendChild(dom);
 
 };
 
 a = new App();
-setTimeout(function() {
-  window.scrollTo(0, 10000);
-}, 100);
+// setTimeout(function() {
+//   window.scrollTo(0, 10000);
+// }, 100);
 

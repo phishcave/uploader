@@ -1,3 +1,8 @@
+$sidebar-width: 200px;
+$footer-height: 30px;
+$colora: #6441A5;
+$colorb: #2a0845;
+
 body, html {
   padding: 0;
   margin: 0;
@@ -7,58 +12,78 @@ body, html {
 
 html {
   height: 100%;
-  background-color: black;
 }
 
 body {
   display: inline;
-  background-color: magenta;
-  color: white;
-  font-family: 'verdana';
-}
+  font-size: 100%;
 
-$sidebar-width: 200px;
-$footer-height: 30px;
+  background: $colora;
+  background: -webkit-linear-gradient(to left, $colora, $colorb);
+  background: linear-gradient(to left, $colora, $colorb);
+}
 
 #app {
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
 	width: 100%;
   min-height: 100%;
-	background-color: blue;
+  position: relative;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  height: 100%;
+}
+
+#sidebar-fixed {
+  position: fixed;
+  width: $sidebar-width;
 }
 
 #sidebar {
-	left: 0;
-	top: 0;
-	bottom: 0;
-  height: 100%;
 	min-width: $sidebar-width;
+  margin: 5px;
+}
+
+#content-container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  background-color: white;
+  justify-content: space-between;
+  max-width: 800px;
+  min-height: 100%;
 }
 
 #content {
+  min-height: 100%;
   flex-grow: 1;
 }
 
-.middle {
-  display: flex;
-  flex-grow: 1;
-  background-color: orange;
+#header {
+  background-color: red;
 }
 
 #footer {
-  background-color: green;
   width: 100%;
-  height: $footer-height;
+  border-top: solid 1px #cacaca;
+  padding: 5px 0;
+  overflow: hidden;
 }
 
 .btn {
-  $btn-bg: green;
+  font-family: 'Montserrat', 'sans-serif';
+  text-transform: uppercase;
+  font-size: 0.7em;
+  font-weight: bold;
+  color: white;
+
+  $btn-bg: lighten($colora, 5%);
   $btn-height: 30px;
+
+  border-radius: 4px;
   line-height: $btn-height;
   cursor: pointer;
-  padding: 4px;
+  padding: 0 5px;
   display: inline-block;
   background-color: $btn-bg;
   vertical-align: middle;
@@ -69,7 +94,8 @@ $footer-height: 30px;
 
   .material-icons {
     position: relative;
-    top: -3px;
+    top: -1px;
+    left: -1px;
   }
 }
 
@@ -83,16 +109,6 @@ $footer-height: 30px;
 
     margin-left: $btn-spacing;
   }
-}
-
-// This is the input field which is used to fetch files.
-.upload-input {
-  display: none;
-}
-
-.upload-entry {
-  padding: 10px;
-  background-color: red;
 }
 
 .material-icons {
@@ -124,9 +140,15 @@ $footer-height: 30px;
 }
 
 .auth-container { 
-  display: inline-block;
-  position: absolute;
-  right: 0;
   padding: 6px;
 }
 
+.center {
+  text-align: center;
+}
+
+.text-tiny {
+  font-family: 'Montserrat', 'sans-serif';
+  text-transform: uppercase;
+  font-size: 0.6em;
+}
