@@ -4,9 +4,60 @@ var UploadFile = function(file) {
   var chunkSize = 1024 * 1024;
   var startTime;
   var chunks = [];
-  var state  = 'processing';
+  var state  = 'queued';
   var hash   = "";
   var id     = __upload_id += 1;
+
+  this.canStart = function() {
+    // has been hashed
+    return hash.length > 0;
+  };
+
+  this.start = function() {
+    this.state = 'uploading';
+
+  };
+
+  this.resume = function() {
+    this.state = 'uploading';
+  };
+
+  this.restart = function() {
+    this.state = 'uploading';
+  };
+
+  this.pause = function() {
+    this.state = 'paused';
+  };
+
+  this.cancel = function() {
+    this.state = 'canceled';
+  }
+
+  this.isQueued = function() {
+    return state == 'queued';
+  };
+
+  this.isUploading = function() {
+    return state == 'uploading';
+  };
+
+  this.isFinished = function() {
+    return state == 'finished';
+  };
+
+  this.isPaused = function() {
+    return state == 'paused';
+  };
+
+  this.isCanceled = function() {
+    return state == 'canceled';
+  };
+
+  this.state = function() {
+    console.log("dont use file.state");
+    return state;
+  }
 
   this.id = function() {
     return id;
@@ -18,7 +69,6 @@ var UploadFile = function(file) {
 
   this.onHashCalculated = function(sha) {
     hash  = sha;
-    state = 'ready';
     this.hashCalculatedCallback(hash);
   }.bind(this);
 
@@ -32,6 +82,16 @@ var UploadFile = function(file) {
 
     return loaded / file.size;
   };
+
+  this.chunksFinished = function() {
+    for ( var i = 0; i < chunks.length; i++ ) {
+      if (!chunks[i].isFinished()) {
+        return false;
+      }
+    }
+
+    return true;
+  }
 
   this.type = function() {
     return mime2name(file.type);
@@ -57,17 +117,22 @@ var UploadFile = function(file) {
     return hash;
   };
 
-  this.isReady = function() {
-    return state == 'ready';
-  };
-
   this.onChunkStarted = function(chunk) {
     startTime = Date.now();
   };
 
   this.onChunkFinished = function(chunk) {
     console.log("chunk finished");
-    // start next chunk
+    if ( this.chunksFinished()) {
+      this.onFinished();
+    }
+  };
+
+  this.onFinished = function() {
+    console.log("upload finished");
+    state = 'finished';
+    this.finishedCallback();
+
   };
 
   this.onChunkProgress = function(chunk, progress) {
@@ -89,6 +154,8 @@ var UploadFile = function(file) {
 
       chunks.push(chunk);
     }
+
+    state = 'uploading';
 
     return chunks;
   };

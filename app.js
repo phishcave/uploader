@@ -178,8 +178,9 @@ var Uploader = function() {
     if ( file === undefined ) { return; }
 
     // remove chunks from our global list.
-    for ( var i = 0; i < file.chunks.length; i++ ) {
-      removeChunk(file.chunks[i]);
+    var chunks = file.chunks();
+    for ( var i = 0; i < chunks.length; i++ ) {
+      this.removeChunk(chunks[i]);
     }
 
     // remove file

@@ -1,5 +1,4 @@
 var UploadFileComponent = function(file, actions) {
-  var state    = 'queued';
   var buttons  = span({cls: 'btn-group'});
   var label    = div({cls: 'label'});
   var info     = div({cls: 'div'});
@@ -17,7 +16,6 @@ var UploadFileComponent = function(file, actions) {
   }.bind(this);
 
   file.finishedCallback = function() {
-    state = 'finished';
     this.updateInfo();
     this.updateButtons();
   }.bind(this);
@@ -40,14 +38,14 @@ var UploadFileComponent = function(file, actions) {
     );
 
     label.appendChild(
-      span({cls:'state'}, state)
+      span({cls:'state'}, file.state())
     );
   };
 
   this.updateInfo = function() {
     H.empty(info);
 
-    if (state == 'queued') {
+    if (file.isQueued()) {
       info.appendChild(
         span({cls:'type'}, file.type())
       );
@@ -59,11 +57,11 @@ var UploadFileComponent = function(file, actions) {
       );
     }
 
-    if (state == 'uploading') {
+    if (file.isUploading()) {
       info.appendChild(chunks);
     }
 
-    if (state == 'finished') {
+    if (file.isFinished()) {
       info.appendChild(
         document.createTextNode("finished")
       );
@@ -71,8 +69,8 @@ var UploadFileComponent = function(file, actions) {
   };
 
   this.start = function() {
-    state = 'uploading';
-
+    file.start();
+    // chunkFile sets state to started
     var fileChunks = file.chunkFile();
     var numChunks = fileChunks.length;
 
@@ -88,21 +86,22 @@ var UploadFileComponent = function(file, actions) {
   };
 
   this.pause = function() {
-    state = 'paused';
+    file.pause();
     this.updateButtons();
   };
 
   this.resume = function() {
-    state = 'uploading';
+    file.resume();
     this.updateButtons();
   };
 
   this.cancel = function() {
-    state = 'canceled';
+    file.cancel();
     this.updateButtons();
   };
 
   this.remove = function() {
+    file.cancel();
     this.onRemove();
   };
 
@@ -110,48 +109,49 @@ var UploadFileComponent = function(file, actions) {
     // remove all buttons
     H.empty(buttons);
 
-    switch (state) {
-      case 'queued':
+    if (file.isQueued()) {
+      buttons.appendChild(
+        span({cls:'btn remove', onclick: this.remove.bind(this)}, icon('clear'), 'Remove')
+      );
+
+      if (file.canStart()) {
         buttons.appendChild(
-          span({cls:'btn remove', onclick: this.remove.bind(this)}, icon('clear'), 'Remove')
+          span({cls:'btn start', onclick: this.start.bind(this)}, icon('file_upload'), 'Upload')
         );
-        if (file.isReady()) {
-          buttons.appendChild(
-            span({cls:'btn start', onclick: this.start.bind(this)}, icon('file_upload'), 'Upload')
-          );
-        }
-        break;
-      case 'uploading':
-        buttons.appendChild(
-          span({cls:'btn pause', onclick: this.pause.bind(this)}, icon('pause'), 'Pause')
-        );
-        buttons.appendChild(
-          span({cls:'btn cancel', onclick: this.cancel.bind(this)}, icon('cancel'), 'Cancel')
-        );
-        break;
-      case 'paused':
-        buttons.appendChild(
-          span({cls:'btn resume', onclick: this.resume.bind(this)}, icon('play_arrow'), 'Resume')
-        );
-        buttons.appendChild(
-          span({cls:'btn cancel', onclick: this.cancel.bind(this)}, icon('cancel'), 'Cancel')
-        );
-        break;
-      case 'canceled':
-        buttons.appendChild(
-          span({cls:'btn restart', onclick: this.start.bind(this)}, icon('file_upload'), 'Restart')
-        );
-        buttons.appendChild(
-          span({cls:'btn remove', onclick: this.remove.bind(this)}, icon('clear'), 'Remove')
-        );
-        break;
-      case 'finished':
-        buttons.appendChild(
-          span({cls:'btn remove', onclick: this.remove.bind(this)}, icon('clear'), 'Remove from list')
-        );
-        break;
-      default:
-        break;
+      }
+    }
+
+    if (file.isUploading()) {
+      buttons.appendChild(
+        span({cls:'btn pause', onclick: this.pause.bind(this)}, icon('pause'), 'Pause')
+      );
+      buttons.appendChild(
+        span({cls:'btn cancel', onclick: this.cancel.bind(this)}, icon('cancel'), 'Cancel')
+      );
+    }
+
+    if (file.isPaused()) {
+      buttons.appendChild(
+        span({cls:'btn resume', onclick: this.resume.bind(this)}, icon('play_arrow'), 'Resume')
+      );
+      buttons.appendChild(
+        span({cls:'btn cancel', onclick: this.cancel.bind(this)}, icon('cancel'), 'Cancel')
+      );
+    }
+
+    if (file.isCanceled()) {
+      buttons.appendChild(
+        span({cls:'btn restart', onclick: this.start.bind(this)}, icon('file_upload'), 'Restart')
+      );
+      buttons.appendChild(
+        span({cls:'btn remove', onclick: this.remove.bind(this)}, icon('clear'), 'Remove')
+      );
+    }
+
+    if (file.isFinished()) {
+      buttons.appendChild(
+        span({cls:'btn remove', onclick: this.remove.bind(this)}, icon('clear'), 'Remove from list')
+      );
     }
   };
 
