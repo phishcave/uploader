@@ -2,8 +2,16 @@ var App = function() {
   var root = div({cls:'foo'}, "hello");
   var body = document.body;
 
+
   var uploader = new Uploader();
-  var menu = new Menu();
+  var menu     = new Menu();
+
+  var header  = div({id:'header'}, 'olo');
+  var sidebar = div({id:'sidebar'});
+  var footer  = div({id:'footer'}, "footerino");
+  var content = div({id:'content'});
+
+  var dom = div({id: 'app'}, header, footer, sidebar, content);
 
   var mockedFile = {
       name: 'Mocked File',
@@ -14,12 +22,11 @@ var App = function() {
 
   uploader.addFile(new UploadFile(mockedFile));
 
-  this.render = function() {
-    body.appendChild(menu.render());
-    body.appendChild(uploader.render());
-  }
+  sidebar.appendChild(menu.render());
+  content.appendChild(uploader.render());
+
+  body.appendChild(dom);
 };
 
 a = new App();
-a.render();
 
