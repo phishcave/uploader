@@ -67,7 +67,9 @@ var Uploader = function() {
       }
 
       if ( c.isQueued() ) {
-        this.startChunk(c);
+        if ( !this.startChunk(c) ) {
+          break;
+        }
       }
     }
   };
