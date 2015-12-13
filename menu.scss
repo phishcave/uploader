@@ -1,0 +1,19 @@
+.menu {
+  position: fixed;
+  width: 200px;
+
+  background-color: purple;
+  .entries {
+    margin-right: 5px;
+    .entry {
+      cursor: pointer;
+      padding: 5px;
+      background-color: red;
+      margin-bottom: 5px;
+
+      &:hover {
+        background-color: darkred;
+      }
+    }
+  }
+}

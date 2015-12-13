@@ -1,11 +1,46 @@
 body, html {
   padding: 0;
-  margin: 0; }
+  margin: 0;
+  width: 100%;
+  min-height: 100%; }
+
+html {
+  height: 100%;
+  background-color: black; }
 
 body {
-  background-color: black;
+  display: inline;
+  background-color: magenta;
   color: white;
   font-family: 'verdana'; }
+
+#app {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 100%;
+  background-color: blue; }
+
+#sidebar {
+  left: 0;
+  top: 0;
+  bottom: 0;
+  height: 100%;
+  min-width: 200px; }
+
+#content {
+  flex-grow: 1; }
+
+.middle {
+  display: flex;
+  flex-grow: 1;
+  background-color: orange; }
+
+#footer {
+  background-color: green;
+  width: 100%;
+  height: 30px; }
 
 .btn {
   line-height: 30px;
@@ -57,6 +92,8 @@ body {
   /* Support for IE. */
   font-feature-settings: 'liga'; }
 
-#footer {
+.auth-container {
+  display: inline-block;
   position: absolute;
-  bottom: 0; }
+  right: 0;
+  padding: 6px; }

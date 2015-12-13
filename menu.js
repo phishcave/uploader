@@ -1,24 +1,39 @@
 var Menu = function() {
-  var menuEntries = div({cls: 'items'});
+  var menuEntries = div({cls: 'entries'});
   var dom = div({cls:'menu'}, 'Menu', menuEntries);
 
   this.addEntry = function(text, path) {
-    return div({cls:'entry', url: path}, text);
+    var entry = div({cls:'entry', url: path}, text);
+    entry.onclick = function() {
+      window.location = path;
+    };
+
+    return entry;
   };
 
   this.updateMenu = function() {
     H.empty(menuEntries);
 
     menuEntries.appendChild(
-      this.addEntry("test", "#foo")
+      this.addEntry("All Files", "#a")
     );
 
     menuEntries.appendChild(
-      this.addEntry("foo", "#foo")
+      this.addEntry("My Files", "#b")
     );
 
     menuEntries.appendChild(
-      this.addEntry("bar", "#foo")
+      this.addEntry("My Albums", "#b")
+    );
+    menuEntries.appendChild(
+      this.addEntry("My Albums", "#b")
+    );
+    menuEntries.appendChild(
+      this.addEntry("My Albums", "#b")
+    );
+
+    menuEntries.appendChild(
+      this.addEntry("Favourites", "#c")
     )
   }
 

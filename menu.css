@@ -1,0 +1,13 @@
+.menu {
+  position: fixed;
+  width: 200px;
+  background-color: purple; }
+  .menu .entries {
+    margin-right: 5px; }
+    .menu .entries .entry {
+      cursor: pointer;
+      padding: 5px;
+      background-color: red;
+      margin-bottom: 5px; }
+      .menu .entries .entry:hover {
+        background-color: darkred; }
