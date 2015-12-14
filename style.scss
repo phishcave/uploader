@@ -1,7 +1,11 @@
 $sidebar-width: 200px;
 $footer-height: 30px;
-$colora: #6441A5;
-$colorb: #2a0845;
+// $colora: #6441A5;
+$colora: #8854c7;
+
+// $colorb: #2a0845;
+$colorb: #523478;
+$colorc: #07a1d8;
 
 body, html {
   padding: 0;
@@ -18,9 +22,12 @@ body {
   display: inline;
   font-size: 100%;
 
-  background: $colora;
-  background: -webkit-linear-gradient(to left, $colora, $colorb);
-  background: linear-gradient(to left, $colora, $colorb);
+  background-color: $colorb;
+  background:
+  linear-gradient($colora, transparent),
+  linear-gradient(-45deg, $colorb, transparent),
+  linear-gradient( 45deg, $colora, transparent);
+  background-blend-mode: multiply;
 }
 
 #app {
@@ -76,6 +83,7 @@ body {
   font-size: 0.7em;
   font-weight: bold;
   color: white;
+  text-shadow: 2px 2px darken($colora, 15%);
 
   $btn-bg: lighten($colora, 5%);
   $btn-height: 30px;
@@ -90,6 +98,8 @@ body {
 
   &:hover {
     background-color: darken($btn-bg, 10%);
+    text-shadow: 2px 2px darken($colora, 50%);
+    box-shadow: 2px 2px 5px lighten($colora, 10%);
   }
 
   .material-icons {

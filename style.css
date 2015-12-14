@@ -10,9 +10,9 @@ html {
 body {
   display: inline;
   font-size: 100%;
-  background: #6441A5;
-  background: -webkit-linear-gradient(to left, #6441A5, #2a0845);
-  background: linear-gradient(to left, #6441A5, #2a0845); }
+  background-color: #523478;
+  background: linear-gradient(#8854c7, transparent), linear-gradient(-45deg, #523478, transparent), linear-gradient(45deg, #8854c7, transparent);
+  background-blend-mode: multiply; }
 
 #app {
   display: flex;
@@ -60,15 +60,18 @@ body {
   font-size: 0.7em;
   font-weight: bold;
   color: white;
+  text-shadow: 2px 2px #62339c;
   border-radius: 4px;
   line-height: 30px;
   cursor: pointer;
   padding: 0 5px;
   display: inline-block;
-  background-color: #6f48b7;
+  background-color: #9567cd;
   vertical-align: middle; }
   .btn:hover {
-    background-color: #593a93; }
+    background-color: #7b41c1;
+    text-shadow: 2px 2px #0d0715;
+    box-shadow: 2px 2px 5px #a37ad4; }
   .btn .material-icons {
     position: relative;
     top: -1px;
