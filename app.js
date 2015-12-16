@@ -6,12 +6,13 @@ var App = function() {
   var menu     = new Menu();
   var auth     = new Authentication();
 
-  var header  = div({id:'header'}, 'yolo');
+  var subheader = span({cls:'sub-header'}, 'Upload Files');
+  var header  = div({id:'header', cls: 'shadow'}, subheader, 'ZQZ');
   var sidebar = div({id:'sidebar-fixed'});
   var sidebar_container = div({id:'sidebar'}, sidebar)
   var footer  = div({id:'footer'}, div({cls:'text-tiny center'}, 'copyright 2015 zqz.ca'));
   var content = div({id:'content'});
-  var content_container = div({id:'content-container'}, content, footer);
+  var content_container = div({id:'content-container'}, header, content, footer);
 
   var dom = div({id: 'app'}, sidebar_container, content_container);
 
