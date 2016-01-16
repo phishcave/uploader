@@ -37,8 +37,30 @@ var UploadFileComponent = function(file, actions) {
       span({cls:'name'}, file.name(), file.size())
     );
 
+    var stateStr = "not defined";
+
+    if ( file.isUploading() ) {
+      stateStr = "UPLOADING";
+    }
+
+    if ( file.isCanceled() ) {
+      stateStr = "CANCELED";
+    }
+
+    if ( file.isQueued() ) {
+      stateStr = "QUEUED";
+    }
+
+    if ( file.isPaused() ) {
+      stateStr = "PAUSED";
+    }
+
+    if ( file.isFinished() ) {
+      stateStr = "FINISHED";
+    }
+
     label.appendChild(
-      span({cls:'state'}, file.state())
+      span({cls:'state'}, stateStr)
     );
   };
 

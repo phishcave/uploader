@@ -1,16 +1,22 @@
 var __upload_id = 10000;
 
 var UploadFile = function(file) {
+  var STATE_QUEUED    = 0;
+  var STATE_FINISHED  = 1;
+  var STATE_UPLOADING = 2;
+  var STATE_PAUSED    = 3;
+  var STATE_CANCELED  = 4;
+
   var chunkSize = 1024 * 1024;
   var chunkSize = 100;
   var startTime;
+  var hash;
   var chunks = [];
-  var state  = 'queued';
-  var hash   = "";
   var id     = __upload_id += 1;
+  var state = STATE_QUEUED;
 
+  // WTF is this?
   this.fakeUpload= function() {
-    state = 'uploading';
     var b = new Blob(["ddawd"], { type: 'text/plain' });
     chunks.push(new Chunk(1, b));
     chunks.push(new Chunk(2, b));
@@ -19,54 +25,36 @@ var UploadFile = function(file) {
 
   this.canStart = function() {
     // has been hashed
-    return hash.length > 0;
+    return hash != undefined && hash.length > 0;
   };
 
   this.start = function() {
-    this.state = 'uploading';
-
+    state = STATE_UPLOADING;
   };
 
   this.resume = function() {
-    this.state = 'uploading';
   };
 
   this.restart = function() {
-    this.state = 'uploading';
   };
 
   this.pause = function() {
-    this.state = 'paused';
+    state = STATE_PAUSED ;
   };
 
   this.cancel = function() {
-    this.state = 'canceled';
+    for( var i = 0; i < chunks.length; i++ ) {
+      chunks[i].cancel();
+    }
+
+    state = STATE_CANCELED ;
   }
 
-  this.isQueued = function() {
-    return state == 'queued';
-  };
-
-  this.isUploading = function() {
-    return state == 'uploading';
-  };
-
-  this.isFinished = function() {
-    return state == 'finished';
-  };
-
-  this.isPaused = function() {
-    return state == 'paused';
-  };
-
-  this.isCanceled = function() {
-    return state == 'canceled';
-  };
-
-  this.state = function() {
-    console.log("dont use file.state");
-    return state;
-  }
+  this.isQueued    = function() { return state == STATE_QUEUED; };
+  this.isUploading = function() { return state == STATE_UPLOADING; };
+  this.isFinished  = function() { return state == STATE_FINISHED; };
+  this.isPaused    = function() { return state == STATE_PAUSED; };
+  this.isCanceled  = function() { return state == STATE_CANCELED; };
 
   this.id = function() {
     return id;
@@ -100,7 +88,7 @@ var UploadFile = function(file) {
     }
 
     return true;
-  }
+  };
 
   this.type = function() {
     return mime2name(file.type);
@@ -128,6 +116,7 @@ var UploadFile = function(file) {
 
   this.onChunkStarted = function(chunk) {
     startTime = Date.now();
+    state = STATE_UPLOADING;
   };
 
   this.onChunkFinished = function(chunk) {
@@ -139,9 +128,8 @@ var UploadFile = function(file) {
 
   this.onFinished = function() {
     console.log("upload finished");
-    state = 'finished';
+    state = STATE_FINISHED;
     this.finishedCallback();
-
   };
 
   this.onChunkProgress = function(chunk, progress) {
@@ -163,8 +151,6 @@ var UploadFile = function(file) {
 
       chunks.push(chunk);
     }
-
-    state = 'uploading';
 
     return chunks;
   };

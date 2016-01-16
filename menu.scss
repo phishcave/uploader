@@ -22,12 +22,13 @@
     .entry {
       cursor: pointer;
       font-family: 'Montserrat', 'sans-serif';
-      padding: 4px 0;
+      padding: 4px 0 4px 10px;
       margin-bottom: 1px;
       font-size: 1.3rem;
       text-shadow: 2px 2px 5px darken($colorb, 30%);
 
       &:hover {
+        background-color: black;
         text-shadow: 2px 2px 5px darken($colorb, 40%),
         2px 2px 2px darken($colorb, 20%);
       }

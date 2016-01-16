@@ -1,35 +1,31 @@
 var Chunk = function(chunk, i) {
+  var API_URL = 'http://localhost:9292/api/upload';
+
+  var STATE_QUEUED    = 0;
+  var STATE_FINISHED  = 1;
+  var STATE_UPLOADING = 2;
+  var STATE_PAUSED    = 3;
+  var STATE_CANCELED  = 4;
+
   var chunkId = i; // id of upload (used internally)
   var loaded;      // how many bytes were sent
   var startTime;   // when
-  var state = 'queued';
+  var state = STATE_QUEUED;
   var xhr;         // only keep track to abort
 
   var callbacks = {
-    start: [],
-    finish: [],
+    start:    [],
+    finish:   [],
     progress: []
   };
 
-  this.isQueued = function() {
-    return state == 'queued';
-  };
-
-  this.isFinished = function() {
-    return state == 'finished';
-  };
-
-  this.isUploading = function() {
-    return state == 'uploading';
-  };
-
-  this.loaded = function() {
-    return loaded;
-  };
-
-  this.size = function() {
-    return chunk.size;
-  };
+  this.isQueued    = function() { return state == STATE_QUEUED; };
+  this.isFinished  = function() { return state == STATE_FINISHED; };
+  this.isUploading = function() { return state == STATE_UPLOADING; };
+  this.isCanceled  = function() { return state == STATE_CANCELED; };
+  this.isPaused    = function() { return state == STATE_PAUSED; };
+  this.loaded      = function() { return loaded; };
+  this.size        = function() { return chunk.size; };
 
   this.addFinishCallback = function(handler) {
     callbacks.finish.push(handler);
@@ -43,17 +39,30 @@ var Chunk = function(chunk, i) {
     callbacks.progress.push(handler);
   };
 
+  this.pause = function() {
+    this.abort();
+    this.onPause();
+  };
+
+  this.cancel = function() {
+    this.abort();
+  }
+
   this.abort = function() {
-    if ( state != 'uploading' ) {
+    if ( !this.isUploading() ) {
       return false;
     }
 
-    xhr.abort();
+    if ( xhr != undefined ) {
+      xhr.abort();
+    }
+
+    this.onAbort();
   };
 
   this.onProgress = function(e) {
-    loaded = e.loaded;
-    p = new ProgressEvent(e, startTime);
+    loaded = e.loaded; // wtf is this?
+    var p = new ProgressEvent(e, startTime);
 
     for ( var i = 0; i < callbacks.progress.length; i++ ) {
       var callback = callbacks.progress[i];
@@ -65,9 +74,17 @@ var Chunk = function(chunk, i) {
     console.log("error");
   };
 
+  this.onAbort = function(e) {
+    console.log("abort");
+  };
+
+  this.onPause = function(e) {
+    console.log("pause");
+  };
+
   // got response from server
   this.onComplete = function(e) {
-    state = 'finished';
+    state = STATE_FINISHED;
 
     for ( var i = 0; i < callbacks.finish.length; i++ ) {
       var callback = callbacks.finish[i];
@@ -76,7 +93,8 @@ var Chunk = function(chunk, i) {
   };
 
   this.onStart = function() {
-    state = 'uploading';
+    state = STATE_UPLOADING;
+
     startTime = Date.now();
     loaded = 0;
 
@@ -86,26 +104,22 @@ var Chunk = function(chunk, i) {
     }
   };
 
-  this.onAbort = function(e) {
-    console.log("aborty");
-  };
-
   this.upload = function() {
     var formData = new FormData();
     formData.append('id', chunkId);
     formData.append('data', chunk);
 
-    req = new XMLHttpRequest();
-    req.open('POST', 'http://localhost:9292/api/upload');
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', API_URL);
 
-    req.upload.addEventListener('progress', this.onProgress.bind(this));
-    req.upload.addEventListener('error', this.onError.bind(this));
-    req.upload.addEventListener('abort', this.onAbort.bind(this));
-    req.addEventListener('load', this.onComplete.bind(this));
+    xhr.upload.addEventListener('progress', this.onProgress.bind(this));
+    xhr.upload.addEventListener('error', this.onError.bind(this));
+    xhr.upload.addEventListener('abort', this.onAbort.bind(this));
+    xhr.addEventListener('load', this.onComplete.bind(this));
 
     this.onStart();
 
-    req.send(formData);
+    xhr.send(formData);
   };
 };
 

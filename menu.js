@@ -47,3 +47,4 @@ var Menu = function() {
   };
 };
 
+console.log('hello');
