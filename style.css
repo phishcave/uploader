@@ -34,7 +34,8 @@ body {
   background-color: #321a4f;
   padding-left: 10px;
   color: white;
-  font-weight: bold; }
+  font-weight: bold;
+  font-family: 'Montserrat'; }
   #header .sub-header {
     float: right;
     padding-right: 10px;
@@ -45,6 +46,11 @@ body {
   width: 200px; }
 
 #sidebar {
+  cursor: default;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   min-width: 200px;
   margin: 5px;
   margin-top: 50px; }

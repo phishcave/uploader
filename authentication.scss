@@ -1,0 +1,41 @@
+@import "mixins.scss";
+
+$auth-height: 40px;
+.auth {
+  font-family: 'Montserrat', 'sans-serif';
+  display: block;
+  height: $auth-height;
+  padding-bottom: 10px;
+  vertical-align: middle;
+  position: relative;
+
+  .gravatar {
+    height: $auth-height;
+    width: $auth-height;
+    display: inline-block;
+  }
+
+  .username {
+    height: $auth-height;
+    color: white;
+    position: absolute;
+    line-height: $auth-height;
+    padding: 0 5px;
+    display: inline-block;
+    cursor: pointer;
+    text-shadow: $text-shadow;
+  }
+
+  .settings {
+    cursor: pointer;
+    float: right;
+    padding-right: 10px;
+    height: $auth-height;
+    line-height: $auth-height;
+    color: white;
+    text-shadow: $text-shadow;
+    i {
+      font-size: 1.2em !important;
+    }
+  }
+}

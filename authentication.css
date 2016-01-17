@@ -1,0 +1,30 @@
+.auth {
+  font-family: 'Montserrat', 'sans-serif';
+  display: block;
+  height: 40px;
+  padding-bottom: 10px;
+  vertical-align: middle;
+  position: relative; }
+  .auth .gravatar {
+    height: 40px;
+    width: 40px;
+    display: inline-block; }
+  .auth .username {
+    height: 40px;
+    color: white;
+    position: absolute;
+    line-height: 40px;
+    padding: 0 5px;
+    display: inline-block;
+    cursor: pointer;
+    text-shadow: 3px 3px 5px #211531; }
+  .auth .settings {
+    cursor: pointer;
+    float: right;
+    padding-right: 10px;
+    height: 40px;
+    line-height: 40px;
+    color: white;
+    text-shadow: 3px 3px 5px #211531; }
+    .auth .settings i {
+      font-size: 1.2em !important; }

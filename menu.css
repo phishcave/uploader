@@ -15,11 +15,14 @@
     margin-right: 5px; }
     .menu .entries .entry {
       cursor: pointer;
-      font-family: 'Montserrat', 'sans-serif';
+      position: relative;
+      left: -10px;
       padding: 4px 0 4px 10px;
       margin-bottom: 1px;
+      font-family: 'Montserrat', 'sans-serif';
       font-size: 1.3rem;
       text-shadow: 2px 2px 5px #09060d; }
       .menu .entries .entry:hover {
-        background-color: black;
+        background-color: #3e2062;
+        border-radius: 4px;
         text-shadow: 2px 2px 5px black, 2px 2px 2px #211531; }

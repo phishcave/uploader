@@ -1,0 +1,23 @@
+@import "mixins.scss";
+
+#queue {
+  .upload-file {
+    font-family: 'Montserrat';
+
+    .name {
+      font-size: 1.5em;
+      color: lighten($colora, 10%);
+    }
+    .state {
+      float: right;
+    }
+    .info {
+      background-color: red;
+    }
+
+    padding: 5px;
+    border: solid 1px #c1c1c1;
+    border-radius: 4px;
+    margin-bottom: 5px;
+  }
+}

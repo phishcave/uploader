@@ -3,12 +3,6 @@
   #uploader .options {
     margin-bottom: 5px; }
 
-#queue .upload-file {
-  padding: 5px;
-  border: solid 1px #c1c1c1;
-  border-radius: 4px;
-  margin-bottom: 5px; }
-
 .chunks {
   font-family: 'Montserrat', 'sans-serif';
   text-transform: uppercase;

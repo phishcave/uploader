@@ -1,0 +1,12 @@
+$colora: #8854c7;
+$colorb: #523478;
+$colorc: #07a1d8;
+$text-shadow: darken($colorb, 20%);
+
+@mixin user-select($val) {
+  cursor: default;
+  -webkit-user-select: $val;
+     -moz-user-select: $val;
+      -ms-user-select: $val;
+          user-select: $val;
+}

@@ -1,0 +1,13 @@
+#queue .upload-file {
+  font-family: 'Montserrat';
+  padding: 5px;
+  border: solid 1px #c1c1c1;
+  border-radius: 4px;
+  margin-bottom: 5px; }
+  #queue .upload-file .name {
+    font-size: 1.5em;
+    color: #a37ad4; }
+  #queue .upload-file .state {
+    float: right; }
+  #queue .upload-file .info {
+    background-color: red; }

@@ -1,8 +1,8 @@
 var UploadFileComponent = function(file, actions) {
   var buttons  = span({cls: 'btn-group'});
   var label    = div({cls: 'label'});
-  var info     = div({cls: 'div'});
-  var chunks   = div({cls:'chunks'});
+  var info     = div({cls: 'info'});
+  var chunks   = div({cls: 'chunks'});
   var progress = span({cls: 'progress'});
 
   file.hashCalculatedCallback = function() {

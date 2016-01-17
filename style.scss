@@ -1,11 +1,7 @@
+@import "mixins.scss";
+
 $sidebar-width: 200px;
 $footer-height: 30px;
-// $colora: #6441A5;
-$colora: #8854c7;
-
-// $colorb: #2a0845;
-$colorb: #523478;
-$colorc: #07a1d8;
 
 body, html {
   padding: 0;
@@ -54,6 +50,7 @@ body {
   padding-left: 10px;
   color: white;
   font-weight: bold;
+  font-family: 'Montserrat';
 
   .sub-header {
     float: right;
@@ -68,6 +65,7 @@ body {
 }
 
 #sidebar {
+  @include user-select(none);
 	min-width: $sidebar-width;
   margin: 5px;
   margin-top: 50px;
