@@ -32,10 +32,15 @@ $preview-size: 64px;
 
       .info {
         padding: 5px 0;
-        .hash {
+        .hash, .size { // size is temp
           font-family: monospace;
           &:before {
             content: 'SHA1: ';
+          }
+        }
+        .size {
+          &:before {
+            content: 'Size: ';
           }
         }
         border-bottom: solid 1px darken($border-color, 5%);

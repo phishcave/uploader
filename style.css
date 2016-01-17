@@ -79,7 +79,6 @@ body {
   font-size: 0.7em;
   font-weight: bold;
   color: white;
-  text-shadow: 2px 2px #62339c;
   border-radius: 4px;
   line-height: 30px;
   cursor: pointer;
@@ -88,9 +87,8 @@ body {
   background-color: #212121;
   vertical-align: middle; }
   .btn:hover {
-    background-color: #070707;
-    text-shadow: 2px 2px #0d0715;
-    box-shadow: 2px 2px 5px #a37ad4; }
+    background-color: #191919;
+    box-shadow: 2px 2px 5px black; }
   .btn .material-icons {
     position: relative;
     font-size: 1.2rem;

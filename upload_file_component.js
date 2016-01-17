@@ -67,7 +67,7 @@ var UploadFileComponent = function(file, actions) {
       span({cls:'state'}, stateStr)
     );
     label.appendChild(
-      div({cls:'name'}, file.name(), file.size())
+      div({cls:'name'}, file.name())
     );
   };
 
@@ -79,6 +79,9 @@ var UploadFileComponent = function(file, actions) {
 
       info.appendChild(
         div({cls:'hash'}, file.hash())
+      );
+      info.appendChild(
+        div({cls:'size'}, file.size())
       );
     }
 

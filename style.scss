@@ -100,7 +100,6 @@ body {
   font-size: 0.7em;
   font-weight: bold;
   color: white;
-  text-shadow: 2px 2px darken($colora, 15%);
 
   border-radius: 4px;
   line-height: $btn-height;
@@ -111,9 +110,8 @@ body {
   vertical-align: middle;
 
   &:hover {
-    background-color: darken($btn-bg, 10%);
-    text-shadow: 2px 2px darken($colora, 50%);
-    box-shadow: 2px 2px 5px lighten($colora, 10%);
+    background-color: darken($btn-bg, 3%);
+    box-shadow: 2px 2px 5px darken($background-color, 10%);
   }
 
   .material-icons {
