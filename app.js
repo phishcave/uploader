@@ -24,7 +24,7 @@ var App = function() {
       slice: function() { return new Blob(["ddawd"], { type: 'text/plain' }); }
   };
 
-  for ( var i = 0; i < 3; i++ ) {
+  for ( var i = 0; i < 20; i++ ) {
     var f = new UploadFile(mockedFile);
     uploader.addFile(f);
   }

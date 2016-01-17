@@ -1,15 +1,13 @@
 .menu {
-  color: white; }
+  color: #268bd2;
+  text-transform: uppercase;
+  margin-top: 10px; }
   .menu .heading {
-    font-family: 'Montserrat', 'sans-serif';
-    text-transform: uppercase;
+    color: white;
     font-size: 0.9em;
     font-weight: bold;
     margin-bottom: 5px;
     padding-bottom: 0px;
-    color: #211531;
-    text-shadow: 2px 2px 6px #3a2554;
-    -webkit-user-select: none;
     cursor: default; }
   .menu .entries {
     margin-right: 5px; }
@@ -17,10 +15,10 @@
       cursor: pointer;
       position: relative;
       left: -10px;
-      padding: 4px 0 4px 10px;
+      padding: 4px 0px 4px 10px;
+      width: 100%;
       margin-bottom: 1px;
-      font-family: 'Montserrat', 'sans-serif';
-      font-size: 1.3rem;
+      font-size: 0.8rem;
       text-shadow: 2px 2px 5px #09060d; }
       .menu .entries .entry:hover {
         background-color: #3e2062;

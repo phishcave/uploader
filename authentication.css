@@ -1,9 +1,8 @@
 .auth {
-  font-family: 'Montserrat', 'sans-serif';
   display: block;
   height: 40px;
-  padding-bottom: 10px;
   vertical-align: middle;
+  border-bottom: solid 1px #0f0f0f;
   position: relative; }
   .auth .gravatar {
     height: 40px;
@@ -17,7 +16,7 @@
     padding: 0 5px;
     display: inline-block;
     cursor: pointer;
-    text-shadow: 3px 3px 5px #211531; }
+    text-shadow: #211531; }
   .auth .settings {
     cursor: pointer;
     float: right;
@@ -25,6 +24,6 @@
     height: 40px;
     line-height: 40px;
     color: white;
-    text-shadow: 3px 3px 5px #211531; }
+    text-shadow: #211531; }
     .auth .settings i {
       font-size: 1.2em !important; }

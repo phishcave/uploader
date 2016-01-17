@@ -2,11 +2,10 @@
 
 $auth-height: 40px;
 .auth {
-  font-family: 'Montserrat', 'sans-serif';
   display: block;
   height: $auth-height;
-  padding-bottom: 10px;
   vertical-align: middle;
+  border-bottom: solid 1px $border-color;
   position: relative;
 
   .gravatar {

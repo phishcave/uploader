@@ -1,7 +1,15 @@
 $colora: #8854c7;
 $colorb: #523478;
 $colorc: #07a1d8;
+
+$link-color: #268bd2;
+$text-color: white;
+$background-color: #141414;
 $text-shadow: darken($colorb, 20%);
+$border-color: darken($background-color, 2%);
+
+$btn-bg: lighten($background-color, 5%);
+$btn-height: 30px;
 
 @mixin user-select($val) {
   cursor: default;

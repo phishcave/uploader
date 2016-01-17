@@ -1,13 +1,39 @@
 #queue .upload-file {
-  font-family: 'Montserrat';
+  display: flex;
+  min-height: 64px;
+  position: relative;
   padding: 5px;
-  border: solid 1px #c1c1c1;
+  border: solid 1px black;
+  background-color: #0f0f0f;
   border-radius: 4px;
   margin-bottom: 5px; }
-  #queue .upload-file .name {
-    font-size: 1.5em;
-    color: #a37ad4; }
+  #queue .upload-file .preview {
+    border-radius: 3px;
+    height: 64px;
+    width: 64px;
+    background-color: #171717;
+    margin-right: 5px; }
+  #queue .upload-file .container {
+    flex-grow: 1; }
+    #queue .upload-file .container .label .name {
+      font-size: 1.2em;
+      font-weight: bold;
+      border-bottom: solid 1px #020202;
+      color: white;
+      padding-bottom: 5px; }
+    #queue .upload-file .container .info {
+      padding: 5px 0;
+      border-bottom: solid 1px #020202;
+      margin-bottom: 5px; }
+      #queue .upload-file .container .info .hash {
+        font-family: monospace; }
+        #queue .upload-file .container .info .hash:before {
+          content: 'SHA1: '; }
+    #queue .upload-file .container .state {
+      font-size: 0.7em; }
+  #queue .upload-file .btn-group {
+    text-align: right; }
   #queue .upload-file .state {
-    float: right; }
-  #queue .upload-file .info {
-    background-color: red; }
+    position: absolute;
+    right: 5px;
+    top: 5px; }

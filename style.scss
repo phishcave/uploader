@@ -18,11 +18,13 @@ body {
   display: inline;
   font-size: 100%;
 
-  background-color: $colorb;
-  background:
-  linear-gradient($colora, transparent),
-  linear-gradient(-45deg, $colorb, transparent),
-  linear-gradient( 45deg, $colora, transparent);
+  font-family: 'Open Sans';
+  background-color: $background-color;
+  color: $text-color;
+  // background:
+  // linear-gradient($colora, transparent),
+  // linear-gradient(-45deg, $colorb, transparent),
+  // linear-gradient( 45deg, $colora, transparent);
   background-blend-mode: multiply;
 }
 
@@ -46,11 +48,11 @@ body {
   height: $header-height;
   line-height: $header-height;
   font-size: 1.5rem;
-  background-color: darken($colora, 35%);
   padding-left: 10px;
   color: white;
+
   font-weight: bold;
-  font-family: 'Montserrat';
+  font-family: 'Open Sans';
 
   .sub-header {
     float: right;
@@ -75,13 +77,9 @@ body {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  background-color: white;
   justify-content: space-between;
   max-width: 800px;
   min-height: 100%;
-  border-left: solid 1px darken($colora, 30%);
-  border-right: solid 1px darken($colora, 20%);
-  box-shadow: 5px 15px 175px darken($colora, 35%);
 }
 
 #content {
@@ -97,15 +95,12 @@ body {
 }
 
 .btn {
-  font-family: 'Montserrat', 'sans-serif';
+  font-family: 'Open Sans';
   text-transform: uppercase;
   font-size: 0.7em;
   font-weight: bold;
   color: white;
   text-shadow: 2px 2px darken($colora, 15%);
-
-  $btn-bg: lighten($colorb, 5%);
-  $btn-height: 30px;
 
   border-radius: 4px;
   line-height: $btn-height;
@@ -174,7 +169,6 @@ body {
 }
 
 .text-tiny {
-  font-family: 'Montserrat', 'sans-serif';
   text-transform: uppercase;
   font-size: 0.6em;
 }

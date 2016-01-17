@@ -1,9 +1,12 @@
 var UploadFileComponent = function(file, actions) {
-  var buttons  = span({cls: 'btn-group'});
+  var buttons  = div({cls: 'btn-group'});
   var label    = div({cls: 'label'});
+  var preview  = div({cls: 'preview'});
   var info     = div({cls: 'info'});
   var chunks   = div({cls: 'chunks'});
   var progress = span({cls: 'progress'});
+
+  var infoOpen = true;
 
   file.hashCalculatedCallback = function() {
     this.updateLabel(); // not needed
@@ -32,9 +35,10 @@ var UploadFileComponent = function(file, actions) {
 
   this.updateLabel = function() {
     H.empty(label);
+    H.empty(preview);
 
-    label.appendChild(
-      span({cls:'name'}, file.name(), file.size())
+    preview.appendChild(
+      span(file.type())
     );
 
     var stateStr = "not defined";
@@ -62,20 +66,19 @@ var UploadFileComponent = function(file, actions) {
     label.appendChild(
       span({cls:'state'}, stateStr)
     );
+    label.appendChild(
+      div({cls:'name'}, file.name(), file.size())
+    );
   };
 
   this.updateInfo = function() {
     H.empty(info);
 
     if (file.isQueued()) {
-      info.appendChild(
-        span({cls:'type'}, file.type())
-      );
-
       info.appendChild(progress);
 
       info.appendChild(
-        span({cls:'hash'}, file.hash())
+        div({cls:'hash'}, file.hash())
       );
     }
 
@@ -131,6 +134,10 @@ var UploadFileComponent = function(file, actions) {
     // remove all buttons
     H.empty(buttons);
 
+    buttons.appendChild(
+      span({cls:'btn stats', onclick: this.remove.bind(this)}, icon('info'), 'Stats')
+    );
+
     if (file.isQueued()) {
       buttons.appendChild(
         span({cls:'btn remove', onclick: this.remove.bind(this)}, icon('clear'), 'Remove')
@@ -182,8 +189,9 @@ var UploadFileComponent = function(file, actions) {
     this.updateInfo();
     this.updateButtons();
 
+    var container = div({cls: 'container'}, label, info, buttons);
     return (
-      div({cls: 'upload-file'}, label, info, buttons)
+      div({cls: 'upload-file'}, preview, container)
     );
   };
 };

@@ -10,8 +10,9 @@ html {
 body {
   display: inline;
   font-size: 100%;
-  background-color: #523478;
-  background: linear-gradient(#8854c7, transparent), linear-gradient(-45deg, #523478, transparent), linear-gradient(45deg, #8854c7, transparent);
+  font-family: 'Open Sans';
+  background-color: #141414;
+  color: white;
   background-blend-mode: multiply; }
 
 #app {
@@ -31,11 +32,10 @@ body {
   height: 50px;
   line-height: 50px;
   font-size: 1.5rem;
-  background-color: #321a4f;
   padding-left: 10px;
   color: white;
   font-weight: bold;
-  font-family: 'Montserrat'; }
+  font-family: 'Open Sans'; }
   #header .sub-header {
     float: right;
     padding-right: 10px;
@@ -59,13 +59,9 @@ body {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  background-color: white;
   justify-content: space-between;
   max-width: 800px;
-  min-height: 100%;
-  border-left: solid 1px #3e2062;
-  border-right: solid 1px #562d88;
-  box-shadow: 5px 15px 175px #321a4f; }
+  min-height: 100%; }
 
 #content {
   min-height: 100%;
@@ -78,7 +74,7 @@ body {
   overflow: hidden; }
 
 .btn {
-  font-family: 'Montserrat', 'sans-serif';
+  font-family: 'Open Sans';
   text-transform: uppercase;
   font-size: 0.7em;
   font-weight: bold;
@@ -89,10 +85,10 @@ body {
   cursor: pointer;
   padding: 0 5px;
   display: inline-block;
-  background-color: #5e3c8a;
+  background-color: #212121;
   vertical-align: middle; }
   .btn:hover {
-    background-color: #462c66;
+    background-color: #070707;
     text-shadow: 2px 2px #0d0715;
     box-shadow: 2px 2px 5px #a37ad4; }
   .btn .material-icons {
@@ -135,6 +131,5 @@ body {
   text-align: center; }
 
 .text-tiny {
-  font-family: 'Montserrat', 'sans-serif';
   text-transform: uppercase;
   font-size: 0.6em; }
