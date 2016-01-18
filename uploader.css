@@ -1,39 +1,42 @@
 #uploader {
   padding: 5px; }
   #uploader .options {
+    border-bottom: solid 1px #0f0f0f;
+    padding-bottom: 5px;
     margin-bottom: 5px; }
 
 .chunks {
-  font-family: 'Montserrat', 'sans-serif';
   text-transform: uppercase;
   font-size: 0.7em;
-  font-weight: bold;
-  display: flex;
-  flex-wrap: wrap;
   margin-left: -5px; }
   .chunks .chunk {
-    flex: 1 0 calc(25% - 5px);
     border-radius: 3px;
     color: white;
     box-sizing: border-box;
-    padding: 2px;
     height: 20px;
     margin-left: 5px;
     margin-bottom: 5px;
-    background-color: #004d00; }
+    background-image: linear-gradient(180deg, #232323, #171717); }
+    .chunks .chunk:last-child {
+      margin-bottom: 0; }
     .chunks .chunk .text {
       padding: 3px;
       text-align: center; }
     .chunks .chunk .progress {
       position: relative; }
       .chunks .chunk .progress .val {
-        padding: 3px;
-        float: right;
+        padding: 4px 3px;
+        position: absolute;
+        right: 0;
+        top: 0;
         z-index: 5; }
       .chunks .chunk .progress .bar {
+        border-radius: 3px;
         z-index: 0;
-        height: 10px;
-        position: absolute; }
+        height: 20px;
+        position: absolute;
+        transition: width 0.2s ease;
+        background-image: linear-gradient(0deg, #124162, #1e6ea7); }
 
 .upload-input {
   display: none; }
