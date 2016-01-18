@@ -19,25 +19,23 @@ var Menu = function() {
     H.empty(menuEntries);
 
     menuEntries.appendChild(
-      this.addEntry("All Files", "#a")
+      this.addEntry("Admin", "#admin")
     );
 
     menuEntries.appendChild(
-      this.addEntry("My Files", "#b")
+      this.addEntry("All Files", "#all")
     );
 
     menuEntries.appendChild(
-      this.addEntry("My Albums", "#b")
-    );
-    menuEntries.appendChild(
-      this.addEntry("My Albums", "#b")
-    );
-    menuEntries.appendChild(
-      this.addEntry("My Albums", "#b")
+      this.addEntry("My Files", "#files")
     );
 
     menuEntries.appendChild(
-      this.addEntry("Favourites", "#c")
+      this.addEntry("Albums", "#albums")
+    );
+
+    menuEntries.appendChild(
+      this.addEntry("Favourites", "#favourites")
     )
   }
 
@@ -46,5 +44,3 @@ var Menu = function() {
     return dom;
   };
 };
-
-console.log('hello');
