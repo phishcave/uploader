@@ -1,25 +1,22 @@
-function sha1sum(file, callback) {
-  var sha1 = CryptoJS.algo.SHA1.create();
-  var read = 0;
-  var unit = 1024 * 1024;
-  var blob;
-  var reader = new FileReader();
+function base64toBlob(base64Data, contentType) {
+	contentType = contentType || '';
+	var sliceSize = 1024;
+	var byteCharacters = atob(base64Data);
+	var bytesLength = byteCharacters.length;
+	var slicesCount = Math.ceil(bytesLength / sliceSize);
+	var byteArrays = new Array(slicesCount);
 
-  reader.readAsArrayBuffer(file.slice(read, read + unit));
-  reader.onload = function(e) {
-    var bytes = CryptoJS.lib.WordArray.create(e.target.result);
+	for (var sliceIndex = 0; sliceIndex < slicesCount; ++sliceIndex) {
+		var begin = sliceIndex * sliceSize;
+		var end = Math.min(begin + sliceSize, bytesLength);
 
-    sha1.update(bytes);
-    read += unit;
-    if (read < file.size) {
-      blob = file.slice(read, read + unit);
-      reader.readAsArrayBuffer(blob);
-    } else {
-      var hash = sha1.finalize();
-      console.log(hash.toString(CryptoJS.enc.Hex)); // print the result
-      callback(hash.toString(CryptoJS.enc.Hex));
-    }
-  };
+		var bytes = new Array(end - begin);
+		for (var offset = begin, i = 0 ; offset < end; ++i, ++offset) {
+			bytes[i] = byteCharacters[offset].charCodeAt(0);
+		}
+		byteArrays[sliceIndex] = new Uint8Array(bytes);
+	}
+	return new Blob(byteArrays, { type: contentType });
 }
 
 function icon(name) {

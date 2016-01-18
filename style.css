@@ -136,3 +136,9 @@ body {
 .text-tiny {
   text-transform: uppercase;
   font-size: 0.6em; }
+
+#paste-hack {
+  position: absolute;
+  left: -1000px;
+  top: -1000px;
+  visibility: none; }

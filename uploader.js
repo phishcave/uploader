@@ -1,3 +1,5 @@
+
+
 var Uploader = function() {
   // List of files in the queue.
   var files = [];
@@ -17,6 +19,52 @@ var Uploader = function() {
   var concurrency = 5;
 
   var sha = new Worker('lib/rusha.js');
+
+  var pasteHack = div({id: 'paste-hack', contentEditable: true});
+
+    var KEYCODE_V = 86;
+  document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.keyCode == KEYCODE_V) {
+      document.body.appendChild(pasteHack);
+      pasteHack.focus();
+      console.log("ctrl v pressed");
+    }
+  }.bind(this));
+
+  document.addEventListener('keyup', function(e) {
+    if (e.keyCode == KEYCODE_V) {
+      console.log("let go of ctrl-v");
+      var pastedItems = pasteHack.children;
+
+      for (var i = 0; i < pastedItems.length; i++) {
+        var item = pastedItems[i];
+
+        // only interested in images
+        if (item.tagName.toLowerCase() != "img") {
+          continue;
+        }
+
+        var src = item.src;
+
+        var base64regexp = new RegExp(/^data:(image\/\w+);base64,/);
+        var matches = src.match(base64regexp);
+
+        // no match means this was not a base64 paste.
+        if (matches != null) {
+          var type = matches[1];
+          var data = src.replace(base64regexp, "");
+          var blob = base64toBlob(data, type);
+          blob.name = "Pasted file"
+
+          var f = new UploadFile(blob);
+          this.addFile(f);
+        }
+      }
+      // console.log(pasteHack);
+    }
+
+    H.empty(pasteHack);
+  }.bind(this));
 
   document.body.ondragover = function(e) {
     e.stopPropagation();
