@@ -69,7 +69,7 @@ var UploadFileComponent = function(file, actions) {
   this.updateInfo = function() {
     H.empty(info);
 
-    if (file.isQueued()) {
+    // if (file.isQueued()) {
       info.appendChild(progress);
 
       info.appendChild(
@@ -78,7 +78,7 @@ var UploadFileComponent = function(file, actions) {
       info.appendChild(
         div({cls:'size'}, file.size())
       );
-    }
+    // }
 
     if (file.isUploading()) {
       info.appendChild(chunks);

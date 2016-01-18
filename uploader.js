@@ -18,6 +18,25 @@ var Uploader = function() {
 
   var sha = new Worker('lib/rusha.js');
 
+  document.body.ondragover = function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+  };
+
+  document.body.ondragleave = function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+  };
+
+  document.body.ondrop = function(e) {
+    var files = e.target.files || e.dataTransfer.files;
+    for (var i = 0; i < files.length; i++) {
+      var f = new UploadFile(files[i]);
+      this.addFile(f);
+      console.log(f);
+    }
+  }.bind(this);
+
   sha.onmessage = function(evt) {
     id = evt.data.id;
     hash = evt.data.hash;
@@ -61,7 +80,7 @@ var Uploader = function() {
 
   this.removeAll = function() {
     for ( var i = 0; i < files.length; i++ ) {
-      this.removeFile(file[i]);
+      this.removeFile(files[i]);
     }
 
     for ( var i = 0; i < chunks.length; i++ ) {

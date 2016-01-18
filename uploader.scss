@@ -13,7 +13,9 @@
 .chunks {
   text-transform: uppercase;
   font-size: 0.7em;
-  margin-left: -5px;
+  margin-top: 5px;
+  border-top: solid 1px darken($border-color, 5%);
+  padding-top: 5px;
 
   $bar-size: 20px;
 
@@ -22,7 +24,6 @@
     color: white;
     box-sizing: border-box;
     height: $bar-size;
-    margin-left: 5px;
     margin-bottom: 5px;
     background-image: linear-gradient(
       180deg,
