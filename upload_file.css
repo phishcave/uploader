@@ -12,12 +12,25 @@
     height: 64px;
     width: 64px;
     background-color: #171717;
-    margin-right: 5px; }
+    margin-right: 5px;
+    cursor: default;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    text-align: center;
+    line-height: 64px; }
+    #queue .upload-file .preview .image-preview {
+      height: 64px;
+      width: 64px;
+      background-size: cover;
+      background-position: center; }
+    #queue .upload-file .preview i {
+      font-size: 54px; }
   #queue .upload-file .container {
     flex-grow: 1; }
     #queue .upload-file .container .label .name {
-      font-size: 1.2em;
-      font-weight: bold;
+      font-size: 1.1em;
       border-bottom: solid 1px #020202;
       color: white;
       padding-bottom: 5px; }

@@ -14,6 +14,21 @@ $preview-size: 64px;
       width: $preview-size;
       background-color: #171717;
       margin-right: 5px;
+      @include user-select(none);
+
+      .image-preview {
+        height: $preview-size;
+        width: $preview-size;
+        background-size: cover;
+        background-position: center;
+      }
+
+      text-align: center;
+      line-height: $preview-size;
+
+      i {
+        font-size: $preview-size - 10px;
+      }
     }
 
     .container {
@@ -21,14 +36,12 @@ $preview-size: 64px;
 
       .label {
         .name {
-          font-size: 1.2em;
-          font-weight: bold;
+          font-size: 1.1em;
           border-bottom: solid 1px darken($border-color, 5%);
           color: $text-color;
           padding-bottom: 5px;
         }
       }
-
 
       .info {
         padding: 5px 0;

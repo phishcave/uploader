@@ -19,12 +19,12 @@ var App = function() {
   var mockedFile = {
       name: 'Mocked File',
       size: '1231',
-      type: 'image/jpg',
+      type: 'text/plain',
 			state: 'uploading',
       slice: function() { return new Blob(["ddawd"], { type: 'text/plain' }); }
   };
 
-  for ( var i = 0; i < 20; i++ ) {
+  for ( var i = 0; i < 5; i++ ) {
     var f = new UploadFile(mockedFile);
     uploader.addFile(f);
   }

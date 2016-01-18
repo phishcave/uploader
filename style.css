@@ -75,6 +75,11 @@ body {
   overflow: hidden; }
 
 .btn {
+  cursor: default;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   font-family: 'Open Sans';
   text-transform: uppercase;
   font-size: 0.7em;

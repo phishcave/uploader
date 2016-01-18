@@ -1,10 +1,10 @@
 var UploadFileComponent = function(file, actions) {
   var buttons  = div({cls: 'btn-group'});
   var label    = div({cls: 'label'});
-  var preview  = div({cls: 'preview'});
   var info     = div({cls: 'info'});
   var chunks   = div({cls: 'chunks'});
   var progress = span({cls: 'progress'});
+  var preview  = new UploadFilePreviewComponent(file);
 
   var infoOpen = true;
 
@@ -35,11 +35,6 @@ var UploadFileComponent = function(file, actions) {
 
   this.updateLabel = function() {
     H.empty(label);
-    H.empty(preview);
-
-    preview.appendChild(
-      span(file.type())
-    );
 
     var stateStr = "not defined";
 
@@ -194,7 +189,7 @@ var UploadFileComponent = function(file, actions) {
 
     var container = div({cls: 'container'}, label, info, buttons);
     return (
-      div({cls: 'upload-file'}, preview, container)
+      div({cls: 'upload-file'}, preview.render(), container)
     );
   };
 };

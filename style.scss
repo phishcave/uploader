@@ -96,6 +96,8 @@ body {
 }
 
 .btn {
+  @include user-select(none);
+
   font-family: 'Open Sans';
   text-transform: uppercase;
   font-size: 0.7em;

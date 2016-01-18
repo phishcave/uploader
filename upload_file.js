@@ -64,6 +64,10 @@ var UploadFile = function(file) {
     return file.slice();
   };
 
+  this.originalBlob = function() {
+    return file;
+  };
+
   this.onHashCalculated = function(sha) {
     hash  = sha;
     this.hashCalculatedCallback(hash);
