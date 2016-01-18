@@ -15,7 +15,13 @@ var ProgressEvent = function(e, startTime) {
   };
 
   this.percent = function() {
-    return loaded / total;
+    var val = loaded / total;
+
+    if ( isNaN(val) ) {
+      return 0;
+    } else {
+      return val;
+    }
   };
 
   this.percentage = function() {
