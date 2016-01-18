@@ -31,6 +31,22 @@ var Uploader = function() {
     }
   }.bind(this));
 
+  document.addEventListener('paste', function(e) {
+    var files = e.clipboardData.items;
+
+    for (var i = 0; i < files.length; i++) {
+      var blob = files[i].getAsFile();
+
+      if (blob == null) {
+        continue;
+      }
+      blob.name = "Pasted file"
+      var f = new UploadFile(blob);
+      this.addFile(f);
+    }
+
+  }.bind(this));
+
   document.addEventListener('keyup', function(e) {
     if (e.keyCode == KEYCODE_V) {
       console.log("let go of ctrl-v");
@@ -77,6 +93,8 @@ var Uploader = function() {
   };
 
   document.body.ondrop = function(e) {
+    e.stopPropagation();
+    e.preventDefault();
     var files = e.target.files || e.dataTransfer.files;
     for (var i = 0; i < files.length; i++) {
       var f = new UploadFile(files[i]);
