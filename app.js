@@ -2,7 +2,7 @@ var App = function() {
   var root = div({cls:'foo'}, "hello");
   var body = document.body;
 
-  var uploader = new Uploader();
+  var uploader = new UploaderComponent();
   var menu     = new Menu();
   var auth     = new Authentication();
 
@@ -17,16 +17,17 @@ var App = function() {
   var dom = div({id: 'app'}, sidebar_container, content_container);
 
   var mockedFile = {
-      name: 'Mocked File',
-      size: '1231',
-      type: 'text/plain',
-			state: 'uploading',
-      slice: function() { return new Blob(["ddawd"], { type: 'text/plain' }); }
+    name: 'Mocked File',
+    size: '1231',
+    type: 'text/plain',
+    state: 'uploading',
+    slice: function() { return new Blob(["ddawd"], { type: 'text/plain' }); }
   };
 
   for ( var i = 0; i < 5; i++ ) {
-    var f = new UploadFile(mockedFile);
-    uploader.addFile(f);
+    uploader.addFile(
+      new UploadFile(mockedFile)
+    );
   }
 
   sidebar.appendChild(auth.render());
@@ -34,11 +35,7 @@ var App = function() {
   content.appendChild(uploader.render());
 
   body.appendChild(dom);
-
 };
 
 a = new App();
-// setTimeout(function() {
-//   window.scrollTo(0, 10000);
-// }, 100);
 

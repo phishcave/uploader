@@ -5,100 +5,13 @@ var Uploader = function() {
   var uploading = [];
   // List of chunks for all uploads.
   var chunks = [];
-  // The buttons for the uploader (start, pause, stop, etc..)
-  var buttons   = div({cls: 'options btn-group'});
-  // The list of files in the upload queue.
-  var queue     = div({id: 'queue', cls: 'list'});
-  // The hidden file input form used for fetching files.
-  var fileInput = input({cls: 'upload-input', type:'file', multiple:'true'});
-  // The entire uploader dom. This is what is appended to root.
-  var dom       = div({id: 'uploader'}, buttons, queue, fileInput);
   // How many chunks will be uploaded at once.
   var concurrency = 5;
   // Web worker for calculating SHA hashes.
   var sha = new Worker('lib/rusha.js');
-  // ContentEditable Hack for consuming paste events in FF.
-  var pasteHack = div({id: 'paste-hack', contentEditable: true});
 
-  var KEYCODE_V = 86;
-  document.addEventListener('keydown', function(e) {
-    if (e.ctrlKey && e.keyCode == KEYCODE_V) {
-      document.body.appendChild(pasteHack);
-      pasteHack.focus();
-      console.log("ctrl v pressed");
-    }
-  }.bind(this));
-
-  document.addEventListener('paste', function(e) {
-    var files = e.clipboardData.items || [];
-
-    for (var i = 0; i < files.length; i++) {
-      var blob = files[i].getAsFile();
-
-      if (blob == null) {
-        continue;
-      }
-      blob.name = "Pasted file"
-      var f = new UploadFile(blob);
-      this.addFile(f);
-    }
-  }.bind(this));
-
-  document.addEventListener('keyup', function(e) {
-    if (e.keyCode == KEYCODE_V) {
-      var pastedItems = pasteHack.children;
-
-      for (var i = 0; i < pastedItems.length; i++) {
-        var item = pastedItems[i];
-
-        // only interested in images
-        if (item.tagName.toLowerCase() != "img") {
-          continue;
-        }
-
-        var src = item.src;
-
-        var base64regexp = new RegExp(/^data:(image\/\w+);base64,/);
-        var matches = src.match(base64regexp);
-
-        // no match means this was not a base64 paste.
-        if (matches != null) {
-          var type = matches[1];
-          var data = src.replace(base64regexp, "");
-          var blob = base64toBlob(data, type);
-          blob.name = "Pasted file"
-
-          var f = new UploadFile(blob);
-          this.addFile(f);
-        }
-      }
-    }
-
-    H.empty(pasteHack);
-  }.bind(this));
-
-  document.body.ondragover = function(e) {
-    e.stopPropagation();
-    e.preventDefault();
-  };
-
-  document.body.ondragleave = function(e) {
-    e.stopPropagation();
-    e.preventDefault();
-  };
-
-  document.body.ondrop = function(e) {
-    e.stopPropagation();
-    e.preventDefault();
-    var files = e.target.files || e.dataTransfer.files;
-    for (var i = 0; i < files.length; i++) {
-      var f = new UploadFile(files[i]);
-      this.addFile(f);
-      console.log(f);
-    }
-  }.bind(this);
-
-  sha.onmessage = function(evt) {
+  // Consumes hash calculated events from SHA1 Web Worker.
+  sha.addEventListener('message', function(evt) {
     id = evt.data.id;
     hash = evt.data.hash;
 
@@ -109,53 +22,46 @@ var Uploader = function() {
     }
 
     console.log(evt);
-  }.bind(this);
+  }.bind(this));
 
+  // Calculates the hash of a blob, result available in the sha 'message'
+  // event handler (which should be directly above this).
+  this.calculateBlobHash = function(id, blob) {
+    sha.postMessage({id: id, data: blob});
+  };
+
+  // Are there any files in the uploader?
   this.hasFiles = function() {
     return files.length > 0;
   };
 
-  // Changes visible buttons for the uploader by rebuilding the button dom.
-  this.updateButtons = function() {
-    H.empty(buttons);
-
-    buttons.appendChild(
-      span({cls:'btn', onclick: this.browse.bind(this)}, icon('folder'), 'Browse')
-    );
-
-    if (this.hasFiles()) {
-      buttons.appendChild(
-        span({cls:'btn', onclick: this.start.bind(this)}, icon('play_arrow'), 'Start All')
-      );
-
-      buttons.appendChild(
-        span({cls:'btn', onclick: this.removeAll.bind(this)}, icon('clear'), 'Remove All')
-      );
-    }
+  // Removes all chunks specified.
+  this.removeChunks = function(chunksToRemove) {
+    chunks = U.filter(chunks, function(c) {
+      return chunksToRemove.indexOf(f) < 0
+    });
   };
 
-  // Opens the file browse dialog.
-  this.browse = function() {
-    fileInput.click();
+  // Removes all files specified.
+  this.removeFiles = function(filesToRemove) {
+    // First remove all chunks for the files.
+    filesToRemove.forEach(function(f) {
+      this.removeChunks(f.chunks());
+    }.bind(this));
+
+    files = U.filter(files, function(f) {
+      return filesToRemove.indexOf(f) < 0
+    });
   };
 
   // Remove all files in uploader.
   this.removeAll = function() {
-    var fileCount = files.length;
+    this.removeFiles(files);
+  };
 
-    var file = null;
-    while((file = files[0]) != null) {
-      this.removeFile(file);
-    }
-
-    var chunk = null;
-    while((chunk = chunks[0]) != null) {
-      this.removeChunk(chunks);
-    }
-
-    H.empty(queue);
-
-    this.updateButtons();
+  // Removes a single file.
+  this.removeFile = function(file) {
+    this.removeFiles([file]);
   };
 
   // Starts uploading all files.
@@ -177,6 +83,12 @@ var Uploader = function() {
     }
   };
 
+  // Adds a file to the uploader.
+  this.addFile = function(file) {
+    files.push(file);
+    this.calculateBlobHash(file.id(), file.blob())
+  };
+
   this.addChunks = function(newChunks) {
     for ( var i = 0; i < newChunks.length; i ++ ) {
       var c = newChunks[i];
@@ -190,20 +102,8 @@ var Uploader = function() {
       chunks.push(c);
     }
 
+    // WEIRD - why do i start here?
     this.start();
-  };
-
-  // Handler for when file input changes.
-  this.onChange = function(evt) {
-    var _files = event.target.files;
-
-    for (var i = 0; i < _files.length; i++) {
-      var f = new UploadFile(_files[i]);
-      this.addFile(f);
-    }
-
-    fileInput.value = '';
-    this.updateButtons();
   };
 
   this.chunksFinished = function() {
@@ -267,63 +167,5 @@ var Uploader = function() {
   this.onChunkFinished = function(chunk) {
     console.log("chunk finished");
     this.start();
-  };
-
-  // Removes a chunk from the global chunk list
-  this.removeChunk = function(chunk) {
-    if ( chunk === undefined ) { return; }
-
-    chunks = U.filter(chunks, function(g) {
-      return g != chunk;
-    });
-  };
-
-  // Removes a file from the Uploader.
-  this.removeFile = function(file) {
-    if ( file === undefined ) { return; }
-
-    // remove chunks from our global list.
-    var chunks = file.chunks();
-    for ( var i = 0; i < chunks.length; i++ ) {
-      this.removeChunk(chunks[i]);
-    }
-
-    // remove file
-    files = U.filter(files, function(g) {
-      return g != file;
-    });
-
-    this.updateButtons();
-  };
-
-  this.hashBlob = function(id, blob) {
-    sha.postMessage({id: id, data: blob});
-  };
-
-  // Adds a file to the uploader.
-  this.addFile = function(file) {
-    files.push(file);
-    this.hashBlob(file.id(), file.blob())
-
-    var e = new UploadFileComponent(file);
-    var e_dom = e.render();
-
-    e.startChunks = function(chunks) {
-      this.addChunks(chunks);
-      console.log("adding " + chunks.length + " chunks")
-    }.bind(this);
-
-    e.onRemove = function() {
-      this.removeFile(file);
-      queue.removeChild(e_dom);
-    }.bind(this);
-
-    queue.appendChild(e_dom);
-  };
-
-  this.render = function() {
-    this.updateButtons();
-    fileInput.onchange = this.onChange.bind(this);
-    return div(dom);
   };
 };
