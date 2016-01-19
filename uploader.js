@@ -32,7 +32,7 @@ var Uploader = function() {
   }.bind(this));
 
   document.addEventListener('paste', function(e) {
-    var files = e.clipboardData.items;
+    var files = e.clipboardData.items || [];
 
     for (var i = 0; i < files.length; i++) {
       var blob = files[i].getAsFile();
