@@ -139,6 +139,6 @@ body {
 
 #paste-hack {
   position: absolute;
-  left: -1000px;
-  top: -1000px;
+  left: -100000px;
+  top: -100000px;
   visibility: none; }
