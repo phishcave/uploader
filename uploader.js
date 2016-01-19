@@ -1,5 +1,3 @@
-
-
 var Uploader = function() {
   // List of files in the queue.
   var files = [];
@@ -17,12 +15,12 @@ var Uploader = function() {
   var dom       = div({id: 'uploader'}, buttons, queue, fileInput);
   // How many chunks will be uploaded at once.
   var concurrency = 5;
-
+  // Web worker for calculating SHA hashes.
   var sha = new Worker('lib/rusha.js');
-
+  // ContentEditable Hack for consuming paste events in FF.
   var pasteHack = div({id: 'paste-hack', contentEditable: true});
 
-    var KEYCODE_V = 86;
+  var KEYCODE_V = 86;
   document.addEventListener('keydown', function(e) {
     if (e.ctrlKey && e.keyCode == KEYCODE_V) {
       document.body.appendChild(pasteHack);
@@ -44,12 +42,10 @@ var Uploader = function() {
       var f = new UploadFile(blob);
       this.addFile(f);
     }
-
   }.bind(this));
 
   document.addEventListener('keyup', function(e) {
     if (e.keyCode == KEYCODE_V) {
-      console.log("let go of ctrl-v");
       var pastedItems = pasteHack.children;
 
       for (var i = 0; i < pastedItems.length; i++) {
@@ -76,7 +72,6 @@ var Uploader = function() {
           this.addFile(f);
         }
       }
-      // console.log(pasteHack);
     }
 
     H.empty(pasteHack);
@@ -130,11 +125,11 @@ var Uploader = function() {
 
     if (this.hasFiles()) {
       buttons.appendChild(
-        span({cls:'btn', onclick: this.start.bind(this)}, 'Start All')
+        span({cls:'btn', onclick: this.start.bind(this)}, icon('play_arrow'), 'Start All')
       );
 
       buttons.appendChild(
-        span({cls:'btn', onclick: this.removeAll.bind(this)}, 'Remove All')
+        span({cls:'btn', onclick: this.removeAll.bind(this)}, icon('clear'), 'Remove All')
       );
     }
   };
@@ -144,13 +139,18 @@ var Uploader = function() {
     fileInput.click();
   };
 
+  // Remove all files in uploader.
   this.removeAll = function() {
-    for ( var i = 0; i < files.length; i++ ) {
-      this.removeFile(files[i]);
+    var fileCount = files.length;
+
+    var file = null;
+    while((file = files[0]) != null) {
+      this.removeFile(file);
     }
 
-    for ( var i = 0; i < chunks.length; i++ ) {
-      this.removeChunk(chunks[i]);
+    var chunk = null;
+    while((chunk = chunks[0]) != null) {
+      this.removeChunk(chunks);
     }
 
     H.empty(queue);
