@@ -46,14 +46,14 @@ var Chunk = function(chunk, i) {
 
   this.cancel = function() {
     this.abort();
-  }
+  };
 
   this.abort = function() {
     if ( !this.isUploading() ) {
       return false;
     }
 
-    if ( xhr != undefined ) {
+    if ( xhr !== undefined ) {
       xhr.abort();
     }
 

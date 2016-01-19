@@ -12,7 +12,7 @@ var Authentication = function() {
     return {
       backgroundImage: "url('" + gravatarUrl() + "')",
       backgroundSize: '100%'
-    }
+    };
   };
 
   this.currentUser = function() {
@@ -22,17 +22,19 @@ var Authentication = function() {
   this.updateAuth= function() {
     H.empty(auth);
 
-    if ( loggedIn == true ) {
+    if ( loggedIn === true ) {
       var gravatar = span({cls:'gravatar', style:gravatarStyle()});
+
       var username = span({
         cls:'username', onclick: onUsernameClick.bind(this)
       }, this.currentUser());
+
       var settings = span({
         cls:'settings right', onclick: onSettingsClick.bind(this)
       }, icon('build'));
-    }
 
-    auth.appendChild(div(gravatar, username, settings));
+      auth.appendChild(div(gravatar, username, settings));
+    }
   };
 
   var onSettingsClick = function() {
@@ -47,5 +49,5 @@ var Authentication = function() {
     this.updateAuth();
 
     return dom;
-  }
+  };
 };

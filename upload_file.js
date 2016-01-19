@@ -8,7 +8,6 @@ var UploadFile = function(file) {
   var STATE_CANCELED  = 4;
 
   var chunkSize = 1024 * 1024;
-  var chunkSize = 100;
   var startTime;
   var hash;
   var chunks = [];
@@ -21,11 +20,11 @@ var UploadFile = function(file) {
     chunks.push(new Chunk(1, b));
     chunks.push(new Chunk(2, b));
     chunks.push(new Chunk(3, b));
-  }
+  };
 
   this.canStart = function() {
     // has been hashed
-    return hash != undefined && hash.length > 0;
+    return hash !== undefined && hash.length > 0;
   };
 
   this.start = function() {
@@ -48,7 +47,7 @@ var UploadFile = function(file) {
     }
 
     state = STATE_CANCELED ;
-  }
+  };
 
   this.isQueued    = function() { return state == STATE_QUEUED; };
   this.isUploading = function() { return state == STATE_UPLOADING; };

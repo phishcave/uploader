@@ -38,7 +38,7 @@ var Uploader = function() {
   // Removes all chunks specified.
   this.removeChunks = function(chunksToRemove) {
     chunks = U.filter(chunks, function(c) {
-      return chunksToRemove.indexOf(f) < 0
+      return chunksToRemove.indexOf(f) < 0;
     });
   };
 
@@ -50,7 +50,7 @@ var Uploader = function() {
     }.bind(this));
 
     files = U.filter(files, function(f) {
-      return filesToRemove.indexOf(f) < 0
+      return filesToRemove.indexOf(f) < 0;
     });
   };
 
@@ -86,7 +86,7 @@ var Uploader = function() {
   // Adds a file to the uploader.
   this.addFile = function(file) {
     files.push(file);
-    this.calculateBlobHash(file.id(), file.blob())
+    this.calculateBlobHash(file.id(), file.blob());
   };
 
   this.addChunks = function(newChunks) {

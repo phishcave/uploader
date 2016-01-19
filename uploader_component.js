@@ -28,7 +28,7 @@ var UploaderComponent = function() {
     for (var i = 0; i < files.length; i++) {
       var blob = files[i].getAsFile();
 
-      if (blob == null) {
+      if (blob === null) {
         continue;
       }
 
@@ -54,7 +54,7 @@ var UploaderComponent = function() {
         var matches = src.match(base64regexp);
 
         // no match means this was not a base64 paste.
-        if (matches != null) {
+        if (matches !== null) {
           var type = matches[1];
           var data = src.replace(base64regexp, "");
           var blob = base64toBlob(data, type);
@@ -111,7 +111,7 @@ var UploaderComponent = function() {
   // Opens the file browse dialog.
   this.onBrowse = function() {
     fileInput.click();
-  };a
+  };
 
   // Handler for when the USER removes all uploads.
   this.onRemoveAll = function() {
@@ -164,7 +164,7 @@ var UploaderComponent = function() {
     // Event Handler which gives chunks to the Uploader to manage.
     ufc.startChunks = function(chunks) {
       uploader.addChunks(chunks);
-      console.log("adding " + chunks.length + " chunks")
+      console.log("adding " + chunks.length + " chunks");
     }.bind(this);
 
     // Event Handler for removing rhe file from the Uploader.
@@ -200,4 +200,4 @@ var UploaderComponent = function() {
 
     this.updateButtons();
   };
-}
+};

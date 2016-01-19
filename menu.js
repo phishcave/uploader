@@ -36,8 +36,8 @@ var Menu = function() {
 
     menuEntries.appendChild(
       this.addEntry("Favourites", "#favourites")
-    )
-  }
+    );
+  };
 
   this.render = function() {
     this.updateMenu();

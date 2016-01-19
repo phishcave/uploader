@@ -16,7 +16,7 @@ var UploadFilePreviewComponent = function(file) {
     container.appendChild(
       icon('format_align_justify')
     );
-  }
+  };
 
   var imagePreview = function() {
     var reader = new FileReader();
@@ -39,7 +39,7 @@ var UploadFilePreviewComponent = function(file) {
   var updatePreview = function() {
     var handlerFunc = handler();
 
-    if (handlerFunc == undefined) {
+    if (handlerFunc === undefined) {
       return;
     }
 
