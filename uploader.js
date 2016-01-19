@@ -38,7 +38,7 @@ var Uploader = function() {
   // Removes all chunks specified.
   this.removeChunks = function(chunksToRemove) {
     chunks = U.filter(chunks, function(c) {
-      return chunksToRemove.indexOf(f) < 0;
+      return chunksToRemove.indexOf(c) < 0;
     });
   };
 
