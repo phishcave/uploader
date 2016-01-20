@@ -33,34 +33,31 @@ var UploadFileComponent = function(file, actions) {
     );
   };
 
-  this.updateLabel = function() {
-    H.empty(label);
-
-    var stateStr = "not defined";
-
+  this.stateString = function() {
     if ( file.isUploading() ) {
-      stateStr = "UPLOADING";
+      return "UPLOADING";
     }
 
     if ( file.isCanceled() ) {
-      stateStr = "CANCELED";
+      return "CANCELED";
     }
 
     if ( file.isQueued() ) {
-      stateStr = "QUEUED";
+      return "QUEUED";
     }
 
     if ( file.isPaused() ) {
-      stateStr = "PAUSED";
+      return "PAUSED";
     }
 
     if ( file.isFinished() ) {
-      stateStr = "FINISHED";
+      return "FINISHED";
     }
+  };
 
-    label.appendChild(
-      span({cls:'state'}, stateStr)
-    );
+  this.updateLabel = function() {
+    H.empty(label);
+
     label.appendChild(
       div({cls:'name'}, file.name())
     );
@@ -69,16 +66,14 @@ var UploadFileComponent = function(file, actions) {
   this.updateInfo = function() {
     H.empty(info);
 
-    // if (file.isQueued()) {
-      info.appendChild(progress);
+    var plaintext = div({cls: 'plaintext'},
+      div('SHA1:   ', file.hash()),
+      div('SIZE:   ', file.size()),
+      div('STATE:  ', this.stateString()),
+      div('CHUNKS: ', '0 / ' + file.chunks().length)
+    );
 
-      info.appendChild(
-        div({cls:'hash'}, file.hash())
-      );
-      info.appendChild(
-        div({cls:'size'}, file.size())
-      );
-    // }
+    info.appendChild(plaintext);
 
     if (file.isUploading()) {
       info.appendChild(chunks);
@@ -123,7 +118,7 @@ var UploadFileComponent = function(file, actions) {
 
   // Handler for Stats button
   this.clickToggleStats = function() {
-    alert("Not implemented");
+    alert("Not Implemented. But you're looking at it.");
   };
 
   // Handler for Cancel button
@@ -143,7 +138,7 @@ var UploadFileComponent = function(file, actions) {
     H.empty(buttons);
 
     buttons.appendChild(
-      span({cls:'btn stats', onclick: this.clickToggleStats.bind(this)}, icon('info'), 'Stats')
+      span({cls:'btn stats pull-left', onclick: this.clickToggleStats.bind(this)}, icon('info'), 'Stats')
     );
 
     if (file.isQueued()) {

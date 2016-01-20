@@ -1,5 +1,5 @@
 var Chunk = function(chunk, i) {
-  var API_URL = 'http://localhost:9292/api/upload';
+  var API_URL = '/api/upload2';
 
   var STATE_QUEUED    = 0;
   var STATE_FINISHED  = 1;
@@ -80,6 +80,8 @@ var Chunk = function(chunk, i) {
   this.onError = function(e) {
     state = STATE_ERRORED;
 
+    console.log("error");
+
     for ( var i = 0; i < callbacks.error.length; i++ ) {
       var callback = callbacks.error[i];
       callback(p);
@@ -97,6 +99,8 @@ var Chunk = function(chunk, i) {
   // got response from server
   this.onComplete = function(e) {
     state = STATE_FINISHED;
+
+    console.log("finished");
 
     for ( var i = 0; i < callbacks.finish.length; i++ ) {
       var callback = callbacks.finish[i];
@@ -116,6 +120,16 @@ var Chunk = function(chunk, i) {
     }
   };
 
+  this.onStateChange = function(xhr, evt) {
+    if (xhr.readyState == 4) {
+      if (xhr.status == 200) {
+        this.onComplete(evt);
+      } else {
+        this.onError(evt);
+      }
+    }
+  };
+
   this.upload = function() {
     var formData = new FormData();
     formData.append('id', chunkId);
@@ -127,7 +141,7 @@ var Chunk = function(chunk, i) {
     xhr.upload.addEventListener('progress', this.onProgress.bind(this));
     xhr.upload.addEventListener('error', this.onError.bind(this));
     xhr.upload.addEventListener('abort', this.onAbort.bind(this));
-    xhr.addEventListener('load', this.onComplete.bind(this));
+    xhr.addEventListener('readystatechange', this.onStateChange.bind(this, xhr));
 
     this.onStart();
 

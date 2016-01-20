@@ -1,15 +1,14 @@
 var ChunkComponent = function(chunk) {
-  var container = div({cls: 'chunk'});
-  var progressValue = span({cls:'val'}, '50%');
-  var progressBar = span({cls:'bar'}, '');
+  var container     = div({cls: 'chunk'});
+  var state         = div({cls: 'state'});
+  var progressValue = span({cls: 'val'}, '50%');
+  var progressBar   = span({cls: 'bar'}, '');
   var progress = div(
     {cls:'progress'}, progressValue, progressBar
   );
 
-  var chunk_state = div();
-
   this.onError = function() {
-    alert("error");
+    this.updateView();
   };
 
   this.onStart = function() {
@@ -43,6 +42,16 @@ var ChunkComponent = function(chunk) {
       container.appendChild(
         div({cls:'text'}, 'queued')
       );
+    }
+
+    if ( chunk.isErrored() ) {
+      container.appendChild(
+        div({cls:'text'}, 'ERRORED')
+      );
+
+      container.classList.add('error');
+    } else {
+      container.classList.remove('error');
     }
 
     if ( chunk.isUploading() ) {
