@@ -1,49 +1,56 @@
 var ChunkComponent = function(chunk) {
-  var chunk_dom = div({cls: 'chunk'});
-  var chunk_progress_val = span({cls:'val'}, '50%');
-  var chunk_progress_bar = span({cls:'bar'}, '');
-  var chunk_progress = div(
-    {cls:'progress'}, chunk_progress_val, chunk_progress_bar
+  var container = div({cls: 'chunk'});
+  var progressValue = span({cls:'val'}, '50%');
+  var progressBar = span({cls:'bar'}, '');
+  var progress = div(
+    {cls:'progress'}, progressValue, progressBar
   );
 
-  this.onStarted = function() {
+  var chunk_state = div();
+
+  this.onError = function() {
+    alert("error");
+  };
+
+  this.onStart = function() {
     this.updateView();
   };
 
   this.onProgress = function(progress) {
-    H.empty(chunk_progress_val);
+    H.empty(progressValue);
 
-    chunk_progress_val.appendChild(
+    progressValue.appendChild(
       document.createTextNode(progress.percentage())
     );
 
-    chunk_progress_bar.style.width = progress.percentage();
+    progressBar.style.width = progress.percentage();
   };
 
-  this.onFinished = function() {
+  this.onFinish = function() {
     // state = 'finished';
     // this.updateView();
   };
 
-  chunk.addStartCallback(this.onStarted.bind(this));
+  chunk.addStartCallback(this.onStart.bind(this));
   chunk.addProgressCallback(this.onProgress.bind(this));
-  chunk.addFinishCallback(this.onFinished.bind(this));
+  chunk.addFinishCallback(this.onFinish.bind(this));
+  chunk.addErrorCallback(this.onError.bind(this));
 
   this.updateView = function() {
-    H.empty(chunk_dom);
+    H.empty(container);
 
     if ( chunk.isQueued() ) {
-      chunk_dom.appendChild(
+      container.appendChild(
         div({cls:'text'}, 'queued')
       );
     }
 
     if ( chunk.isUploading() ) {
-      chunk_dom.appendChild(chunk_progress);
+      container.appendChild(progress);
     }
 
     if ( chunk.isFinished() ) {
-      chunk_dom.appendChild(
+      container.appendChild(
         document.createTextNode("finished")
       );
     }
@@ -51,6 +58,6 @@ var ChunkComponent = function(chunk) {
 
   this.render = function() {
     this.updateView();
-    return chunk_dom;
+    return container;
   };
 };

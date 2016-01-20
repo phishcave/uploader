@@ -6,6 +6,7 @@ var Chunk = function(chunk, i) {
   var STATE_UPLOADING = 2;
   var STATE_PAUSED    = 3;
   var STATE_CANCELED  = 4;
+  var STATE_ERRORED   = 5;
 
   var chunkId = i; // id of upload (used internally)
   var loaded;      // how many bytes were sent
@@ -16,7 +17,8 @@ var Chunk = function(chunk, i) {
   var callbacks = {
     start:    [],
     finish:   [],
-    progress: []
+    progress: [],
+    error:    []
   };
 
   this.isQueued    = function() { return state == STATE_QUEUED; };
@@ -24,6 +26,7 @@ var Chunk = function(chunk, i) {
   this.isUploading = function() { return state == STATE_UPLOADING; };
   this.isCanceled  = function() { return state == STATE_CANCELED; };
   this.isPaused    = function() { return state == STATE_PAUSED; };
+  this.isErrored   = function() { return state == STATE_ERRORED; };
   this.loaded      = function() { return loaded; };
   this.size        = function() { return chunk.size; };
 
@@ -37,6 +40,10 @@ var Chunk = function(chunk, i) {
 
   this.addProgressCallback = function(handler) {
     callbacks.progress.push(handler);
+  };
+
+  this.addErrorCallback = function(handler) {
+    callbacks.error.push(handler);
   };
 
   this.pause = function() {
@@ -71,7 +78,12 @@ var Chunk = function(chunk, i) {
   };
 
   this.onError = function(e) {
-    console.log("error");
+    state = STATE_ERRORED;
+
+    for ( var i = 0; i < callbacks.error.length; i++ ) {
+      var callback = callbacks.error[i];
+      callback(p);
+    }
   };
 
   this.onAbort = function(e) {
