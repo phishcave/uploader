@@ -104,9 +104,9 @@ body {
   color: white;
 
   border-radius: 4px;
-  line-height: $btn-height;
+  line-height: $btn-height - 2px;
   cursor: pointer;
-  padding: 0 5px;
+  padding: 0px 5px;
   display: inline-block;
   background-color: $btn-bg;
   vertical-align: middle;
@@ -178,4 +178,8 @@ body {
   left: -100000px;
   top: -100000px;
   visibility: none;
+}
+
+.pull-left {
+  float: left;
 }

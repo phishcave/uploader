@@ -2,7 +2,7 @@
   display: flex;
   min-height: 64px;
   position: relative;
-  box-shadow: 0px 0px 7px #070707;
+  box-shadow: 0px 0px 7px #0f0f0f;
   padding: 5px;
   border: solid 1px #050505;
   background-color: #0f0f0f;
@@ -31,7 +31,8 @@
   #queue .upload-file .container {
     flex-grow: 1; }
     #queue .upload-file .container .label .name {
-      font-size: 1.1em;
+      font-size: 1.2em;
+      font-weight: 600;
       border-bottom: solid 1px #020202;
       color: #cccccc;
       padding-bottom: 5px; }
@@ -39,17 +40,48 @@
       padding: 5px 0;
       border-bottom: solid 1px #020202;
       margin-bottom: 5px; }
-      #queue .upload-file .container .info .hash, #queue .upload-file .container .info .size {
-        font-family: monospace; }
-        #queue .upload-file .container .info .hash:before, #queue .upload-file .container .info .size:before {
-          content: 'SHA1: '; }
-      #queue .upload-file .container .info .size:before {
-        content: 'Size: '; }
-    #queue .upload-file .container .state {
-      font-size: 0.7em; }
+      #queue .upload-file .container .info .plaintext {
+        font-family: monospace;
+        white-space: pre; }
   #queue .upload-file .btn-group {
     text-align: right; }
   #queue .upload-file .state {
     position: absolute;
     right: 5px;
     top: 5px; }
+
+.chunks {
+  text-transform: uppercase;
+  font-size: 0.7em;
+  margin-top: 5px;
+  border-top: solid 1px #020202;
+  padding-top: 5px; }
+  .chunks .chunk {
+    border-radius: 3px;
+    color: white;
+    box-sizing: border-box;
+    height: 20px;
+    margin-bottom: 5px;
+    background-image: linear-gradient(180deg, #232323, #171717); }
+    .chunks .chunk:last-child {
+      margin-bottom: 0; }
+    .chunks .chunk .text {
+      padding: 3px;
+      text-align: center; }
+    .chunks .chunk.error {
+      background-image: linear-gradient(180deg, #821717, #570f0f); }
+    .chunks .chunk .progress {
+      position: relative; }
+      .chunks .chunk .progress .val {
+        padding: 4px 3px;
+        position: absolute;
+        right: 0;
+        top: 0;
+        z-index: 5; }
+      .chunks .chunk .progress .bar {
+        border-radius: 3px;
+        z-index: 0;
+        height: 20px;
+        position: absolute;
+        transition: width 0.2s ease;
+        background-image: linear-gradient(0deg, #124162, #1e6ea7); }

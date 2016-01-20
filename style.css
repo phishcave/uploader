@@ -85,9 +85,9 @@ body {
   font-size: 0.7em;
   color: white;
   border-radius: 4px;
-  line-height: 30px;
+  line-height: 28px;
   cursor: pointer;
-  padding: 0 5px;
+  padding: 0px 5px;
   display: inline-block;
   background-color: #212121;
   vertical-align: middle; }
@@ -142,3 +142,6 @@ body {
   left: -100000px;
   top: -100000px;
   visibility: none; }
+
+.pull-left {
+  float: left; }
