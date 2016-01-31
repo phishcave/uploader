@@ -2,12 +2,23 @@ var Router = function(container) {
   var routes = {};
   var containter = container;
 
+  var loadScript = function(scriptName) {
+    return new Promise(function(resolve) {
+      var body = document.body;
+      var node = script({type: 'text/javascript', src: scriptName})
+      body.appendChild(node);
+
+      return node.onload = function() {
+        return resolve();
+      };
+    });
+  };
+
   var onHashChange = function(e) {
     var hash = window.location.hash.replace(/^#/,'')
     console.log(hash);
     this.navigate(hash);
   }.bind(this);
-
 
   window.addEventListener('hashchange', onHashChange);
 
@@ -15,21 +26,36 @@ var Router = function(container) {
     onHashChange();
   };
 
-  this.add = function(path, func) {
-    routes[path] = func;
+  this.add = function(path, dependencies, func) {
+    routes[path] = {
+      deps: dependencies,
+      func: func
+    };
   }.bind(this);
 
-  this.renderComponent = function(component) {
-    var component = routes[component];
-    var c = new component();
-    return c.render();
+  this.renderComponent = function(component, callback) {
+    var routeInfo = routes[component];
+    if ( routeInfo === undefined ) {
+      return div("no content");
+    }
+
+    var scriptsToLoad = [];
+    routeInfo.deps.forEach(function(dep) {
+      scriptsToLoad.push(loadScript(dep));
+    });
+
+    Promise.all(scriptsToLoad).then(function() {
+      var loadFunc = new routeInfo.func();
+      var component = new loadFunc();
+      callback(component.render());
+    });
   };
 
   this.navigate = function(whereTo) {
     H.empty(container);
 
-    var component = this.renderComponent(whereTo);
-
-    container.appendChild(component);
+    this.renderComponent(whereTo, function(component) {
+      container.appendChild(component);
+    });
   };
 };

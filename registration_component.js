@@ -69,6 +69,6 @@ var RegistrationComponent = function() {
     var submit = div({cls: 'btn large', onclick: this.onSubmit}, 'Register');
     var container = div({cls: 'registration'}, notice, this.renderFields(), submit);
     return container;
-  }
+  };
 };
 

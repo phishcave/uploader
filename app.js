@@ -2,7 +2,7 @@ var App = function() {
   var root = div({cls:'foo'}, "hello");
   var body = document.body;
 
-  var uploader = new UploaderComponent();
+  // var uploader = new UploaderComponent();
   var menu     = new Menu();
   var auth     = new AuthenticationComponent();
 
@@ -24,19 +24,36 @@ var App = function() {
     slice: function() { return new Blob(["ddawd"], { type: 'text/plain' }); }
   };
 
-  for ( var i = 0; i < 1; i++ ) {
-    uploader.addFile(
-      new UploadFile(mockedFile)
-    );
-  }
+  // for ( var i = 0; i < 1; i++ ) {
+  //   uploader.addFile(
+  //     new UploadFile(mockedFile)
+  //   );
+  // }
 
   var router = new Router(content);
-  router.add("register", RegistrationComponent);
-  router.add("upload", UploaderComponent);
+
+  // router.add("", RegistrationComponent);
+  router.add("upload", [
+    "progress_event.js",
+    "chunk.js",
+    "chunk_component.js",
+    "upload_file.js",
+    "upload_file_preview_component.js",
+    "upload_file_component.js",
+    "uploader.js",
+    "uploader_component.js"
+  ], function() {
+    return UploaderComponent;
+  });
+
+  router.add("register", ["registration_component.js"], function() {
+    return RegistrationComponent;
+  });
+  // router.add("upload", UploaderComponent);
 
   sidebar.appendChild(auth.render());
   sidebar.appendChild(menu.render());
-  content.appendChild(uploader.render());
+  // content.appendChild(uploader.render());
 
   router.init();
 
