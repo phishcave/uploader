@@ -4,7 +4,7 @@ var App = function() {
 
   var uploader = new UploaderComponent();
   var menu     = new Menu();
-  var auth     = new Authentication();
+  var auth     = new AuthenticationComponent();
 
   var subheader = span({cls:'sub-header'}, 'Upload Files');
   var header  = div({id:'header', cls: 'shadow'}, subheader, 'ZQZ');
@@ -24,15 +24,21 @@ var App = function() {
     slice: function() { return new Blob(["ddawd"], { type: 'text/plain' }); }
   };
 
-  for ( var i = 0; i < 5; i++ ) {
+  for ( var i = 0; i < 1; i++ ) {
     uploader.addFile(
       new UploadFile(mockedFile)
     );
   }
 
+  var router = new Router(content);
+  router.add("register", RegistrationComponent);
+  router.add("upload", UploaderComponent);
+
   sidebar.appendChild(auth.render());
   sidebar.appendChild(menu.render());
   content.appendChild(uploader.render());
+
+  router.init();
 
   body.appendChild(dom);
 };

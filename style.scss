@@ -122,6 +122,12 @@ body {
     top: -1px;
     left: -1px;
   }
+
+  &.large {
+    font-size: 1em;
+    padding: 4px 10px;
+    text-transform: none;
+  }
 }
 
 .btn-group {

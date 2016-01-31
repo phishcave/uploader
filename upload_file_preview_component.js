@@ -14,7 +14,7 @@ var UploadFilePreviewComponent = function(file) {
   var textPreview = function() {
     H.empty(container);
     container.appendChild(
-      icon('format_align_justify')
+      icon('description')
     );
   };
 
