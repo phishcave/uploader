@@ -72,6 +72,15 @@ body {
 	min-width: $sidebar-width;
   margin: 5px;
   margin-top: 50px;
+
+  .heading {
+    color: white;
+    font-size: 0.9em;
+    font-weight: bold;
+    margin-bottom: 5px;
+    padding-bottom: 0px;
+    cursor: default;
+  }
 }
 
 #content-container {

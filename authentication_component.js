@@ -1,12 +1,27 @@
 var Authentication = function() {
   var api = "http://127.0.0.1:3001";
 
+  this.onSuccessCallback = function() {};
+  this.onFailureCallback = function() {};
+
+  this.onStateChange = function(xhr, evt) {
+    if (xhr.readyState == 4) {
+      var data = JSON.parse(xhr.response)
+      if (xhr.status == 201) {
+        this.onSuccessCallback(data);
+      } else {
+        this.onFailureCallback(data);
+      }
+    }
+  };
+
   this.request = function(path, data) {
     var xhr = new XMLHttpRequest();
 
     xhr.open('POST', api + path)
     xhr.setRequestHeader("Content-Type", "application/json")
     xhr.send(JSON.stringify(data));
+    xhr.addEventListener('readystatechange', this.onStateChange.bind(this, xhr));
   };
 
   this.login = function(username, password) {
@@ -20,15 +35,28 @@ var Authentication = function() {
 var AuthenticationComponent = function() {
   var auth = new Authentication();
   var loggedIn = false;
-  var auth = div({cls: 'auth'});
-  var dom = div({cls:'auth-container'}, auth);
+  var dom = div({cls:'auth'});
+  var errors = div({cls:'errors'})
+
+  auth.onSuccessCallback = function(data) {
+    console.log("success");
+  }.bind(this);
+
+  auth.onFailureCallback = function(data) {
+    H.empty(errors)
+    errors.appendChild(span(data.error));
+  }.bind(this);
 
   var onLoginClick = function() {
-    H.empty(auth);
+    H.empty(dom);
 
-    var username = input({type:'text'});
-    var password = input({type:'text'});
-    var submit = div('submit');
+    var header = div({cls:'heading'}, "LOGIN")
+
+    var username = input({type:'text', placeholder: 'Username'});
+    var password = input({type:'text', placeholder: 'Password'});
+    var submit = div({cls:'submit'}, icon('forward'));
+
+    var loginContainer = div({cls:'login-container'}, submit, username, password);
 
     submit.onclick = function() {
       console.log("username" + username.value);
@@ -37,10 +65,11 @@ var AuthenticationComponent = function() {
       auth.login(username.value, password.value);
     };
 
-    var loginForm = div(username, password, submit);
+    var loginForm = div(header, loginContainer, errors);
 
-    auth.appendChild(loginForm);
+    dom.appendChild(loginForm);
   }.bind(this);
+
 
   var gravatarUrl = function() {
     return "http://gravatar.com/avatar/1f8377ba373028db1c2598a963c9ee2c";
@@ -57,8 +86,8 @@ var AuthenticationComponent = function() {
     return "Anonymous";
   };
 
-  this.updateAuth= function() {
-    H.empty(auth);
+  this.updateAuth = function() {
+    H.empty(dom);
 
     if ( loggedIn === true ) {
       var gravatar = span({cls:'gravatar', style:gravatarStyle()});
@@ -71,7 +100,7 @@ var AuthenticationComponent = function() {
         cls:'settings right', onclick: onSettingsClick.bind(this)
       }, icon('build'));
 
-      auth.appendChild(div(gravatar, username, settings));
+      dom.appendChild(div(gravatar, username, settings));
     } else {
       onLoginClick();
       // var login = div("login");

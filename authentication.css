@@ -1,9 +1,35 @@
 .auth {
   display: block;
-  height: 40px;
   vertical-align: middle;
   border-bottom: solid 1px #0f0f0f;
   position: relative; }
+  .auth input[type=text] {
+    font-size: 0.7em;
+    margin-bottom: 5px; }
+    .auth input[type=text]:last-child {
+      margin-bottom: 0; }
+  .auth .errors {
+    color: red;
+    font-size: 0.8em;
+    padding: 3px 0;
+    text-align: center; }
+  .auth .login-container {
+    position: relative; }
+    .auth .login-container .submit {
+      text-align: center;
+      cursor: pointer;
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 50px;
+      height: 100%;
+      margin-bottom: 4px;
+      color: #141414;
+      background-color: #212121; }
+      .auth .login-container .submit:hover {
+        color: #cccccc; }
+      .auth .login-container .submit i {
+        font-size: 3em; }
   .auth .gravatar {
     height: 40px;
     width: 40px;

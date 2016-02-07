@@ -55,6 +55,13 @@ body {
   min-width: 200px;
   margin: 5px;
   margin-top: 50px; }
+  #sidebar .heading {
+    color: white;
+    font-size: 0.9em;
+    font-weight: bold;
+    margin-bottom: 5px;
+    padding-bottom: 0px;
+    cursor: default; }
 
 #content-container {
   display: flex;
