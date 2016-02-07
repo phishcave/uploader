@@ -1,16 +1,42 @@
 var Authentication = function() {
   var api = "http://127.0.0.1:3001";
 
-  this.onSuccessCallback = function() {};
-  this.onFailureCallback = function() {};
+  this.data = function(option) {
+    var data = {};
+    try {
+      data = JSON.parse(localStorage['current_user']);
+    } catch(e) {
+      data = {};
+    }
+
+    return data[option];
+  };
+
+  this.username = function() {
+    return this.data('username');
+  };
+
+  this.loggedIn = function() {
+    var user = this.data('id');
+    return user != undefined;
+  };
+
+  this.onSuccess = function(data) {
+    localStorage['current_user'] = data;
+    this.onSuccessCallback(data);
+  };
+
+  this.onFailure = function(data) {
+    this.onFailureCallback(data);
+  };
 
   this.onStateChange = function(xhr, evt) {
     if (xhr.readyState == 4) {
-      var data = JSON.parse(xhr.response)
+      var data = xhr.response;
       if (xhr.status == 201) {
-        this.onSuccessCallback(data);
+        this.onSuccess(data);
       } else {
-        this.onFailureCallback(data);
+        this.onFailure(data);
       }
     }
   };
@@ -34,12 +60,11 @@ var Authentication = function() {
 
 var AuthenticationComponent = function() {
   var auth = new Authentication();
-  var loggedIn = false;
   var dom = div({cls:'auth'});
   var errors = div({cls:'errors'})
 
   auth.onSuccessCallback = function(data) {
-    console.log("success");
+    this.updateAuth();
   }.bind(this);
 
   auth.onFailureCallback = function(data) {
@@ -82,19 +107,15 @@ var AuthenticationComponent = function() {
     };
   };
 
-  this.currentUser = function() {
-    return "Anonymous";
-  };
-
   this.updateAuth = function() {
     H.empty(dom);
 
-    if ( loggedIn === true ) {
+    if ( auth.loggedIn() ) {
       var gravatar = span({cls:'gravatar', style:gravatarStyle()});
 
       var username = span({
         cls:'username', onclick: onUsernameClick.bind(this)
-      }, this.currentUser());
+      }, auth.username());
 
       var settings = span({
         cls:'settings right', onclick: onSettingsClick.bind(this)
