@@ -1,14 +1,26 @@
 var Router = function(container) {
   var routes = {};
   var containter = container;
+  var loadedScripts = [];
+
+  var loadedScript = function(scriptName) {
+    return loadedScripts.indexOf(scriptName) > 0;
+  };
 
   var loadScript = function(scriptName) {
     return new Promise(function(resolve) {
+      var name = scriptName;
       var body = document.body;
+
+      if (loadedScript(name)) {
+        return resolve();
+      }
+
       var node = script({type: 'text/javascript', src: scriptName})
       body.appendChild(node);
 
       return node.onload = function() {
+        loadedScripts.push(name);
         return resolve();
       };
     });

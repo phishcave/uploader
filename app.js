@@ -32,7 +32,12 @@ var App = function() {
 
   var router = new Router(content);
 
-  // router.add("", RegistrationComponent);
+  router.add("", [
+    "dashboard_component.js"
+  ], function() {
+    return DashboardComponent;
+  });
+
   router.add("upload", [
     "progress_event.js",
     "chunk.js",
@@ -46,10 +51,11 @@ var App = function() {
     return UploaderComponent;
   });
 
-  router.add("register", ["registration_component.js"], function() {
+  router.add("register", [
+    "registration_component.js"
+  ], function() {
     return RegistrationComponent;
   });
-  // router.add("upload", UploaderComponent);
 
   sidebar.appendChild(auth.render());
   sidebar.appendChild(menu.render());

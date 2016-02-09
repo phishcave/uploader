@@ -27,11 +27,11 @@ var Menu = function() {
     );
 
     menuEntries.appendChild(
-      this.addEntry("My Files", "#files")
+      this.addEntry("Uploads", "#upload")
     );
 
     menuEntries.appendChild(
-      this.addEntry("Albums", "#albums")
+      this.addEntry("Register", "#register")
     );
 
     menuEntries.appendChild(
