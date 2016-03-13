@@ -32,6 +32,13 @@ var App = function() {
 
   var router = new Router(content);
 
+  router.add("files", [
+    "file_list.js",
+    "file_list_component.js"
+  ], function() {
+    return FileListComponent;
+  })
+
   router.add("", [
     "dashboard_component.js"
   ], function() {

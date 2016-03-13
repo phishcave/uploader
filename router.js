@@ -28,8 +28,9 @@ var Router = function(container) {
 
   var onHashChange = function(e) {
     var hash = window.location.hash.replace(/^#/,'')
-    console.log(hash);
-    this.navigate(hash);
+    paths = hash.split('/')
+    console.log(paths);
+    this.navigate(paths[0], paths.slice(1));
   }.bind(this);
 
   window.addEventListener('hashchange', onHashChange);
@@ -45,7 +46,7 @@ var Router = function(container) {
     };
   }.bind(this);
 
-  this.renderComponent = function(component, callback) {
+  this.renderComponent = function(component, args, callback) {
     var routeInfo = routes[component];
     if ( routeInfo === undefined ) {
       return div("no content");
@@ -58,15 +59,15 @@ var Router = function(container) {
 
     Promise.all(scriptsToLoad).then(function() {
       var loadFunc = new routeInfo.func();
-      var component = new loadFunc();
+      var component = new loadFunc(args);
       callback(component.render());
     });
   };
 
-  this.navigate = function(whereTo) {
+  this.navigate = function(whereTo, args) {
     H.empty(container);
 
-    this.renderComponent(whereTo, function(component) {
+    this.renderComponent(whereTo, args, function(component) {
       container.appendChild(component);
     });
   };
