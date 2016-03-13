@@ -8,7 +8,7 @@ var Uploader = function() {
   // How many chunks will be uploaded at once.
   var concurrency = 5;
   // Web worker for calculating SHA hashes.
-  var sha = new Worker('lib/rusha.js');
+  var sha = new Worker('assets/lib/rusha.js');
 
   // Consumes hash calculated events from SHA1 Web Worker.
   sha.addEventListener('message', function(evt) {

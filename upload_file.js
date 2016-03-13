@@ -1,34 +1,98 @@
-var __upload_id = 10000;
-
 var UploadFile = function(file) {
-  var STATE_QUEUED    = 0;
-  var STATE_FINISHED  = 1;
-  var STATE_UPLOADING = 2;
-  var STATE_PAUSED    = 3;
-  var STATE_CANCELED  = 4;
+  var STATE_INITIALIZED = 0;
+  var STATE_QUEUED      = 1;
+  var STATE_INCOMPLETE  = 2;
+  var STATE_FINISHED    = 3;
+  var STATE_UPLOADING   = 4;
+  var STATE_PAUSED      = 5;
+  var STATE_CANCELED    = 6;
 
   var chunkSize = 1024 * 1024;
   var startTime;
   var hash;
+  var id = -1;
   var chunks = [];
-  var id     = __upload_id += 1;
-  var state = STATE_QUEUED;
+  var state = STATE_INITIALIZED;
 
-  // WTF is this?
-  this.fakeUpload= function() {
-    var b = new Blob(["ddawd"], { type: 'text/plain' });
-    chunks.push(new Chunk(1, b));
-    chunks.push(new Chunk(2, b));
-    chunks.push(new Chunk(3, b));
+  // Once the file has been hashed we can do things with it.
+  this.onHashCalculated = function(sha) {
+    hash = sha;
+
+    // Check if the file has been uploaded or is in progress.
+    this.fetchStatus(hash)
+
+    // Not sure.
+    this.updateViewCallback();
+  }.bind(this);
+
+  this.fetchStatus = function(hash) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/files/status/' + hash)
+    xhr.addEventListener('readystatechange', this.onStatus.bind(this, xhr));
+    xhr.send();
+  };
+
+  this.onStatus = function(xhr, evt) {
+    if (xhr.readyState === 4) {
+      if(xhr.status === 200) {
+        var response = JSON.parse(xhr.response);
+        id = response.id;
+
+        switch(response.state) {
+          case 'Incomplete':
+            state = STATE_INCOMPLETE;
+            break;
+          default:
+            console.log("unhandled state");
+            console.log(response);
+            break;
+        }
+      } else if (xhr.status == 404) {
+        // file is not found, so we add it to the queue.
+        state = STATE_QUEUED;
+      }
+    };
+
+    this.updateViewCallback();
   };
 
   this.canStart = function() {
-    // has been hashed
-    return hash !== undefined && hash.length > 0;
+    return state == STATE_QUEUED || state == STATE_INCOMPLETE;
+    // || state == STATE_PAUSED
+  };
+
+  this.createFile = function() {
+    var fileData = {
+      size: file.size,
+      name: this.name(),
+      type: this.type(),
+      chunks: this.numChunks(),
+      hash: this.hash()
+    };
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/files')
+    xhr.setRequestHeader("Content-Type", "application/json")
+    xhr.addEventListener('readystatechange', this.onFileCreate.bind(this, xhr));
+    xhr.send(JSON.stringify(fileData));
+  };
+
+  this.onFileCreate = function(xhr, evt) {
+    if (xhr.readyState === 4) {
+      if(xhr.status === 200) {
+        id = JSON.parse(xhr.response).id;
+        state = STATE_QUEUED;
+        console.log(xhr);
+      } else {
+        console.log(evt);
+      }
+    }
   };
 
   this.start = function() {
+    this.createFile();
     state = STATE_UPLOADING;
+    this.updateViewCallback();
   };
 
   this.resume = function() {
@@ -49,6 +113,8 @@ var UploadFile = function(file) {
     state = STATE_CANCELED ;
   };
 
+  this.isInitialized = function() { return state == STATE_INITIALIZED; };
+  this.isIncomplete = function() { return state == STATE_INCOMPLETE; };
   this.isQueued    = function() { return state == STATE_QUEUED; };
   this.isUploading = function() { return state == STATE_UPLOADING; };
   this.isFinished  = function() { return state == STATE_FINISHED; };
@@ -66,11 +132,6 @@ var UploadFile = function(file) {
   this.originalBlob = function() {
     return file;
   };
-
-  this.onHashCalculated = function(sha) {
-    hash  = sha;
-    this.hashCalculatedCallback(hash);
-  }.bind(this);
 
   // Progress in relation to all chunks.
   this.progressPercent = function() {
@@ -140,13 +201,13 @@ var UploadFile = function(file) {
   };
 
   // Overwritten, hopefully
-  this.hashCalculatedCallback = function(hash) {};
+  this.updateView = function(hash) {};
 
   // Split into chunks
   this.chunkFile = function() {
     for(var i = 0; i < this.numChunks(); i++) {
       var chunkData = file.slice(i*chunkSize, (i+1)*chunkSize);
-      var chunk = new Chunk(i, chunkData);
+      var chunk = new Chunk(chunkData, { position: i, file_id: this.id() });
 
       chunk.addStartCallback(this.onChunkStarted.bind(this, chunk));
       chunk.addFinishCallback(this.onChunkFinished.bind(this, chunk));
@@ -157,5 +218,13 @@ var UploadFile = function(file) {
 
     return chunks;
   };
+  // WTF is this?
+  this.fakeUpload= function() {
+    var b = new Blob(["ddawd"], { type: 'text/plain' });
+    chunks.push(new Chunk(1, b));
+    chunks.push(new Chunk(2, b));
+    chunks.push(new Chunk(3, b));
+  };
+
 };
 

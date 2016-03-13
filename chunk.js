@@ -1,5 +1,5 @@
-var Chunk = function(chunk, i) {
-  var API_URL = '/api/upload2';
+var Chunk = function(chunk, options) {
+  var API_URL = '/chunks';
 
   var STATE_QUEUED    = 0;
   var STATE_FINISHED  = 1;
@@ -8,7 +8,6 @@ var Chunk = function(chunk, i) {
   var STATE_CANCELED  = 4;
   var STATE_ERRORED   = 5;
 
-  var chunkId = i; // id of upload (used internally)
   var loaded;      // how many bytes were sent
   var startTime;   // when
   var state = STATE_QUEUED;
@@ -132,7 +131,8 @@ var Chunk = function(chunk, i) {
 
   this.upload = function() {
     var formData = new FormData();
-    formData.append('id', chunkId);
+    formData.append('file_id', options.file_id);
+    formData.append('position', options.position);
     formData.append('data', chunk);
 
     var xhr = new XMLHttpRequest();

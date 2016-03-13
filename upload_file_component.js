@@ -8,7 +8,7 @@ var UploadFileComponent = function(file, actions) {
 
   var infoOpen = true;
 
-  file.hashCalculatedCallback = function() {
+  file.updateViewCallback = function() {
     this.updateLabel(); // not needed
     this.updateInfo();
     this.updateButtons();
@@ -34,6 +34,14 @@ var UploadFileComponent = function(file, actions) {
   };
 
   this.stateString = function() {
+    if ( file.isInitialized() ) {
+      return "INIT";
+    }
+
+    if ( file.isIncomplete() ) {
+      return "INCOMPLETE";
+    }
+
     if ( file.isUploading() ) {
       return "UPLOADING";
     }
@@ -118,7 +126,7 @@ var UploadFileComponent = function(file, actions) {
 
   // Handler for Stats button
   this.clickToggleStats = function() {
-    alert("Not Implemented. But you're looking at it.");
+    alert("Not Implemented");
   };
 
   // Handler for Cancel button
@@ -141,7 +149,7 @@ var UploadFileComponent = function(file, actions) {
       span({cls:'btn stats pull-left', onclick: this.clickToggleStats.bind(this)}, icon('info'), 'Stats')
     );
 
-    if (file.isQueued()) {
+    if (file.isQueued() || file.isIncomplete()) {
       buttons.appendChild(
         span({cls:'btn remove', onclick: this.clickRemove.bind(this)}, icon('clear'), 'Remove')
       );

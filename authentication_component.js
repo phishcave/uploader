@@ -18,7 +18,7 @@ var Authentication = function() {
 
   this.loggedIn = function() {
     var user = this.data('id');
-    return user != undefined;
+    return user !== undefined;
   };
 
   this.onSuccess = function(data) {
@@ -31,11 +31,14 @@ var Authentication = function() {
   };
 
   this.onStateChange = function(xhr, evt) {
-    if (xhr.readyState == 4) {
+    if (xhr.readyState === 4) {
       var data = xhr.response;
-      if (xhr.status == 201) {
+      if (xhr.status === 201) {
         this.onSuccess(data);
       } else {
+        if ( xhr.status === 0 ) {
+          data = { error: "Failed to connect to backend" };
+        }
         this.onFailure(data);
       }
     }
@@ -55,6 +58,10 @@ var Authentication = function() {
       username: username,
       password: password
     });
+  };
+
+  this.logout = function() {
+    localStorage.removeItem('current_user');
   };
 };
 
@@ -121,13 +128,21 @@ var AuthenticationComponent = function() {
         cls:'settings right', onclick: onSettingsClick.bind(this)
       }, icon('build'));
 
-      dom.appendChild(div(gravatar, username, settings));
+      var logout = span({
+        cls:'settings right', onclick: onLogoutClick.bind(this)
+      }, icon('exit_to_app'));
+
+      dom.appendChild(div(gravatar, username, logout, settings));
     } else {
       onLoginClick();
       // var login = div("login");
       // login.onclick = onLoginClick;
       // auth.appendChild(login);
     }
+  };
+
+  var onLogoutClick = function() {
+    auth.logout();
   };
 
   var onSettingsClick = function() {

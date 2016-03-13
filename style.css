@@ -33,7 +33,7 @@ body {
   height: 50px;
   line-height: 50px;
   font-size: 1.5rem;
-  padding-left: 10px;
+  padding-left: 5px;
   color: white;
   font-weight: bold;
   font-family: 'Open Sans'; }
@@ -72,6 +72,7 @@ body {
   min-height: 100%; }
 
 #content {
+  padding: 0 5px;
   min-height: 100%;
   flex-grow: 1; }
 

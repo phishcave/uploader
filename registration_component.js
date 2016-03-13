@@ -9,7 +9,19 @@ var RegistrationComponent = function() {
     } else {
       node.appendChild(icon('cancel'));
     }
-  }
+  };
+
+  var passwordValidation = function(validator, input, evt) {
+    var password = document.getElementById('registration-input-password').value;
+    var password_confirmation = document.getElementById('registration-input-password_confirmation').value;
+    var valid = true;
+
+    if (password.length <= 5 || password != password_confirmation) {
+      valid = false;
+    }
+
+    baseValidation(validator, valid);
+  };
 
   var usernameValidation = function(validator, input, evt) {
     var username = input.value;
@@ -25,7 +37,7 @@ var RegistrationComponent = function() {
   var fields = [
     { name: 'username', text: 'Username', type: 'text', validator: usernameValidation },
     { name: 'password', text: 'Password', type: 'text', required: true },
-    { name: 'password_confirmation', text: 'Password Confirmation', type: 'text', required: true },
+    { name: 'password_confirmation', text: 'Password Confirmation', validator: passwordValidation, type: 'text', required: true },
     { name: 'email', text: 'Email', type: 'text', required: true },
     { name: 'phone', text: 'Phone', type: 'text', required: false},
   ];
@@ -36,7 +48,10 @@ var RegistrationComponent = function() {
       var errors = field.errors || [];
 
       var fieldText = span({cls: 'input-name'}, field.text);
-      var fieldInput = input({name: field.name, type: field.type, required: field.required});
+      var fieldInput = input({
+        id: 'registration-input-' + field.name,
+        name: field.name, type: field.type, required: field.required
+      });
       var fieldValid = span({cls: 'valid'});
 
       if ( field.validator != undefined ) {

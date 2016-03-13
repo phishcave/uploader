@@ -16,7 +16,7 @@ var Router = function(container) {
         return resolve();
       }
 
-      var node = script({type: 'text/javascript', src: scriptName})
+      var node = script({type: 'text/javascript', src: "assets/" + scriptName})
       body.appendChild(node);
 
       return node.onload = function() {
