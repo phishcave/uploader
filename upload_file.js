@@ -61,7 +61,7 @@ var UploadFile = function(file) {
     // || state == STATE_PAUSED
   };
 
-  this.createFile = function() {
+  this.createFile = function(callback) {
     var fileData = {
       size: file.size,
       name: this.name(),
@@ -73,24 +73,26 @@ var UploadFile = function(file) {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/files')
     xhr.setRequestHeader("Content-Type", "application/json")
-    xhr.addEventListener('readystatechange', this.onFileCreate.bind(this, xhr));
+    xhr.addEventListener('readystatechange', this.onFileCreate.bind(this, xhr, callback));
     xhr.send(JSON.stringify(fileData));
   };
 
-  this.onFileCreate = function(xhr, evt) {
+  this.onFileCreate = function(xhr, callback) {
     if (xhr.readyState === 4) {
       if(xhr.status === 200) {
         id = JSON.parse(xhr.response).id;
         state = STATE_QUEUED;
         console.log(xhr);
+        callback();
       } else {
-        console.log(evt);
+        console.log("non 200 response from createfile");
+        console.log(xhr);
       }
     }
   };
 
-  this.start = function() {
-    this.createFile();
+  this.start = function(callback) {
+    this.createFile(callback);
     state = STATE_UPLOADING;
     this.updateViewCallback();
   };

@@ -96,18 +96,22 @@ var UploadFileComponent = function(file, actions) {
 
   // Handler for Start button
   this.clickStart = function() {
-    file.start();
-    // chunkFile sets state to started
-    var fileChunks = file.chunkFile();
-    var numChunks = fileChunks.length;
+    file.start(function() {
+      // chunkFile sets state to started
+      var fileChunks = file.chunkFile();
+      var numChunks = fileChunks.length;
 
-    for ( var i = 0; i < numChunks; i++ ) {
-      var chunk = fileChunks[i];
-      var chunk_dom = new ChunkComponent(chunk);
-      chunks.appendChild(chunk_dom.render());
-    }
+      for ( var i = 0; i < numChunks; i++ ) {
+        var chunk = fileChunks[i];
+        var chunk_dom = new ChunkComponent(chunk);
+        chunks.appendChild(chunk_dom.render());
+      }
 
-    this.startChunks(fileChunks);
+      this.startChunks(fileChunks);
+      this.updateInfo();
+      this.updateButtons();
+    }.bind(this));
+
     this.updateInfo();
     this.updateButtons();
   };
