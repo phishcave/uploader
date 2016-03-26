@@ -127,13 +127,9 @@ class Builder
   end
 
   def changed_files
-    [].tap do |changed_files|
-      @signatures.each do |file, new_signature|
-        if @signature_cache[file] != new_signature
-          changed_files << file
-        end
-      end
-    end
+    @signatures.each_key.map do |f|
+      @signature_cache[f] != @signatures[f] ? f : nil
+    end.compact
   end
 
   def output_file_path(input)
