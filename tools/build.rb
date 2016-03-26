@@ -29,6 +29,8 @@ class Builder
   end
 
   def build
+    return unless @can_build
+
     source_files = files_in_path(SOURCE_DIR + '/**')
     hash_files(source_files)
     changed_count = changed_files.count
@@ -50,6 +52,16 @@ class Builder
     build_finish_time = Time.now
 
     puts "Finished! #{build_finish_time - build_start_time} seconds"
+
+    compress_build if should_bundle?
+  end
+
+  def compress_build
+    compressed_file = 'build.tar.bz2'
+    script = "tar cjf #{compressed_file} -C #{OUTPUT_DIR} ."
+
+    puts "Compressing build (#{compressed_file})"
+    %x[ #{script} ]
   end
 
   private
@@ -174,6 +186,10 @@ class Builder
     else
       {}
     end
+  end
+
+  def should_bundle?
+    ARGV[0] == 'bundle'
   end
 end
 
