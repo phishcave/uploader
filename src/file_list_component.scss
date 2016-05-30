@@ -1,0 +1,50 @@
+@import "mixins.scss";
+
+.file-entry {
+  padding: 5px;
+  position: relative;
+  border-bottom: solid 2px $btn-bg;
+  margin-bottom: 5px;
+
+  &:hover {
+    background-color: red;
+  }
+
+  .left {
+    
+  }
+
+  .right {
+    display: inline;
+    position: absolute;
+    right: 0;
+    top: 0px;
+    text-align: right;
+  }
+
+  .dl {
+    span {
+      margin-left: 5px;
+    }
+  }
+  .thumb, .info {
+    margin: 5px;
+    display: inline;
+  }
+}
+
+#files {
+  .table {
+    .name {
+      min-width: 50%;
+    }
+
+    .size {
+      max-width: 10%;
+    }
+
+    .options {
+      max-width: 10%;
+    }
+  }
+}

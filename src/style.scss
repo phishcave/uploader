@@ -1,7 +1,24 @@
 @import "mixins.scss";
 
-$sidebar-width: 200px;
-$footer-height: 30px;
+$input-border-color: #cdcdcd;
+
+input[type=text] {
+  $border-size: 3px;
+  $bottom-padding: (5px - $border-size);
+  background-color: $btn-bg;
+  border: 0;
+  font-size: 15px;
+  padding: 2px 5px $bottom-padding  5px;
+  outline: none;
+  outline-style:none;
+  box-shadow:none;
+	border: solid 1px $input-border-color;
+  border-radius: 2px;
+
+  &:focus {
+		border: solid 1px darken($input-border-color, 10%);
+  }
+}
 
 body, html {
   padding: 0;
@@ -18,15 +35,9 @@ body {
   display: inline;
   font-size: 100%;
 
-  font-family: 'Open Sans';
+  font-family: "Lato", sans-serif;
   background-color: $background-color;
-  text-rendering: 'optimizeLegibility';
-  color: $text-color;
-  // background:
-  // linear-gradient($colora, transparent),
-  // linear-gradient(-45deg, $colorb, transparent),
-  // linear-gradient( 45deg, $colora, transparent);
-  background-blend-mode: multiply;
+  color: black;
 }
 
 #app {
@@ -34,75 +45,25 @@ body {
 	width: 100%;
   min-height: 100%;
   position: relative;
-  flex-direction: row;
+  flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  height: 100%;
 }
 
-.shadow {
-  text-shadow: 2px 2px 5px black;
-}
 
-#header {
-  $header-height: 50px;
-  height: $header-height;
-  line-height: $header-height;
-  font-size: 1.5rem;
-  padding-left: 5px;
-  color: white;
-
-  font-weight: bold;
-  font-family: 'Open Sans';
-
-  .sub-header {
-    float: right;
-    padding-right: 10px;
-    font-size: 1.2rem;
-  }
-}
-
-#sidebar-fixed {
-  position: fixed;
-  width: $sidebar-width;
-}
-
-#sidebar {
-  @include user-select(none);
-	min-width: $sidebar-width;
-  margin: 5px;
-  margin-top: 50px;
-
-  .heading {
-    color: white;
-    font-size: 0.9em;
-    font-weight: bold;
-    margin-bottom: 5px;
-    padding-bottom: 0px;
-    cursor: default;
-  }
-}
-
-#content-container {
+#content {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  justify-content: space-between;
-  max-width: 800px;
-  min-height: 100%;
+  min-width: 100%;
+  // max-width: 1000px;
+  margin: 0 auto;
+  margin-bottom: 10px;
 }
 
-#content {
-  padding: 0 5px;
-  min-height: 100%;
-  flex-grow: 1;
-}
-
-#footer {
-  width: 100%;
-  border-top: solid 1px $border-color;
-  padding: 5px 0;
-  overflow: hidden;
+#view {
+  margin-top: 20px;
+  padding: 0 30px;
 }
 
 .btn {
@@ -111,15 +72,16 @@ body {
   font-family: 'Open Sans';
   text-transform: uppercase;
   font-size: 0.7em;
-  color: white;
+  color: $header-bg;
 
   border-radius: 4px;
   line-height: $btn-height - 2px;
   cursor: pointer;
   padding: 0px 5px;
   display: inline-block;
-  background-color: $btn-bg;
+  background-color: white;
   vertical-align: middle;
+  border: solid 1px $header-bg;
 
   &:hover {
     background-color: darken($btn-bg, 3%);
@@ -198,4 +160,7 @@ body {
 
 .pull-left {
   float: left;
+}
+.pull-right {
+  float: right;
 }

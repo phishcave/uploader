@@ -3,8 +3,13 @@ $colorb: #523478;
 $colorc: #07a1d8;
 
 $link-color: #268bd2;
-$text-color: darken(white, 20%);
-$background-color: #141414;
+$text-color: darken(black, 20%);
+$background-color: white;
+//$header-bg: #1F5846;
+$header-bg: #4A90E2;
+$header-fg: white;
+$header-height: 72px;
+
 $text-shadow: darken($colorb, 20%);
 $border-color: darken($background-color, 2%);
 

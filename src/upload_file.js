@@ -27,7 +27,7 @@ var UploadFile = function(file) {
 
   this.fetchStatus = function(hash) {
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', '/files/status/' + hash)
+    xhr.open('GET', '/api/files/status/' + hash)
     xhr.addEventListener('readystatechange', this.onStatus.bind(this, xhr));
     xhr.send();
   };
@@ -41,6 +41,9 @@ var UploadFile = function(file) {
         switch(response.state) {
           case 'Incomplete':
             state = STATE_INCOMPLETE;
+            break;
+          case 'Finished':
+            state = STATE_FINISHED;
             break;
           default:
             console.log("unhandled state");
@@ -71,7 +74,7 @@ var UploadFile = function(file) {
     };
 
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', '/files')
+    xhr.open('POST', '/api/files')
     xhr.setRequestHeader("Content-Type", "application/json")
     xhr.addEventListener('readystatechange', this.onFileCreate.bind(this, xhr, callback));
     xhr.send(JSON.stringify(fileData));

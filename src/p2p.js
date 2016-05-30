@@ -35,7 +35,8 @@ var P2PComponent = function(sessionID) {
       connect: onConnect.bind(this),
       disconnect: onDisconnect.bind(this),
       sessionExists: onSessionExists.bind(this),
-      sessionNotFound: onSessionNotFound.bind(this)
+      sessionNotFound: onSessionNotFound.bind(this),
+      sessionCreated: onSessionCreated.bind(this)
     };
 
     p2p = new P2P(sessionID, callbacks);
@@ -43,6 +44,12 @@ var P2PComponent = function(sessionID) {
     if (!isSender()) {
       p2p.receive();
     }
+  };
+
+  var onSessionCreated = function(sessionID) {
+    H.empty(container);
+    container.appendChild(div("Session Created, send the following link to the person hwo should receive the file"));
+    container.appendChild(dominate.tags.a({href: "/direct/" + sessionID}, "dooad"));
   };
 
   var onSessionExists = function() {
@@ -58,10 +65,14 @@ var P2PComponent = function(sessionID) {
 
   var onConnect = function() {
     console.log("Connect");
+    H.empty(container);
+    container.appendChild(div("Connected!"));
   };
 
   var onDisconnect = function() {
     console.log("Disconnect");
+    H.empty(container);
+    container.appendChild(div("Disconnected!"));
   };
 
   var isSender = function() {

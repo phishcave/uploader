@@ -14,6 +14,8 @@ var UploaderComponent = function() {
 
   var KEYCODE_V = 86;
 
+  this.title = function() { return "upload" };
+
   document.addEventListener('keydown', function(e) {
     if (e.ctrlKey && e.keyCode == KEYCODE_V) {
       document.body.appendChild(pasteHack);

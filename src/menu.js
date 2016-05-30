@@ -1,47 +1,34 @@
 var Menu = function() {
-  heading = function(text) {
-    return div({cls:'heading'}, text);
-  };
+  var items = [];
+  var menu = div({cls:'menu'});
 
-  var menuEntries = div({cls: 'entries'});
-  var dom = div({cls:'menu'}, heading('Menu'), menuEntries);
+  var addItem = function(text, path) {
+    var item = span({cls:'item', url: path}, text);
 
-  this.addEntry = function(text, path) {
-    var entry = div({cls:'entry', url: path}, text);
-    entry.onclick = function() {
-      window.location = path;
+    item.onclick = function(e) {
+      window.gotoPage(path);
     };
 
-    return entry;
+    items.push(item);
   };
 
-  this.updateMenu = function() {
-    H.empty(menuEntries);
+  this.update = function() {
+    items = [];
 
-    menuEntries.appendChild(
-      this.addEntry("Admin", "#admin")
-    );
-
-    menuEntries.appendChild(
-      this.addEntry("All Files", "#all")
-    );
-
-    menuEntries.appendChild(
-      this.addEntry("Uploads", "#upload")
-    );
-
-    menuEntries.appendChild(
-      this.addEntry("Register", "#register")
-    );
-
-    menuEntries.appendChild(
-      this.addEntry("Favourites", "#favourites")
-    );
+    addItem("All Files", "/files");
+    addItem("Upload", "/upload");
+    addItem("Sign In", "/login");
   };
 
   this.render = function() {
-    this.updateMenu();
-    return dom;
+    this.update();
+    H.empty(menu);
+
+    for (var i = 0; i < items.length; i++) {
+      menu.appendChild(items[i]);
+    }
+
+    return menu;
   };
 };
 

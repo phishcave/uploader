@@ -2,19 +2,19 @@ var App = function() {
   var root = div({cls:'foo'}, "hello");
   var body = document.body;
 
-  // var uploader = new UploaderComponent();
   var menu     = new Menu();
   var auth     = new AuthenticationComponent();
+  var header   = new HeaderComponent({menu: menu});
+  var footer   = new FooterComponent();
+  var alerts   = new Alerts();
 
-  var subheader = span({cls:'sub-header'}, 'Upload Files');
-  var header  = div({id:'header', cls: 'shadow'}, subheader, 'ZQZ');
-  var sidebar = div({id:'sidebar-fixed'});
-  var sidebar_container = div({id:'sidebar'}, sidebar);
-  var footer  = div({id:'footer'}, div({cls:'text-tiny center'}, 'copyright 2015 zqz.ca'));
-  var content = div({id:'content'});
-  var content_container = div({id:'content-container'}, header, content, footer);
+  var view = div({id:'view'});
+  var content = div({id:'content'}, alerts.render(), view);
 
-  var dom = div({id: 'app'}, sidebar_container, content_container);
+  var dom = div({id: 'app'}, header.render(), content, footer.render());
+
+  // alerts.addError("This is an error");
+  // alerts.addAlert("foobar");
 
   var mockedFile = {
     name: 'Mocked File',
@@ -30,7 +30,18 @@ var App = function() {
   //   );
   // }
 
-  var router = new Router(content);
+  var router = new Router(view);
+
+  router.add("login", ["login.js", "login_component.js"], function() {
+    return LoginComponent;
+  });
+
+  router.add("file", [
+    "file_view.js",
+    "file_view_component.js"
+  ], function() {
+    return FileViewComponent;
+  })
 
   router.add("files", [
     "file_list.js",
@@ -43,6 +54,14 @@ var App = function() {
     "dashboard_component.js"
   ], function() {
     return DashboardComponent;
+  });
+
+  router.add("direct", [
+    "p2p_send.js",
+    "p2p_recv.js",
+    "p2p.js"
+  ], function() {
+    return P2PComponent;
   });
 
   router.add("upload", [
@@ -64,14 +83,13 @@ var App = function() {
     return RegistrationComponent;
   });
 
-  sidebar.appendChild(auth.render());
-  sidebar.appendChild(menu.render());
-  // content.appendChild(uploader.render());
-
   router.init();
 
   body.appendChild(dom);
+
+  this.addAlert = alerts.addAlert;
+  this.addError = alerts.addError;
 };
 
-a = new App();
+window.app = new App();
 

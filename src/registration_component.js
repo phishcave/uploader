@@ -1,6 +1,10 @@
 var RegistrationComponent = function() {
   var fieldNodes = {};
 
+  this.title = function() {
+    return "join";
+  };
+
   var baseValidation = function(node, valid) {
     H.empty(node)
 
@@ -47,7 +51,7 @@ var RegistrationComponent = function() {
     fields.forEach(function(field) {
       var errors = field.errors || [];
 
-      var fieldText = span({cls: 'input-name'}, field.text);
+      var fieldText = div({cls: 'input-name'}, field.text);
       var fieldInput = input({
         id: 'registration-input-' + field.name,
         name: field.name, type: field.type, required: field.required

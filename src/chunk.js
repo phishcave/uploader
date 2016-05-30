@@ -1,5 +1,5 @@
 var Chunk = function(chunk, options) {
-  var API_URL = '/chunks';
+  var API_URL = '/api/chunks';
 
   var STATE_QUEUED    = 0;
   var STATE_FINISHED  = 1;
@@ -133,6 +133,7 @@ var Chunk = function(chunk, options) {
     var formData = new FormData();
     formData.append('file_id', options.file_id);
     formData.append('position', options.position);
+    formData.append('hash', options.hash);
     formData.append('data', chunk);
 
     var xhr = new XMLHttpRequest();

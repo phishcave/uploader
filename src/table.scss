@@ -1,0 +1,49 @@
+@import "mixins";
+
+.table {
+  .thead {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+
+    padding: 0 10px;
+    padding-bottom: 10px;
+
+    .th {
+      font-size: 1.2rem;
+      font-weight: bold;
+      flex-grow: 1;
+    }
+  }
+
+  .tbody {
+    .tr {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    .td {
+      flex-grow: 1;
+    }
+
+    .tr {
+      padding: 10px;
+      background-color: #dedede;
+
+      &:hover {
+        background-color: #5ba504;
+        color: white;
+      }
+
+      margin-bottom: 5px;
+      border-radius: 3px;
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+}

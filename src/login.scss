@@ -1,0 +1,39 @@
+@import "mixins";
+
+.login-container {
+  height: 100%;
+  $padding: 30px;
+  $width: 300px;
+  background-color: $btn-bg;
+  font-family: 'Lato';
+
+  width: $width;
+  padding: $padding;
+  background-color: #efefef;
+  margin: 0 auto;
+
+  $adjusted-width: $width - $padding + 8px;
+
+  .group {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    width: $adjusted-width;
+  }
+
+  input[type=text] {
+    padding: 8px;
+    display: block;
+    width: $adjusted-width;
+  }
+
+  .submit {
+    width: $adjusted-width;
+    padding: 15px 8px;
+    border-radius: 2px;
+    background-color: $header-bg;
+    border: solid 1px $header-bg;
+    text-align: center;
+    color: white;
+    cursor: pointer;
+  }
+}

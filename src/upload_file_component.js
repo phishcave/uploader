@@ -78,7 +78,7 @@ var UploadFileComponent = function(file, actions) {
       div('SHA1:   ', file.hash()),
       div('SIZE:   ', file.size()),
       div('STATE:  ', this.stateString()),
-      div('CHUNKS: ', '0 / ' + file.chunks().length)
+      div('CHUNKS: ', file.chunks().length + ' / ' + file.numChunks())
     );
 
     info.appendChild(plaintext);

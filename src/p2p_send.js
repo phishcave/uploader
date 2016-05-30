@@ -48,6 +48,7 @@ var P2PSender = function(connection, callbacks) {
 
     if (msg['msg'] === 'created') {
       console.log("Session Created: " + msg.id);
+      callbacks.sessionCreated(msg.id);
     }
 
     if (msg['type'] === 'answer') {

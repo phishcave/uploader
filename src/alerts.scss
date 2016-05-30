@@ -1,0 +1,43 @@
+$alert-bg: #5BA504;
+$error-bg: #c4000a;
+
+.alerts {
+  background-color: red;
+  color: white;
+
+  .close {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    border-radius: 3px;
+    padding: 0;
+    cursor: pointer;
+
+    i {
+      margin-right: 0;
+      font-size: 3rem;
+    }
+  }
+
+  .header {
+    font-size: 2rem;
+
+    i {
+      font-size: 4rem;
+      margin-right: 10px;
+    }
+  }
+
+  .alert, .error {
+    padding: 10px;
+    position: relative;
+  }
+
+  .alert {
+    background-color: $alert-bg;
+  }
+
+  .error {
+    background-color: $error-bg;
+  }
+}

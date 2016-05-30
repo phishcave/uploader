@@ -1,5 +1,5 @@
 var Authentication = function() {
-  var api = "http://127.0.0.1:3001";
+  var api = "http://127.0.0.1:3001/api";
 
   this.data = function(option) {
     var data = {};
@@ -79,30 +79,6 @@ var AuthenticationComponent = function() {
     errors.appendChild(span(data.error));
   }.bind(this);
 
-  var onLoginClick = function() {
-    H.empty(dom);
-
-    var header = div({cls:'heading'}, "LOGIN")
-
-    var username = input({type:'text', placeholder: 'Username'});
-    var password = input({type:'text', placeholder: 'Password'});
-    var submit = div({cls:'submit'}, icon('forward'));
-
-    var loginContainer = div({cls:'login-container'}, submit, username, password);
-
-    submit.onclick = function() {
-      console.log("username" + username.value);
-      console.log("password" + password.value);
-
-      auth.login(username.value, password.value);
-    };
-
-    var loginForm = div(header, loginContainer, errors);
-
-    dom.appendChild(loginForm);
-  }.bind(this);
-
-
   var gravatarUrl = function() {
     return "http://gravatar.com/avatar/1f8377ba373028db1c2598a963c9ee2c";
   };
@@ -133,11 +109,6 @@ var AuthenticationComponent = function() {
       }, icon('exit_to_app'));
 
       dom.appendChild(div(gravatar, username, logout, settings));
-    } else {
-      onLoginClick();
-      // var login = div("login");
-      // login.onclick = onLoginClick;
-      // auth.appendChild(login);
     }
   };
 

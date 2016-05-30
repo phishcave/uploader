@@ -19,22 +19,22 @@
   }
 }
 
-input[type=text] {
-  $border-size: 3px;
-  $bottom-padding: (5px - $border-size);
-  background-color: $btn-bg;
-  border: 0;
-  font-size: 1em;
-  font-family: 'Open Sans';
-  padding: 2px 5px $bottom-padding  5px;
-  color: white;
-  outline: none;
-  outline-style:none;
-  box-shadow:none;
-  border-color:transparent;
-  border-bottom: solid $border-size $btn-bg;
+// input[type=text] {
+//   $border-size: 3px;
+//   $bottom-padding: (5px - $border-size);
+//   background-color: $btn-bg;
+//   border: 0;
+//   font-size: 1em;
+//   font-family: 'Open Sans';
+//   padding: 2px 5px $bottom-padding  5px;
+//   color: white;
+//   outline: none;
+//   outline-style:none;
+//   box-shadow:none;
+//   border-color:transparent;
+//   border-bottom: solid $border-size $btn-bg;
 
-  &:focus {
-    border-bottom: solid $border-size $link-color;
-  }
-}
+//   &:focus {
+//     border-bottom: solid $border-size $link-color;
+//   }
+// }
