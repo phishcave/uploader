@@ -7,32 +7,25 @@ $fg: white;
 #header {
   @include user-select(none);
 
-  display: flex;
-  flex-direction: row;
-
   width: 100%;
-  min-height: $height;
-  line-height: $height;
-  vertical-align: middle;
-  background-color: $bg;
-  color: $fg;
+  margin-top: 10px;
 
   .left {
-    margin-left: 10px;
+    flex-grow: 1;
   }
 
   .right {
-    position: absolute;
-    right: 0;
-    margin-right: 10px;
+  }
+
+  .container {
+    display: flex;
+    flex-direction: row;
   }
 
   // The ZQZ
   .banner {
     font-weight: bold;
     margin-right: 10px;
-    margin-left: 30px;
-    font-size: 2rem;
     cursor: pointer;
   }
 

@@ -2,14 +2,14 @@ var Authentication = function() {
   var api = "http://127.0.0.1:3001/api";
 
   this.data = function(option) {
-    var data = {};
+    var content = {};
     try {
-      data = JSON.parse(localStorage['current_user']);
+      content = JSON.parse(localStorage['current_user']);
     } catch(e) {
-      data = {};
+      content = {};
     }
 
-    return data[option];
+    return content[option];
   };
 
   this.username = function() {

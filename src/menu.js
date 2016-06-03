@@ -1,8 +1,9 @@
 var Menu = function() {
   var items = [];
-  var menu = div({cls:'menu'});
+  var menu = span({cls:'menu'});
+  var auth = new Authentication();
 
-  var addItem = function(text, path) {
+  var addLink = function(text, path) {
     var item = span({cls:'item', url: path}, text);
 
     item.onclick = function(e) {
@@ -12,12 +13,23 @@ var Menu = function() {
     items.push(item);
   };
 
+  var addText = function(text) {
+    var item = span({cls:'item'}, text);
+    items.push(item);
+  };
+
   this.update = function() {
     items = [];
 
-    addItem("All Files", "/files");
-    addItem("Upload", "/upload");
-    addItem("Sign In", "/login");
+    addLink("All Files", "/files");
+    addLink("Upload", "/upload");
+
+    if ( auth.loggedIn() ) {
+      addLink("Sign Out", "/logout");
+      addText(auth.username());
+    } else {
+      addLink("Sign In", "/login");
+    }
   };
 
   this.render = function() {

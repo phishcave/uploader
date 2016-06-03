@@ -1,3 +1,13 @@
+$bg-color: #131914;
+$inner-bg: #080A08;
+$border-color: #364737;
+$border-hover-color: #455C47;
+$box-shadow-color: #253025;
+$text-shadow-color: #729674;
+$text-hover-color: #AFE8B3;
+
+$header-height: 20px;
+
 $colora: #8854c7;
 $colorb: #523478;
 $colorc: #07a1d8;
@@ -8,10 +18,8 @@ $background-color: white;
 //$header-bg: #1F5846;
 $header-bg: #4A90E2;
 $header-fg: white;
-$header-height: 72px;
 
 $text-shadow: darken($colorb, 20%);
-$border-color: darken($background-color, 2%);
 
 $btn-bg: lighten($background-color, 5%);
 $btn-height: 30px;

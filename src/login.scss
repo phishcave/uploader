@@ -1,39 +1,61 @@
 @import "mixins";
 
 .login-container {
-  height: 100%;
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+}
+
+.login {
   $padding: 30px;
   $width: 300px;
-  background-color: $btn-bg;
-  font-family: 'Lato';
 
   width: $width;
   padding: $padding;
-  background-color: #efefef;
+  background-color: $inner-bg;
+  box-shadow: 0 0 10px -4px $box-shadow-color;
+  border: solid 1px $border-color;
+  border-radius: 2px;
   margin: 0 auto;
 
   $adjusted-width: $width - $padding + 8px;
 
   .group {
-    font-size: 1.2rem;
     margin-bottom: 10px;
-    width: $adjusted-width;
+    width: 100%;
   }
 
-  input[type=text] {
-    padding: 8px;
+  input[type=text], input[type=password] {
+    font-family: monospace;
+    margin-top: 3px;
+    padding: 6px 8px;
     display: block;
-    width: $adjusted-width;
+    width: 100%;
   }
 
   .submit {
-    width: $adjusted-width;
-    padding: 15px 8px;
-    border-radius: 2px;
-    background-color: $header-bg;
-    border: solid 1px $header-bg;
+    margin-top: 15px;
+
+    i {
+      position: relative;
+      top: -1px;
+    }
+
+    $submit-padding: 10px;
+    width: 100%;
+    background-color: $border-color;
     text-align: center;
     color: white;
+    border-radius: 3px;
+    box-sizing: border-box;
+    padding: $submit-padding;
     cursor: pointer;
+    box-shadow:
+      inset 1px 1px 0px lighten($border-color, 10%),
+      inset -1px -1px 0px darken($border-color, 7%);
+
+    &:hover {
+      background-color: darken($border-color, 2%);
+    }
   }
 }

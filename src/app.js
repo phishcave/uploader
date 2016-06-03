@@ -3,18 +3,17 @@ var App = function() {
   var body = document.body;
 
   var menu     = new Menu();
-  var auth     = new AuthenticationComponent();
   var header   = new HeaderComponent({menu: menu});
   var footer   = new FooterComponent();
   var alerts   = new Alerts();
 
   var view = div({id:'view'});
-  var content = div({id:'content'}, alerts.render(), view);
+  var content = div({id:'content'}, alerts.render(), div({cls:'container'}, view));
 
   var dom = div({id: 'app'}, header.render(), content, footer.render());
 
-  // alerts.addError("This is an error");
-  // alerts.addAlert("foobar");
+  // alerts.addError("login", "Failed to login", "Invalid Credentials");
+  // alerts.addAlert("login", "No file exists");
 
   var mockedFile = {
     name: 'Mocked File',
@@ -23,12 +22,6 @@ var App = function() {
     state: 'uploading',
     slice: function() { return new Blob(["ddawd"], { type: 'text/plain' }); }
   };
-
-  // for ( var i = 0; i < 1; i++ ) {
-  //   uploader.addFile(
-  //     new UploadFile(mockedFile)
-  //   );
-  // }
 
   var router = new Router(view);
 
@@ -89,7 +82,13 @@ var App = function() {
 
   this.addAlert = alerts.addAlert;
   this.addError = alerts.addError;
+
+  this.boot = function() {
+
+  };
 };
 
 window.app = new App();
+window.app.boot();
+
 

@@ -27,13 +27,20 @@ var Router = function(container) {
     });
   };
 
-  window.gotoPage = function(path) {
-    this.navigate(path);
+  this.gotoPage = function(path) {
+    this.navigate(path, 'normal');
   }.bind(this);
+
+  this.silentGotoPage = function(path) {
+    this.navigate(path, 'silent');
+  }.bind(this);
+
+  window.gotoPage = this.gotoPage;
+  window.silentGotoPage = this.silentGotoPage;
 
   var onHashChange = function(e) {
     var hash = window.location.hash || window.location.pathname;
-    window.gotoPage(hash);
+    this.gotoPage(hash);
   }.bind(this);
 
   window.addEventListener('hashchange', onHashChange);
@@ -64,27 +71,38 @@ var Router = function(container) {
       var loadFunc = new routeInfo.func();
       var component = new loadFunc(args);
 
+      // Set title.
       if (component.title === undefined) {
         console.log(componentName + " has no title");
+        window.setSection("");
       } else {
         window.setSection(component.title());
       }
-      callback(component.render());
+
+      callback(component);
     });
   };
 
+  // When the user goes back.
   window.onpopstate = function(e){
     if (e.state) {
-      this.navigate(e.state.path, true);
+      this.navigate(e.state.path, 'silent');
+    } else {
+      this.navigate('/', 'silent');
     }
   }.bind(this);
 
-  this.setPage = function(path) {
+  this.pushHistory = function(path) {
     console.log("inserting history " + path);
     window.history.pushState({ "path": path }, path, path);
   }
 
-  this.navigate = function(path, disableHistory) {
+  this.updateHistory = function(path) {
+    console.log("updating history " + path);
+    window.history.replaceState({ "path": path }, path, path);
+  }
+
+  this.navigate = function(path, historyType) {
     var url = path.replace(/^(#(\/)?)|(\/)/,'');
     var parts = url.split('/');
 
@@ -94,17 +112,27 @@ var Router = function(container) {
     H.empty(container);
 
     this.renderComponent(whereTo, args, function(component) {
-      container.appendChild(component);
+      var node = component.render();
+      container.appendChild(node);
+
+      // Call init if it exists
+      if (component.init !== undefined) {
+        component.init();
+      }
     });
 
-    if (!initialLoad && !disableHistory) {
+    if (!initialLoad) {
       history_path = "/" + whereTo
 
       if (args.length > 0) {
         history_path += "/" + args
       }
 
-      this.setPage(history_path)
+      if (historyType === "silent") {
+        this.updateHistory(history_path);
+      } else if ( historyType === "normal" ) {
+        this.pushHistory(history_path);
+      }
     }
 
     initialLoad = false;

@@ -1,5 +1,5 @@
 var Alerts = function(text) {
-  var alertsNode = div({cls: 'alerts'});
+  var alertsNode = div({id: 'alerts'});
   var alerts = [];
 
   var close = function() {
@@ -32,9 +32,9 @@ var Alerts = function(text) {
         ico = icon('warning');
       }
 
-      var header = div({cls:'header'}, ico, 'Error');
+      var header = div({cls:'header'}, ico, a.title);
       var exit = span({cls: 'close', onclick: close}, icon('clear'));
-      var node = div({cls: a.type}, header, a.title, a.text, exit);
+      var node = div({cls: 'box ' + a.type}, header, a.text, exit);
 
       alertsNode.appendChild(node);
     }

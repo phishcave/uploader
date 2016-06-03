@@ -1,50 +1,22 @@
 @import "mixins.scss";
 
-.file-entry {
-  padding: 5px;
-  position: relative;
-  border-bottom: solid 2px $btn-bg;
-  margin-bottom: 5px;
-
-  &:hover {
-    background-color: red;
-  }
-
-  .left {
-    
-  }
-
-  .right {
-    display: inline;
-    position: absolute;
-    right: 0;
-    top: 0px;
-    text-align: right;
-  }
-
-  .dl {
-    span {
-      margin-left: 5px;
-    }
-  }
-  .thumb, .info {
-    margin: 5px;
-    display: inline;
-  }
-}
-
 #files {
+  width: 100%;
   .table {
     .name {
+      flex-grow: 1;
       min-width: 50%;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
 
     .size {
-      max-width: 10%;
+      max-width: 13%;
     }
 
     .options {
-      max-width: 10%;
+      max-width: 14%;
     }
   }
 }

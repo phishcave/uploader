@@ -2,24 +2,25 @@
 
 .menu {
   overflow: hidden;
-  font-family: 'Lato';
   font-weight: normal;
 
   .item {
     $border-size: 6px;
+
     display: inline-block;
     cursor: pointer;
-    padding: 0 30px;
-    margin-top: $border-size;
+    padding: 0 10px;
+    text-shadow: 0 0 7px $text-shadow-color;
     height: $header-height - $border-size;
     line-height: $header-height - $border-size;
 
     &:hover {
-      border-bottom: inset $border-size white;
+      text-shadow: 0 0 12px $text-hover-color;
     }
 
     &:last-child {
       margin-right: 0;
+      padding-right: 0;
     }
   }
 }

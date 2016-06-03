@@ -6,12 +6,9 @@
     flex-direction: row;
     align-items: flex-start;
     justify-content: center;
-
-    padding: 0 10px;
-    padding-bottom: 10px;
+    margin-bottom: 10px;
 
     .th {
-      font-size: 1.2rem;
       font-weight: bold;
       flex-grow: 1;
     }
@@ -23,6 +20,8 @@
       flex-direction: row;
       align-items: flex-start;
       justify-content: center;
+      border-bottom: solid 1px $border-color;
+      padding: 1px;
     }
 
     .td {
@@ -30,16 +29,13 @@
     }
 
     .tr {
-      padding: 10px;
-      background-color: #dedede;
-
       &:hover {
-        background-color: #5ba504;
+        background-color: $border-color;
+        border-bottom: solid 1px $border-hover-color;
         color: white;
       }
 
       margin-bottom: 5px;
-      border-radius: 3px;
 
       &:last-child {
         border-bottom: none;

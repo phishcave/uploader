@@ -39,7 +39,7 @@ var FileListComponent = function(id) {
   var table = new TableComponent({columns: [
     {name: 'File Name', property: 'name'},
     {name: 'Size', property: 'size', align: 'center'},
-    {name: 'Options', property: 'options', align: 'center'},
+    {name: 'Options', property: 'options', align: 'right'},
   ]});
 
   var fileList = new FileList(0, 5);
