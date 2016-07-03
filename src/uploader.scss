@@ -1,6 +1,9 @@
 @import 'mixins.scss';
 
 #uploader {
+  background-color: red;
+  min-width: 800px;
+
   .options {
     border-bottom: solid 1px $border-color;
     padding-bottom: 5px;

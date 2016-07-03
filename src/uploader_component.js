@@ -85,7 +85,7 @@ var UploaderComponent = function() {
     e.preventDefault();
     var files = e.target.files || e.dataTransfer.files;
     for (var i = 0; i < files.length; i++) {
-      var f = new UploadFile(files[i]);
+      var f = new File(files[i]);
       this.addFile(f);
       console.log(f);
     }
@@ -143,7 +143,7 @@ var UploaderComponent = function() {
   // Adds a blob to the uploader.
   this.addRawFile = function(blob) {
     this.addFile(
-      new UploadFile(blob)
+      new File(blob)
     );
   };
 
@@ -160,7 +160,7 @@ var UploaderComponent = function() {
   this.addFile = function(file) {
     uploader.addFile(file);
 
-    var ufc = new UploadFileComponent(file);
+    var ufc = new FileComponent(file);
     var ufc_node = ufc.render();
 
     // Event Handler which gives chunks to the Uploader to manage.
@@ -181,7 +181,7 @@ var UploaderComponent = function() {
   this.render = function() {
     this.updateButtons();
     fileInput.onchange = this.onChange.bind(this);
-    return div(dom);
+    return dom;
   };
   // Removes a file from the Uploader.
   this.removeFile = function(file) {

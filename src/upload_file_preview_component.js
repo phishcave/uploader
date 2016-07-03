@@ -1,4 +1,4 @@
-var UploadFilePreviewComponent = function(file) {
+var FilePreviewComponent = function(file) {
   var container = div({cls: 'preview'});
   var type = file.type();
 
@@ -18,19 +18,19 @@ var UploadFilePreviewComponent = function(file) {
     );
   };
 
+  var createPreviewImage = function(evt) {
+    var image = div({cls: 'image-preview'});
+    image.style.backgroundImage= 'url(' + e.target.result + ')';
+    return image;
+  };
+
   var imagePreview = function() {
     var reader = new FileReader();
 
     reader.onload = function(e) {
       H.empty(container);
 
-      var image = div({
-        cls: 'image-preview',
-      });
-
-      image.style.backgroundImage= 'url(' + e.target.result + ')';
-
-      container.appendChild(image);
+      container.appendChild(createPreviewImage(e));
     };
 
     reader.readAsDataURL(file.originalBlob());

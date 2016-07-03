@@ -1,40 +1,3 @@
-var FileListEntryComponent = function(file) {
-  var fileType = span(file.type);
-  var fileAge = span(file.created_at);
-  var fileState = span(file.state);
-  var fileName = span({cls:'name'}, "(" + file.state + ") ", file.name);
-  var fileSize = span({cls:'size'}, filesize(file.size));
-
-  var previewUrl = "/file/" + file.hash;
-  var downloadUrl = "/d/" + file.id;
-
-  var previewFile = function(e) {
-    e.preventDefault();
-    var url = "#file/" + file.hash;
-    window.gotoPage(url);
-  };
-
-  var downloadFile = function(e) {
-    e.preventDefault();
-    var url = "/d/" + file.hash;
-    window.gotoPage(url);
-  };
-
-  var thumb = div({cls: 'thumb'}, 'thumb');
-  var dl = span({cls: 'dl'},
-    dominate.tags.a({onclick: previewFile, href: previewUrl}, 'Preview'),
-    dominate.tags.a({target: '_blank', href: downloadUrl}, 'Download')
-  );
-
-  var left = div({cls: 'left'}, thumb, fileName);
-  var right = div({cls: 'right'}, fileSize, dl);
-  var dom = div({cls: 'file-entry'}, left, right);
-
-  this.render = function() {
-    return dom;
-  };
-};
-
 var FileListComponent = function(id) {
   var table = new TableComponent({columns: [
     {name: 'File Name', property: 'name'},
@@ -55,12 +18,21 @@ var FileListComponent = function(id) {
 
     var filez = [];
 
+    var downloadLink = function(url) {
+      return function() {
+        window.gotoPage('#file/' + url);
+        console.log(url);
+      };
+    };
+
     for(var i = 0; i < files.length; i++) {
       var file = files[i];
+      var showFile = div({onclick: downloadLink(file.hash)}, file.name);
+
       var fileEntry = {
-        name: file.name,
+        name: showFile,
         size: filesize(file.size),
-        options: function() { return 'P D'; }
+        options: 'DEL HIDE'
       };
 
       filez.push(fileEntry);

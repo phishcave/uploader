@@ -1,5 +1,4 @@
 var FileView = function(id) {
-
   this.title = function() {
     return "foo";
   }
@@ -8,17 +7,16 @@ var FileView = function(id) {
     if (xhr.readyState === 4) {
       if(xhr.status === 200) {
         var file = JSON.parse(xhr.response);
+        this.onLoad(file);
         console.log(file);
       }
     }
   };
 
-  var getFile = function() {
+  this.fetch = function() {
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', '/api/file/' + id)
+    xhr.open('GET', '/api/v1/files/' + id)
     xhr.addEventListener('readystatechange', onGetFile.bind(this, xhr));
     xhr.send();
   };
-
-  var file = getFile(id);
 };

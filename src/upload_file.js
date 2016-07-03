@@ -1,4 +1,4 @@
-var UploadFile = function(file) {
+var File = function(file) {
   var STATE_INITIALIZED = 0;
   var STATE_QUEUED      = 1;
   var STATE_INCOMPLETE  = 2;
@@ -27,29 +27,40 @@ var UploadFile = function(file) {
 
   this.fetchStatus = function(hash) {
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', '/api/files/status/' + hash)
+    xhr.open('GET', '/api/v1/check/' + hash)
     xhr.addEventListener('readystatechange', this.onStatus.bind(this, xhr));
     xhr.send();
+  };
+
+  // Receieved 200 on status.
+  // {
+  //   'id': '21321',
+  //   'state': 'incomplete',
+  //   'chunks_received': [1,2,3,4]'
+  //   'total_chunks': 9
+  // }
+  this.onFileExists = function(xhr, evt) {
+    var response = JSON.parse(xhr.response);
+    id = response.id;
+
+    switch(response.state) {
+      case 'Incomplete':
+        state = STATE_INCOMPLETE;
+        break;
+      case 'Finished':
+        state = STATE_FINISHED;
+        break;
+      default:
+        console.log("unhandled state");
+        console.log(response);
+        break;
+    }
   };
 
   this.onStatus = function(xhr, evt) {
     if (xhr.readyState === 4) {
       if(xhr.status === 200) {
-        var response = JSON.parse(xhr.response);
-        id = response.id;
-
-        switch(response.state) {
-          case 'Incomplete':
-            state = STATE_INCOMPLETE;
-            break;
-          case 'Finished':
-            state = STATE_FINISHED;
-            break;
-          default:
-            console.log("unhandled state");
-            console.log(response);
-            break;
-        }
+        this.onFileExists(xhr, evt);
       } else if (xhr.status == 404) {
         // file is not found, so we add it to the queue.
         state = STATE_QUEUED;
@@ -74,7 +85,7 @@ var UploadFile = function(file) {
     };
 
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', '/api/files')
+    xhr.open('POST', '/api/v1/files')
     xhr.setRequestHeader("Content-Type", "application/json")
     xhr.addEventListener('readystatechange', this.onFileCreate.bind(this, xhr, callback));
     xhr.send(JSON.stringify(fileData));
@@ -232,4 +243,3 @@ var UploadFile = function(file) {
   };
 
 };
-

@@ -39,7 +39,7 @@ body {
   display: inline;
   font-size: 100%;
 
-  font-family: "Verdana", sans-serif;
+  font-family: monospace, sans-serif;
   background-color: $bg-color;
   color: white;
 }
@@ -182,4 +182,9 @@ body {
 }
 .pull-right {
   float: right;
+}
+
+#graph { 
+  width: 500px;
+  height: 400px;
 }

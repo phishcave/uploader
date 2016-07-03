@@ -76,6 +76,15 @@ var Chunk = function(chunk, options) {
     }
   };
 
+  this.onAbort = function(e) {
+    console.log("abort");
+  };
+
+  this.onPause = function(e) {
+    console.log("pause");
+  };
+
+  // NON 201 Response from the server.
   this.onError = function(e) {
     state = STATE_ERRORED;
 
@@ -87,15 +96,7 @@ var Chunk = function(chunk, options) {
     }
   };
 
-  this.onAbort = function(e) {
-    console.log("abort");
-  };
-
-  this.onPause = function(e) {
-    console.log("pause");
-  };
-
-  // got response from server
+  // 201 Response received from server.
   this.onComplete = function(e) {
     state = STATE_FINISHED;
 
@@ -107,8 +108,11 @@ var Chunk = function(chunk, options) {
     }
   };
 
-  this.onStart = function() {
+  // Let UI know the chunk is being uploaded.
+  this.begin = function() {
     state = STATE_UPLOADING;
+
+    console.log("starting");
 
     startTime = Date.now();
     loaded = 0;
@@ -119,9 +123,10 @@ var Chunk = function(chunk, options) {
     }
   };
 
+  // First step in handling response from the server.
   this.onStateChange = function(xhr, evt) {
     if (xhr.readyState == 4) {
-      if (xhr.status == 200) {
+      if (xhr.status == 201) {
         this.onComplete(evt);
       } else {
         this.onError(evt);
@@ -129,24 +134,31 @@ var Chunk = function(chunk, options) {
     }
   };
 
+  this.chunk_url = function() {
+    return '/api/v1/files/' + options.file_id + '/chunks/' + options.position;
+  };
+
   this.upload = function() {
-    var formData = new FormData();
-    formData.append('file_id', options.file_id);
-    formData.append('position', options.position);
-    formData.append('hash', options.hash);
-    formData.append('data', chunk);
+    // var formData = new FormData();
+    // formData.append('file_id', options.file_id);
+    // formData.append('position', options.position);
+    // formData.append('hash', options.hash);
+    // formData.append('data', chunk);
 
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', API_URL);
+    xhr.open('POST', this.chunk_url());
 
     xhr.upload.addEventListener('progress', this.onProgress.bind(this));
     xhr.upload.addEventListener('error', this.onError.bind(this));
     xhr.upload.addEventListener('abort', this.onAbort.bind(this));
-    xhr.addEventListener('readystatechange', this.onStateChange.bind(this, xhr));
+    xhr.addEventListener(
+      'readystatechange',
+      this.onStateChange.bind(this, xhr)
+    );
 
-    this.onStart();
+    this.begin();
 
-    xhr.send(formData);
+    xhr.send(chunk);
   };
 };
 

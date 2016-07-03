@@ -1,10 +1,10 @@
-var UploadFileComponent = function(file, actions) {
+var FileComponent = function(file, actions) {
   var buttons  = div({cls: 'btn-group'});
   var label    = div({cls: 'label'});
   var info     = div({cls: 'info'});
   var chunks   = div({cls: 'chunks'});
   var progress = span({cls: 'progress'});
-  var preview  = new UploadFilePreviewComponent(file);
+  var preview  = new FilePreviewComponent(file);
 
   var infoOpen = true;
 
