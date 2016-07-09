@@ -18,16 +18,16 @@ var FileListComponent = function(id) {
 
     var filez = [];
 
-    var downloadLink = function(url) {
+    var downloadLink = function(slug) {
       return function() {
-        window.gotoPage('#file/' + url);
+        window.gotoPage('#file/' + slug);
         console.log(url);
       };
     };
 
     for(var i = 0; i < files.length; i++) {
       var file = files[i];
-      var showFile = div({onclick: downloadLink(file.hash)}, file.name);
+      var showFile = div({onclick: downloadLink(file.slug)}, file.name.slice(0, 50));
 
       var fileEntry = {
         name: showFile,

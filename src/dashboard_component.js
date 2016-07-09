@@ -1,4 +1,60 @@
-var DashboardComponent = function() {
+var Dashboard = function() {
+  
+};
+
+var DashboardEntryComponent = function(data) {
+  var thumbnail_url =
+    'url("/api/v1/thumbnails/' + data.thumb_id + '")';
+
+  var title = span({cls: 'title'}, data.name);
+  var created_at = span(data.created_at);
+  var slug = data.slug;
+
+  var onClick = function() {
+    window.gotoPage("#file/" + slug);
+  };
+
+  var content = div({cls: 'content'}, title);
+
+  return div({
+    cls: 'entry',
+    style: { backgroundImage: thumbnail_url },
+    onclick: onClick
+  }, content);
+};
+
+var DashboardComponent = function(args) {
+  console.log("args" + args)
+  var dom = div({id: 'dashboard'});
+
+  var update = function(data){
+    for (var entry_id in data.data) {
+      var entry = data.data[entry_id];
+      dom.appendChild(
+        new DashboardEntryComponent(entry)
+      )
+    }
+
+    console.log(data)
+    return
+  }
+
+  var onLoad = function(text, xhr) {
+    if (xhr.status === 200) {
+      update(JSON.parse(text))
+    } else {
+      console.log("failed to retreive dash");
+    }
+  };
+
+  var fetch = function() {
+    I.get('/api/v1/dashboard?per_page=20', onLoad);
+  };
+
+  this.init = function() {
+    fetch();
+  }
+
   // smoothPlotter.smoothing = 0.3;
 
   // var data = [];
@@ -38,6 +94,6 @@ var DashboardComponent = function() {
 	// };
 
   this.render = function() {
-    return graphNode;
+    return dom;
   };
 };

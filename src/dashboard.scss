@@ -1,0 +1,55 @@
+$width: 800px;
+$height: 100px;
+$padding: 5px;
+$rows: 5;
+
+#dashboard {
+  width: $width;
+  display: flex;
+  min-height: 10px;
+  align-content: flex-start;
+  flex-flow: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  .entry {
+    width: 19%; // $width / $rows;
+    height: $height;
+    margin-bottom: 2*$padding;
+    cursor: pointer;
+    background-color: red;
+    background-position: center center;
+
+    -webkit-filter: grayscale(100%);
+    filter: grayscale(100%);
+
+    &:hover {
+      background-color: red;
+      -webkit-filter: none;
+      filter: none;
+      background-scale: cover;
+
+      .content {
+        .title {
+          display: block;
+        }
+      }
+    }
+
+    .content {
+      overflow: hidden;
+      height: $height;
+      position: relative;
+
+      .title {
+        display: none;
+        background-color: black;
+        white-space: pre;
+        overflow: hidden;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+      }
+    }
+  }
+}

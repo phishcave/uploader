@@ -2,7 +2,7 @@ var RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection 
 var RTCSessionDescription = window.RTCSessionDescription || window.mozRTCSessionDescription;
 
 var P2P = function(sessionID, callbacks) {
-  var config = { 'iceServers': [{'urls': 'stun:23.21.150.121'}] };
+  var config = { 'iceServers': [{'urls': 'stun:de.zqz.ca'}] };
   var conArgs = { 'optional': [{'DtlsSrtpKeyAgreement': true}] };
   var connection = new RTCPeerConnection(config, conArgs);
   var connected = false;

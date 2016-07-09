@@ -16,7 +16,7 @@ var P2PSender = function(connection, callbacks) {
   var wsURI = function() {
     var loc = window.location;
     var proto = loc.protocol === 'https:' ? 'wss:' : 'ws:';
-    var path = "/api/p2p/signaling";
+    var path = "/api/v1/p2p/signaling";
     return proto + "//" + loc.host + path;
   };
 

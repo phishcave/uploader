@@ -4,7 +4,7 @@ var RTCSessionDescription = window.RTCSessionDescription || window.mozRTCSession
 // I don't think is needed since I'm only going to use a DataChannel
 
 var P2PReceiver = function(connection, sessionID, callbacks) {
-  var api_path = "/api/p2p/join/" + sessionID;
+  var api_path = "/api/v1/p2p/" + sessionID;
   var desc = null;
 
   var initWebRTC = function() {

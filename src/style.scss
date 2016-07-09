@@ -2,6 +2,10 @@
 
 $input-border-color: #cdcdcd;
 
+* {
+  box-sizing: border-box;
+}
+
 input[type=text], input[type=password] {
   $border-size: 3px;
   $bottom-padding: (5px - $border-size);
