@@ -1,10 +1,7 @@
 var FileViewComponent = function(args) {
+  console.log(args);
   var file_view = new FileView(args);
   var dom = div({id: 'file_show'});
-
-  var buildHeader = function() {
-    var title = div(file_view.title());
-  };
 
   var dom = div({id: 'file'});
 
@@ -20,6 +17,10 @@ var FileViewComponent = function(args) {
     } else {
       dom.appendChild(div("No Preview Availabile"));
     }
+
+    var download = dominate.tags.a({cls: 'download', href: '/d/' + file.slug, target: '_blank'}, 'DOWNLOAD');
+
+    dom.appendChild(download)
   };
 
   file_view.onLoad = this.update;

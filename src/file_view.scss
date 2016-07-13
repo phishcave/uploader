@@ -1,5 +1,17 @@
 #file {
+  width: 800px;
+
   .preview {
     width: 800px;
+  }
+
+  .download {
+    background-color: #060806;
+    padding: 10px;
+    width: 300px;
+    display: inline-block;
+    text-align: center;
+    font-size: 2em;
+    color: white;
   }
 }

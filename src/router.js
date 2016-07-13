@@ -79,7 +79,7 @@ var Router = function(container) {
         window.setSection(component.title());
       }
 
-      callback(component);
+			callback(component);
     });
   };
 

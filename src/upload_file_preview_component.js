@@ -20,7 +20,7 @@ var FilePreviewComponent = function(file) {
 
   var createPreviewImage = function(evt) {
     var image = div({cls: 'image-preview'});
-    image.style.backgroundImage= 'url(' + e.target.result + ')';
+    image.style.backgroundImage= 'url(' + evt.target.result + ')';
     return image;
   };
 
