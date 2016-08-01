@@ -77,9 +77,9 @@ var File = function(file) {
 
   this.createFile = function(callback) {
     var fileData = {
-      size: file.size,
+      size: this.fileSize(),
       name: this.name(),
-      type: this.type(),
+      type: this.mimeType(),
       chunks: this.numChunks(),
       hash: this.hash()
     };
@@ -184,6 +184,14 @@ var File = function(file) {
 
   this.chunks = function() {
     return chunks;
+  };
+
+  this.fileSize = function() {
+    return file.size;
+  };
+
+  this.mimeType = function() {
+    return file.type;
   };
 
   this.size = function() {

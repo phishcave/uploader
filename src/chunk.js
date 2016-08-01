@@ -135,7 +135,7 @@ var Chunk = function(chunk, options) {
   };
 
   this.chunk_url = function() {
-    return '/api/v1/files/' + options.file_id + '/chunks/' + options.position;
+    return '/api/v1/files/' + options.file_id + '/chunks/' + options.position + '/' + options.hash;
   };
 
   this.upload = function() {
