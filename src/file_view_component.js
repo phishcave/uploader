@@ -1,17 +1,30 @@
 var FileViewComponent = function(args) {
+  if (args === undefined) {
+    console.log("File View Arguments should not be undefined!")
+    return
+  }
+
   console.log(args);
   var file_view = new FileView(args);
   var dom = div({id: 'file_show'});
 
   var dom = div({id: 'file'});
 
+  this.title = function() {
+    return "loading data";
+  };
+
   this.update = function(file) {
-    var title = div(file.name);
     var slug = file.url;
 
-    dom.appendChild(title);
+    // Since the file is loaded async the title must be set here
+    window.setSection(file.name);
 
-    if (file.type == 'image') {
+    console.dir(file)
+
+    var previewType = mime2name(file.type)
+
+    if (previewType == 'image') {
       var preview = dominate.tags.img({cls: 'preview', src: '/d/' + file.slug})
       dom.appendChild(preview);
     } else {

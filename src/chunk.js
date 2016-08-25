@@ -87,6 +87,7 @@ var Chunk = function(chunk, options) {
   // NON 201 Response from the server.
   this.onError = function(e) {
     state = STATE_ERRORED;
+    state = STATE_FINISHED;
 
     console.log("error");
 
@@ -106,6 +107,18 @@ var Chunk = function(chunk, options) {
       var callback = callbacks.finish[i];
       callback(p);
     }
+  };
+
+  this.Data = function()  {
+    return chunk;
+  };
+
+  this.SetHash = function(hash) {
+    options.hash = hash;
+  };
+
+  this.Hash = function() {
+    return options.hash;
   };
 
   // Let UI know the chunk is being uploaded.

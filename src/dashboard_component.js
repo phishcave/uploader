@@ -15,10 +15,15 @@ var DashboardEntryComponent = function(data) {
   };
 
   var content = div({cls: 'content'}, title);
+  var style = null;
+
+  if (data.thumb_id !== null) {
+    style = { backgroundImage: thumbnail_url };
+  }
 
   return div({
     cls: 'entry',
-    style: { backgroundImage: thumbnail_url },
+    style: style,
     onclick: onClick
   }, content);
 };

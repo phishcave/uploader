@@ -66,12 +66,14 @@ var Uploader = function() {
 
   // Starts uploading all files.
   this.start = function() {
-    console.log("start");
+    console.log("starting", chunks.length);
 
     for ( var i = 0; i < chunks.length; i++ ) {
       var c = chunks[i];
+      console.log("starting chunk: ", i, c.Hash())
 
       if ( c.isUploading() || c.isFinished() ) {
+        console.log("skipping", i, "finish or uploading")
         continue;
       }
 
@@ -90,6 +92,7 @@ var Uploader = function() {
   };
 
   this.addChunks = function(newChunks) {
+    var chunksToBeHashed = [];
     for ( var i = 0; i < newChunks.length; i ++ ) {
       var c = newChunks[i];
 
@@ -99,11 +102,26 @@ var Uploader = function() {
         continue;
       }
 
-      chunks.push(c);
+      chunksToBeHashed.push(
+        new Promise(function(resolve) {
+          var thenewchunk = c;
+          SHA1(c, function(chunk, hash) {
+            chunk.SetHash(hash);
+            chunks.push(chunk);
+            console.log("HASHED", chunk.Hash())
+            return resolve();
+          }.bind(this, c));
+        })
+      );
     }
 
-    // WEIRD - why do i start here?
-    this.start();
+    var starty = this.start.bind(this);
+    Promise.all(chunksToBeHashed).then(function() {
+      console.log("STARTING")
+      console.dir(chunks)
+      // WEIRD - why do i start here?
+      starty();
+    });
   };
 
   this.chunksFinished = function() {
@@ -135,6 +153,7 @@ var Uploader = function() {
   };
 
   this.startChunk = function(chunk) {
+    console.log("starting", chunk.Hash());
     if ( this.chunksInProgress() >= concurrency ) {
       console.log("cannt upload more than " + concurrency + " chunks at once");
       return false;
@@ -147,6 +166,7 @@ var Uploader = function() {
     }
 
     // Add callbacks
+    chunk.addErrorCallback(this.onChunkError.bind(this, chunk));
     chunk.addProgressCallback(this.onChunkProgress.bind(this, chunk));
     chunk.addFinishCallback(this.onChunkFinished.bind(this, chunk));
     chunk.addStartCallback(this.onChunkStarted.bind(this, chunk));
@@ -162,6 +182,11 @@ var Uploader = function() {
 
   this.onChunkStarted = function(chunk) {
 
+  };
+
+  this.onChunkError = function(chunk) {
+    console.log("chunk errored");
+    this.start();
   };
 
   this.onChunkFinished = function(chunk) {

@@ -73,6 +73,13 @@ var App = function() {
     return UploaderComponent;
   });
 
+  router.add("upload2", [
+    "new/upload_component.js",
+    "new/uploader.js"
+  ], function() {
+    return UploaderComponent;
+  });
+
   router.add("register", [
     "registration_component.js"
   ], function() {

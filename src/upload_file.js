@@ -44,10 +44,10 @@ var File = function(file) {
     id = response.id;
 
     switch(response.state) {
-      case 'Incomplete':
+      case 'incomplete':
         state = STATE_INCOMPLETE;
         break;
-      case 'Finished':
+      case 'finished':
         state = STATE_FINISHED;
         break;
       default:
@@ -80,7 +80,7 @@ var File = function(file) {
       size: this.fileSize(),
       name: this.name(),
       type: this.mimeType(),
-      chunks: this.numChunks(),
+      num_chunks: this.numChunks(),
       hash: this.hash()
     };
 
@@ -106,7 +106,11 @@ var File = function(file) {
   };
 
   this.start = function(callback) {
-    this.createFile(callback);
+    if (state != STATE_INCOMPLETE) {
+      this.createFile(callback);
+    } else {
+      callback();
+    }
     state = STATE_UPLOADING;
     this.updateViewCallback();
   };
@@ -242,12 +246,4 @@ var File = function(file) {
 
     return chunks;
   };
-  // WTF is this?
-  this.fakeUpload= function() {
-    var b = new Blob(["ddawd"], { type: 'text/plain' });
-    chunks.push(new Chunk(1, b));
-    chunks.push(new Chunk(2, b));
-    chunks.push(new Chunk(3, b));
-  };
-
 };
