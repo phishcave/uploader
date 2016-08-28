@@ -10,7 +10,7 @@ var File = function(file) {
   var chunkSize = 1024 * 1024;
   var startTime;
   var hash;
-  var id = -1;
+  var id = Math.ceil(Math.random() * 10000000);
   var chunks = [];
   var state = STATE_INITIALIZED;
 

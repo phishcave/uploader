@@ -20,13 +20,13 @@ $rows: 5;
     background-color: red;
     background-position: center center;
 
-    -webkit-filter: grayscale(100%);
-    filter: grayscale(100%);
+    // -webkit-filter: grayscale(100%);
+    // filter: grayscale(100%);
 
     &:hover {
       background-color: red;
-      -webkit-filter: none;
-      filter: none;
+      // -webkit-filter: none;
+      // filter: none;
       background-scale: cover;
 
       .content {

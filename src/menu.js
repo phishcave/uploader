@@ -24,12 +24,12 @@ var Menu = function() {
     addLink("All Files", "/files");
     addLink("Upload", "/upload");
 
-    if ( auth.loggedIn() ) {
-      addLink("Sign Out", "/logout");
-      addText(auth.username());
-    } else {
-      addLink("Sign In", "/login");
-    }
+//     if ( auth.loggedIn() ) {
+//       addLink("Sign Out", "/logout");
+//       addText(auth.username());
+//     } else {
+//       addLink("Sign In", "/login");
+//     }
   };
 
   this.render = function() {

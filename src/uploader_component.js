@@ -140,7 +140,8 @@ var UploaderComponent = function() {
     e.preventDefault();
     var files = e.target.files || e.dataTransfer.files;
     for (var i = 0; i < files.length; i++) {
-      var f = new File(files[i]);
+      var x = files[i];
+      var f = new File(x);
       this.addFile(f);
       console.log(f);
     }
