@@ -22,7 +22,7 @@ var get = function(url, callback) {
   xhr.onreadystatechange = function() {
     if (xhr.readyState !== 4) {
       // not the complete state
-      return
+      return;
     }
 
     var response = {};
@@ -40,15 +40,20 @@ var UploadCommands = function(file, emit) {
 
     var existsCallback = function(status, response) {
       if (status === 404) {
+        chunkFile();
         console.log("file does not exist");
       } else if ( status ===  200 ) {
-        console.dir(response)
+        console.dir(response);
         emit('file:state', response.state);
         console.log("file exists");
       }
     };
 
     get(url, existsCallback);
+  };
+
+  var chunkFile = function() {
+    emit('chunk:created', '');
   };
 
   // When a file is added we must hash it so that we can check
@@ -63,8 +68,13 @@ var UploadCommands = function(file, emit) {
     });
   };
 
+  var removeFile = function() {
+    emit('file:removed', file);
+  };
+
   return {
-    addFile: addFile
+    addFile: addFile,
+    removeFile: removeFile
   };
 };
 
@@ -89,6 +99,9 @@ var UploadWorker = function(callback) {
     switch(type) {
       case 'add':
         commands.addFile();
+        break;
+      case 'remove':
+        commands.removeFile();
         break;
       default:
         console.log("Received unrecognized command: " + type);

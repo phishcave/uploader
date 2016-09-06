@@ -34,14 +34,14 @@ var App = function() {
     "file_view_component.js"
   ], function() {
     return FileViewComponent;
-  })
+  });
 
   router.add("files", [
     "file_list.js",
     "file_list_component.js"
   ], function() {
     return FileListComponent;
-  })
+  });
 
   router.add("", [
     "dashboard_component.js",
@@ -74,7 +74,12 @@ var App = function() {
   });
 
   router.add("upload2", [
+    "new/sha.js",
+    "new/upload.js",
+    "new/file_component.js",
     "new/upload_component.js",
+    "new/upload_handler.js",
+    "new/upload_worker.js",
     "new/uploader.js"
   ], function() {
     return UploaderComponent;

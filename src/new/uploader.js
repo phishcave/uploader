@@ -1,47 +1,17 @@
-var File = function(blob) {
-  if (blob === undefined) {
-    console.log("Must specify file data");
-    return;
-  }
-
-  this.Data = function() {
-    return blob;
-  };
-
-  this.Attributes = {
-  };
-};
-
-
-// var Uploader = function() {
-//   var options = {
-//     Concurrency: 5,
-//     MaxFileSize: 25 * 1024 * 1024,
-//     ChunkSize: 1 * 1024 * 1024
-//   };
-
-//   var files = []; // internal list of files.
-
-//   this.AddFile = function(file) {
-//     SHA1(file, function(hash) {
-//       file.Attributes.Hash = hash;
-//       files.push(file);
-//     });
-//   };
-
-//   var fileExistsOnServer = function(file) {
-
-//   };
-// };
-
-
 var Uploader = function(callback) {
+  var options = {
+    Concurrency: 5,
+    MaxFileSize: 25 * 1024 * 1024,
+    ChunkSize: 1 * 1024 * 1024
+  };
+
   var handlers = [];
 
   var add = function(file) {
     var h = Upload(file, callback);
+    file.handler = h;
     handlers.push(h);
-    h.add()
+    h.add();
   };
 
   var start = function() {
@@ -51,10 +21,14 @@ var Uploader = function(callback) {
     }
   };
 
+  var remove = function(file) {
+    alert('why are you calling me?');
+    file.handler.remove();
+  };
+
   return {
     start: start,
+    remove: remove,
     add: add
   };
 };
-
-
