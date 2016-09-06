@@ -40,7 +40,6 @@ var UploadCommands = function(file, emit) {
 
     var existsCallback = function(status, response) {
       if (status === 404) {
-        chunkFile();
         console.log("file does not exist");
       } else if ( status ===  200 ) {
         console.dir(response);
@@ -52,8 +51,52 @@ var UploadCommands = function(file, emit) {
     get(url, existsCallback);
   };
 
-  var chunkFile = function() {
-    emit('chunk:created', '');
+
+  // This chunks the file and after all the chunks have been hashed, starts the
+  // upload process.
+  var startUpload = function() {
+    var chunkSize = 1000; // kb
+    var numChunks = file.blob.size / chunkSize;
+    var chunkPromises = [];
+
+    if (file.chunks !== undefined && file.chunks.length > 0) {
+      console.log("File Already Chunked!");
+      return;
+    }
+
+    file.chunks = [];
+    for(var i = 0; i < numChunks; i++) {
+      var dataStart = i * chunkSize;
+      var dataEnd = (i + 1) * chunkSize;
+
+      var blob = file.blob.slice(dataStart, dataEnd);
+      var chunk = {
+        id: Math.random(),
+        position: i,
+        blob: blob
+      };
+
+      file.chunks.push(chunk);
+
+      // We need to track when we've added all chunks.
+      var chunkPromise = addChunk(chunk);
+      chunkPromises.push(chunkPromise);
+    };
+
+    Promise.all(chunkPromises).then(function() {
+      startUpload();
+      emit('file:chunked');
+    });
+  };
+
+  var addChunk = function(chunk) {
+    return new Promise(function(resolve) {
+      SHA1(chunk.blob, function(hash) {
+        chunk.hash = hash;
+        emit('chunk:created', chunk);
+        return resolve();
+      });
+    });
   };
 
   // When a file is added we must hash it so that we can check
@@ -74,7 +117,8 @@ var UploadCommands = function(file, emit) {
 
   return {
     addFile: addFile,
-    removeFile: removeFile
+    removeFile: removeFile,
+    startFile: startFile
   };
 };
 
@@ -102,6 +146,9 @@ var UploadWorker = function(callback) {
         break;
       case 'remove':
         commands.removeFile();
+        break;
+      case 'start':
+        commands.startFile();
         break;
       default:
         console.log("Received unrecognized command: " + type);

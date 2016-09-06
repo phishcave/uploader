@@ -15,6 +15,7 @@ var FileComponent = function(uploader, file) {
   // The user has started the upload.
   var clickStart = function() {
     console.log("Starting File");
+    file.handler.start();
     alert('starting file');
   };
 
