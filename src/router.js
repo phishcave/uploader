@@ -27,36 +27,32 @@ var Router = function(container) {
     });
   };
 
-  this.gotoPage = function(path) {
-    this.navigate(path, 'normal');
-  }.bind(this);
 
-  this.silentGotoPage = function(path) {
-    this.navigate(path, 'silent');
-  }.bind(this);
+  var gotoPage = function(path) {
+    navigate(path, 'normal');
+  };
 
-  window.gotoPage = this.gotoPage;
-  window.silentGotoPage = this.silentGotoPage;
+  var silentGotoPage = function(path) {
+    navigate(path, 'silent');
+  };
 
   var onHashChange = function(e) {
     var hash = window.location.hash || window.location.pathname;
-    this.gotoPage(hash);
-  }.bind(this);
+    gotoPage(hash);
+  };
 
-  window.addEventListener('hashchange', onHashChange);
-
-  this.init = function() {
+  var init = function() {
     onHashChange();
   };
 
-  this.add = function(path, dependencies, func) {
+  var add = function(path, dependencies, func) {
     routes[path] = {
       deps: dependencies,
       func: func
     };
-  }.bind(this);
+  };
 
-  this.renderComponent = function(componentName, args, callback) {
+  var renderComponent = function(componentName, args, callback) {
     var routeInfo = routes[componentName];
     if ( routeInfo === undefined ) {
       return div("no content");
@@ -79,30 +75,30 @@ var Router = function(container) {
         window.setSection(component.title());
       }
 
-			callback(component);
+      callback(component);
     });
   };
 
   // When the user goes back.
-  window.onpopstate = function(e){
+  var onpopstate = function(e) {
     if (e.state) {
-      this.navigate(e.state.path, 'silent');
+      navigate(e.state.path, 'silent');
     } else {
-      this.navigate('/', 'silent');
+      navigate('/', 'silent');
     }
-  }.bind(this);
+  };
 
-  this.pushHistory = function(path) {
+  var pushHistory = function(path) {
     console.log("inserting history " + path);
     window.history.pushState({ "path": path }, path, path);
   };
 
-  this.updateHistory = function(path) {
+  var updateHistory = function(path) {
     console.log("updating history " + path);
     window.history.replaceState({ "path": path }, path, path);
   };
 
-  this.navigate = function(path, historyType) {
+  var navigate = function(path, historyType) {
     var url = path.replace(/^(#(\/)?)|(\/)/,'');
     var parts = url.split('/');
 
@@ -111,7 +107,7 @@ var Router = function(container) {
 
     H.empty(container);
 
-    this.renderComponent(whereTo, args, function(component) {
+    renderComponent(whereTo, args, function(component) {
       var node = component.render();
       container.appendChild(node);
 
@@ -129,12 +125,22 @@ var Router = function(container) {
       }
 
       if (historyType === "silent") {
-        this.updateHistory(history_path);
+        updateHistory(history_path);
       } else if ( historyType === "normal" ) {
-        this.pushHistory(history_path);
+        pushHistory(history_path);
       }
     }
 
     initialLoad = false;
+  };
+
+  window.gotoPage = gotoPage;
+  window.silentGotoPage = silentGotoPage;
+  window.onpopstate = onpopstate;
+  window.addEventListener('hashchange', onHashChange);
+
+  return {
+    init: init,
+    add: add,
   };
 };
