@@ -1,5 +1,5 @@
 var FileList = function(page, per_page) {
-  var API_URL  = '/api/v1/files'
+  var API_URL  = '/api/v1/files';
   var files    = [];
 
   // Overwrite this

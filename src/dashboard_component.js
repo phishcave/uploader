@@ -1,6 +1,4 @@
-var Dashboard = function() {
-  
-};
+var Dashboard = function() { };
 
 var DashboardEntryComponent = function(data) {
   var thumbnail_url =
@@ -29,7 +27,7 @@ var DashboardEntryComponent = function(data) {
 };
 
 var DashboardComponent = function(args) {
-  console.log("args" + args)
+  console.log("args" + args);
   var dom = div({id: 'dashboard'});
 
   var update = function(data){
@@ -37,28 +35,24 @@ var DashboardComponent = function(args) {
       var entry = data.data[entry_id];
       dom.appendChild(
         new DashboardEntryComponent(entry)
-      )
+      );
     }
 
-    console.log(data)
-    return
-  }
+    console.log(data);
+    return;
+  };
 
   var onLoad = function(text, xhr) {
     if (xhr.status === 200) {
-      update(JSON.parse(text))
+      update(JSON.parse(text));
     } else {
       console.log("failed to retreive dash");
     }
   };
 
   var fetch = function() {
-    I.get('/api/v1/dashboard?per_page=20', onLoad);
+    I.get('/api/v1/dashboard?per_page=70', onLoad);
   };
-
-  this.init = function() {
-    fetch();
-  }
 
   // smoothPlotter.smoothing = 0.3;
 
@@ -97,8 +91,13 @@ var DashboardComponent = function(args) {
   //     graph.updateOptions( { 'file': data } );
   //   }, 1000);
 	// };
-
-  this.render = function() {
-    return dom;
+  //
+  return {
+    init: function() {
+      fetch();
+    },
+    render: function() {
+      return dom;
+    }
   };
 };

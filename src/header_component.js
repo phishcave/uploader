@@ -2,24 +2,24 @@ var HeaderComponent = function(options) {
   var menu = options.menu;
 
   var onClickBanner = function() {
-    window.gotoPage('#')
+    window.gotoPage('#');
   };
 
-  var banner = span({cls: 'banner', onclick: onClickBanner}, 'ZQZ')
-  var section = span({cls: 'section'})
+  var banner = span({cls: 'banner', onclick: onClickBanner}, 'ZQZ');
+  var section = span({cls: 'section'});
   var user = span({cls: 'user'});
 
   var left = div({cls:'left'}, banner, section);
   var right = div({cls:'right'}, menu.render(), user);
   var container = div({cls: 'container'}, left, right);
 
-  var header = div({id: 'header'}, container);
+  var dom = div({id: 'header'}, container);
 
   // todo don't expose this on window. expose it on app
   window.setSection = function(title) {
-    var title = title.toLowerCase();
-    H.empty(section)
-    section.appendChild(span(title));
+    var header_title = title.toLowerCase();
+    H.empty(section);
+    section.appendChild(span(header_title));
 
     var parts = ["zqz.ca"];
 
@@ -30,7 +30,9 @@ var HeaderComponent = function(options) {
     document.title = parts.join(" - ");
   };
 
-  this.render = function() {
-    return header;
+  return {
+    render: function() {
+      return dom;
+    }
   };
 };

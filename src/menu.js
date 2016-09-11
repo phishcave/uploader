@@ -18,29 +18,32 @@ var Menu = function() {
     items.push(item);
   };
 
-  this.update = function() {
+  var update = function() {
     items = [];
 
     addLink("All Files", "/files");
     addLink("Upload", "/upload");
 
-//     if ( auth.loggedIn() ) {
-//       addLink("Sign Out", "/logout");
-//       addText(auth.username());
-//     } else {
-//       addLink("Sign In", "/login");
-//     }
+    //     if ( auth.loggedIn() ) {
+    //       addLink("Sign Out", "/logout");
+    //       addText(auth.username());
+    //     } else {
+    //       addLink("Sign In", "/login");
+    //     }
   };
 
-  this.render = function() {
-    this.update();
-    H.empty(menu);
+  return {
+    update: update, // why is this eeeexposed?
+    render: function() {
+      update();
+      H.empty(menu);
 
-    for (var i = 0; i < items.length; i++) {
-      menu.appendChild(items[i]);
+      for (var i = 0; i < items.length; i++) {
+        menu.appendChild(items[i]);
+      }
+
+      return menu;
     }
-
-    return menu;
   };
 };
 

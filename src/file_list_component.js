@@ -9,10 +9,6 @@ var FileListComponent = function(id) {
   var pagination = div("pagination");
   var dom = div({id: 'files'});
 
-  this.title = function() {
-    return "files";
-  };
-
   var filesLoaded = function(files) {
     H.empty(dom);
 
@@ -45,7 +41,12 @@ var FileListComponent = function(id) {
   fileList.onLoad = filesLoaded.bind(this);
   fileList.fetch();
 
-  this.render = function() {
-    return dom;
+  return {
+    title: function() {
+      return 'files';
+    },
+    render: function() {
+      return dom;
+    }
   };
 };

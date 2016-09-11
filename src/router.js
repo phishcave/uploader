@@ -17,10 +17,10 @@ var Router = function(container) {
         return resolve();
       }
 
-      var node = script({type: 'text/javascript', src: "/assets/" + scriptName})
+      var node = script({type: 'text/javascript', src: "/assets/" + scriptName});
       body.appendChild(node);
 
-      return node.onload = function() {
+      node.onload = function() {
         loadedScripts.push(name);
         return resolve();
       };
@@ -95,12 +95,12 @@ var Router = function(container) {
   this.pushHistory = function(path) {
     console.log("inserting history " + path);
     window.history.pushState({ "path": path }, path, path);
-  }
+  };
 
   this.updateHistory = function(path) {
     console.log("updating history " + path);
     window.history.replaceState({ "path": path }, path, path);
-  }
+  };
 
   this.navigate = function(path, historyType) {
     var url = path.replace(/^(#(\/)?)|(\/)/,'');
@@ -122,10 +122,10 @@ var Router = function(container) {
     });
 
     if (!initialLoad) {
-      history_path = "/" + whereTo
+      history_path = "/" + whereTo;
 
       if (args.length > 0) {
-        history_path += "/" + args
+        history_path += "/" + args;
       }
 
       if (historyType === "silent") {

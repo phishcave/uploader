@@ -75,6 +75,7 @@ var App = function() {
 
   router.add("upload2", [
     "new/sha.js",
+    "new/xhr.js",
     "new/upload.js",
     "new/file_component.js",
     "new/upload_component.js",
@@ -95,11 +96,10 @@ var App = function() {
 
   body.appendChild(dom);
 
-  this.addAlert = alerts.addAlert;
-  this.addError = alerts.addError;
-
-  this.boot = function() {
-
+  return {
+    addAlert: alerts.addAlert,
+    addError: alerts.addError,
+    boot: function() {}
   };
 };
 
