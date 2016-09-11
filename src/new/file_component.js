@@ -16,7 +16,6 @@ var FileComponent = function(uploader, file) {
   var clickStart = function() {
     console.log("Starting File");
     file.handler.start();
-    alert('starting file');
   };
 
   // The user has paused their upload.
@@ -50,26 +49,46 @@ var FileComponent = function(uploader, file) {
   var detailsButton = div({cls:'btn', onclick: clickDetails}, 'Details');
   var pauseButton = div({cls:'btn', onclick: clickPause}, 'Pause');
 
-  var setState = function(state) {
+  var setState = function() {
     H.empty(stateNode);
-    stateNode.appendChild(div(state));
+    stateNode.appendChild(div(file.state));
+    renderButtons();
   };
 
-  var setHash = function(hash) {
+  var setHash = function() {
     H.empty(hashNode);
-    hashNode.appendChild(div(hash));
+    hashNode.appendChild(div(file.hash));
   };
 
   var renderButtons = function() {
     H.empty(buttonsContainer);
 
-    // Stop buttons depending on states
-    buttonsContainer.appendChild(startButton);
-    buttonsContainer.appendChild(stopButton);
-    buttonsContainer.appendChild(pauseButton);
-    buttonsContainer.appendChild(resumeButton);
+    var canStart = file.state !== 'finished' && file.state !== 'uploading';
+    if (canStart) {
+      buttonsContainer.appendChild(startButton);
+    }
+
+    var canStop = file.state === 'uploading';
+    if (canStop) {
+      buttonsContainer.appendChild(stopButton);
+    }
+
+    var canPause = file.state === 'uploading';
+    if (canPause) {
+      buttonsContainer.appendChild(pauseButton);
+    }
+
+    var canResume = file.state === 'paused';
+    if (canResume) {
+      buttonsContainer.appendChild(resumeButton);
+    }
+
     buttonsContainer.appendChild(detailsButton);
-    buttonsContainer.appendChild(removeButton);
+
+    var canRemove = file.state === 'finished' || file.state == 'new';
+    if (canRemove) {
+      buttonsContainer.appendChild(removeButton);
+    }
   };
 
   var render = function() {
@@ -90,12 +109,18 @@ var FileComponent = function(uploader, file) {
 
   var addChunk = function(chunk) {
     var c = new ChunkComponent(chunk);
-    chunkComponents[chunk.id] = c;
+    chunkComponents[chunk.hash] = c;
     chunksContainerNode.appendChild(c.render());
+  };
+
+  var finishChunk = function(chunk) {
+    var c = chunkComponents[chunk.hash];
+    c.finish();
   };
 
   return {
     addChunk: addChunk,
+    finishChunk: finishChunk,
     setState: setState,
     setHash: setHash,
     remove: remove,

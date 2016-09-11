@@ -1,11 +1,52 @@
-var UploadHandler = function(file, callback) {
+// TODO: Come up with an explanation for why this exists as it does.
+var UploadHandler = function(file, worker) {
   var id = Math.random();
   file.id = id;
 
-  var handleCallback = function(type, payload) {
+  // Not used...
+  var stateString = function(stateInt) {
+    var states = [
+      'incomplete',
+      'processing',
+      'finished'
+    ];
+
+    if (stateInt === null) {
+      return 'new';
+    }
+
+    return states[stateInt];
+  };
+
+  var onmessage = function(type, payload) {
     switch(type) {
+      case 'file:created':
+        file.file_id = payload.id;
+        break;
       case 'file:hashed':
         file.hash = payload;
+        break;
+      case 'file:state':
+        file.file_id = payload.id;
+        file.state = payload.state;
+
+        var chunks_needed = payload.chunks_needed;
+        var chunks_received = payload.chunks_received;
+
+        // The number of chunks the server is missing.
+        if (chunks_needed !== undefined) {
+          file.chunks_needed = chunks_needed;
+        }
+
+        // The hashes of the chunks the server has received.
+        if (chunks_received !== undefined) {
+          file.chunks_received = chunks_received;
+        }
+
+        console.log("setting state", file.state);
+        break;
+      case 'file:uploading':
+        file.state = 'uploading';
         break;
       default:
         console.log("Ignoring", type);
@@ -13,14 +54,8 @@ var UploadHandler = function(file, callback) {
     }
   };
 
-  uploadWorkerCallbacks[id] = function(type, payload) {
-    // handle the message here, but also pass it on.
-    handleCallback(type, payload);
-    callback(file.id, type, payload);
-  };
-
   var emit = function(type, payload) {
-    uploadWorker.send({id: id, type: type, payload: payload});
+    worker.send({id: id, type: type, payload: payload});
   };
 
   return {
@@ -32,6 +67,7 @@ var UploadHandler = function(file, callback) {
     },
     remove: function() {
       emit('remove', file);
-    }
+    },
+    onmessage: onmessage
   };
 };

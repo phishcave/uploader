@@ -14,36 +14,46 @@
 // chunk:cancelled
 // chunk:errored
 // chunk:finished
+// todo - create file on server if not exist.
+//      - upload chunks
+//      - send events
+//      - clean this up
 //
 
-var get = function(url, callback) {
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', url, true);
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState !== 4) {
-      // not the complete state
-      return;
-    }
-
-    var response = {};
-    if (xhr.response !== "") {
-      response = JSON.parse(xhr.response);
-    }
-    callback(xhr.status, response);
-  };
-  xhr.send();
-};
-
 var UploadCommands = function(file, emit) {
-  var checkIfFileExists = function(hash) {
-    var url = '/api/v1/check/' + hash;
+  // Creates a "file" on the server. This is really just a container id for us
+  // to upload chunks to.
+  var createFile = function() {
+    var url = '/api/v1/files';
+
+    var payload = {
+      name: file.name,
+      size: file.blob.size,
+      type: file.blob.type,
+      hash: file.hash,
+      num_chunks: file.num_chunks
+    };
+
+    var createCallback = function(status, response) {
+      if (status === 201) {
+        emit('file:created', response);
+        uploadChunks();
+      } else {
+        console.log("file already exists..");
+      }
+    };
+
+    postJSON(url, payload, createCallback);
+  };
+
+  var fetchStatus = function() {
+    var url = '/api/v1/check/' + file.hash;
 
     var existsCallback = function(status, response) {
       if (status === 404) {
         console.log("file does not exist");
       } else if ( status ===  200 ) {
-        console.dir(response);
-        emit('file:state', response.state);
+        emit('file:state', response);
         console.log("file exists");
       }
     };
@@ -51,12 +61,40 @@ var UploadCommands = function(file, emit) {
     get(url, existsCallback);
   };
 
+  var startFile = function() {
+    if (file.state === 'finished') {
+      console.log("File already uploaded");
+      return;
+    }
+
+    if (file.state === 'new') {
+      console.log("creating file");
+      createFile();
+      return;
+    }
+
+    resumeFile();
+  };
+
+  var resumeFile = function() {
+    console.log("resuming");
+    uploadChunks();
+  };
+
+  var uploadChunks = function() {
+    var chunkPromises = chunkFile();
+
+    Promise.all(chunkPromises).then(function() {
+      emit('file:chunked');
+      startUpload();
+    });
+  };
 
   // This chunks the file and after all the chunks have been hashed, starts the
-  // upload process.
-  var startUpload = function() {
-    var chunkSize = 1000; // kb
-    var numChunks = file.blob.size / chunkSize;
+  // upload process. This should be moved somewhere else.
+  var chunkFile = function() {
+    var chunkSize = file.chunk_size;
+    var numChunks = file.num_chunks;
     var chunkPromises = [];
 
     if (file.chunks !== undefined && file.chunks.length > 0) {
@@ -72,6 +110,7 @@ var UploadCommands = function(file, emit) {
       var blob = file.blob.slice(dataStart, dataEnd);
       var chunk = {
         id: Math.random(),
+        file_id: file.file_id,
         position: i,
         blob: blob
       };
@@ -81,12 +120,44 @@ var UploadCommands = function(file, emit) {
       // We need to track when we've added all chunks.
       var chunkPromise = addChunk(chunk);
       chunkPromises.push(chunkPromise);
+    }
+
+    return chunkPromises;
+  };
+
+  var startUpload = function() {
+    emit('file:uploading');
+
+    for (var i = 0; i < file.chunks.length; i++) {
+      var c = file.chunks[i];
+      uploadChunk(c);
+    }
+  };
+
+  var uploadChunk = function(c) {
+    if (c === undefined) {
+      console.log("chunk is null?");
+      return;
+    }
+
+    if (c.file_id === undefined) {
+      console.log("no file id for what reason?!");
+      console.log(file);
+      return;
+    }
+
+    var url = '/api/v1/files/' + c.file_id + '/chunks/' + c.position + '/' + c.hash;
+    var chunkProgress = function(progress) {
+      console.log("progress");
+      console.dir(progress);
     };
 
-    Promise.all(chunkPromises).then(function() {
-      startUpload();
-      emit('file:chunked');
-    });
+    var chunkFinished = function(response) {
+      emit("chunk:finished", c);
+      console.log("chunk finished");
+    };
+
+    post(url, c.blob, chunkProgress, chunkFinished);
   };
 
   var addChunk = function(chunk) {
@@ -106,8 +177,7 @@ var UploadCommands = function(file, emit) {
 
     SHA1(file.blob, function(hash) {
       emit('file:hashed', hash);
-
-      checkIfFileExists(hash);
+      fetchStatus();
     });
   };
 
@@ -147,6 +217,9 @@ var UploadWorker = function(callback) {
       case 'remove':
         commands.removeFile();
         break;
+      case 'status':
+        commands.checkStatus();
+        break;
       case 'start':
         commands.startFile();
         break;
@@ -164,8 +237,5 @@ var UploadWorker = function(callback) {
 var FileChunker = function(file) {
   var chunkSize = 1;
   var blob = file.blob;
-
-  var start = function() {
-
-  };
+  var start = function() { };
 };

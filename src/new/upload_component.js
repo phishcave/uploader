@@ -103,11 +103,11 @@ var UploaderComponent = function() {
 
   // View updates when a file is hashed.
   var fileHashed = function(id, hash) {
-    fileNodes[id].setHash(hash);
+    fileNodes[id].setHash();
   };
 
-  var fileStateChange = function(id, state) {
-    fileNodes[id].setState(state);
+  var fileStateChange = function(id, payload) {
+    fileNodes[id].setState();
   };
 
   var fileRemoved = function(id, payload) {
@@ -115,8 +115,16 @@ var UploaderComponent = function() {
     delete fileNodes[id];
   };
 
+  var fileUploading = function(id) {
+    fileNodes[id].setState();
+  };
+
   var chunkCreated = function(id, chunk) {
     fileNodes[id].addChunk(chunk);
+  };
+
+  var chunkFinished = function(id, chunk) {
+    fileNodes[id].finishChunk(chunk);
   };
 
   var onmessage = function(id, type, payload) {
@@ -133,8 +141,14 @@ var UploaderComponent = function() {
       case 'file:state':
         fileStateChange(id, payload);
         break;
+      case 'file:uploading':
+        fileUploading(id);
+        break;
       case 'chunk:created':
         chunkCreated(id, payload);
+        break;
+      case 'chunk:finished':
+        chunkFinished(id, payload);
         break;
       default:
         console.log("default: " + type);
@@ -148,6 +162,7 @@ var UploaderComponent = function() {
   };
 
   var u = Uploader(onmessage);
+  window.uploader = u;
   var dom = div({cls: 'uploads'});
   var fileNodes = {}; // Keep track of file nodes
   var buttonsNode = new UploaderButtonsComponent(u);
@@ -161,7 +176,7 @@ var UploaderComponent = function() {
 var ChunkComponent = function(chunk) {
   var dom = div({cls:'chunk'}, 'a chunk');
 
-  var setProgress = function(percent) {
+  var set_progress = function(percent) {
 
   };
 
@@ -171,6 +186,9 @@ var ChunkComponent = function(chunk) {
 
   return {
     render: render,
-    setProgress: setProgress
+    finish: function() {
+      dom.appendChild(div('finished'));
+    },
+    set_progress: set_progress
   };
 };

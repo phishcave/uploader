@@ -19,21 +19,22 @@ var SHA1 = function(file, callback) {
     return;
   }
 
-  if (!rushaLoaded) {
+  if (rushaLoaded === false) {
     rusha = new Worker('assets/lib/rusha.js');
+    rushaLoaded = true;
 
     rusha.addEventListener('message', function(e) {
       var callbackFunc = rushaCallbacks[e.data.id];
       if (callbackFunc === undefined) {
         console.log("Failed to find callback func for " + e.data.id);
         console.dir(e);
-        return
+        return;
       }
 
       var id = e.data.id;
       var hash = e.data.hash;
 
-      console.log("Hashed: " + id + " - " + hash)
+      console.log("Hashed: " + id + " - " + hash);
       callbackFunc(hash);
       delete rushaCallbacks[id];
     });
