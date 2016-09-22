@@ -63,3 +63,21 @@ var get = function(url, callback) {
   };
   xhr.send();
 };
+
+
+var deleteRequest = function(url, callback) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('DELETE', url, true);
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState !== 4) { return; } // not the complete state
+
+    var response = {};
+    if (xhr.response !== "") {
+      response = JSON.parse(xhr.response);
+    }
+
+    callback(xhr.status, response);
+  };
+  xhr.send();
+};
+

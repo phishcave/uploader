@@ -46,8 +46,6 @@ var App = function() {
   router.add("", [
     "dashboard_component.js",
     "lib/d3.min.js",
-    // "lib/dygraph-combined-dev.js",
-    // "lib/smooth-plotter.js"
   ], function() {
     return DashboardComponent;
   });
@@ -99,11 +97,11 @@ var App = function() {
   return {
     addAlert: alerts.addAlert,
     addError: alerts.addError,
-    boot: function() {}
+    boot: function() {},
+    root: '/api/v1/'
   };
 };
 
 window.app = new App();
 window.app.boot();
-
 

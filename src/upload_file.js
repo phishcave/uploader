@@ -93,7 +93,7 @@ var File = function(file) {
 
   this.onFileCreate = function(xhr, callback) {
     if (xhr.readyState === 4) {
-      if(xhr.status === 200) {
+      if(xhr.status === 201) {
         id = JSON.parse(xhr.response).id;
         state = STATE_QUEUED;
         console.log(xhr);

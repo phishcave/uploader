@@ -1,20 +1,33 @@
+var FilePaths = function(file) {
+  var slug = file.slug;
+
+  return {
+    download: function() {
+      return '/d/' + file.slug;
+    },
+    preview: function() {
+      return '/d/' + file.slug;
+    },
+    delete: function() {
+      return app.root + 'files/' + slug + '/delete';
+    }
+  };
+};
+
 var FileViewComponent = function(args) {
   if (args === undefined) {
     console.log("File View Arguments should not be undefined!");
     return;
   }
 
-  console.log(args);
-  var file_view = new FileView(args);
-  // var dom = div({id: 'file_show'});
+  console.log("Arguments");
+  console.dir(args);
 
   var dom = div({id: 'file'});
+  var file_view = new FileView(args);
 
-  this.title = function() {
-    return "loading data";
-  };
-
-  this.update = function(file) {
+  var update = function(file) {
+    var paths = FilePaths(file);
     var slug = file.url;
 
     // Since the file is loaded async the title must be set here
@@ -25,21 +38,38 @@ var FileViewComponent = function(args) {
     var previewType = mime2name(file.type);
 
     if (previewType == 'image') {
-      var preview = dominate.tags.img({cls: 'preview', src: '/d/' + file.slug});
+      var preview = dominate.tags.img({cls: 'preview', src: paths.download()});
       dom.appendChild(preview);
     } else {
       dom.appendChild(div("No Preview Availabile"));
     }
 
-    var download = dominate.tags.a({cls: 'download', href: '/d/' + file.slug, target: '_blank'}, 'DOWNLOAD');
+    var download = dominate.tags.a({cls: 'download', href: paths.download(), target: '_blank'}, 'DOWNLOAD');
+
+    var deleteFile = function() {
+      console.log("deleting file");
+      deleteRequest(paths.delete(), function(status, response) {
+        if (status == 204) {
+          console.log("file deleted!");
+        } else {
+          console.log("error deleting file");
+        }
+      });
+    };
+    var deleteBtn = div({onclick: deleteFile}, 'delete');
 
     dom.appendChild(download);
+    dom.appendChild(deleteBtn);
   };
 
-  file_view.onLoad = this.update;
+  file_view.onLoad = update;
 
-  this.render = function() {
-    file_view.fetch();
-    return dom;
+  return {
+    render: function() {
+      file_view.fetch();
+      return dom;
+    },
+    update: update,
+    title: function() { return "loading data"; },
   };
 };

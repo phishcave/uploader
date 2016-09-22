@@ -17,16 +17,15 @@ var Router = function(container) {
         return resolve();
       }
 
-      var node = script({type: 'text/javascript', src: "/assets/" + scriptName});
-      body.appendChild(node);
+      var s = script({type: 'text/javascript', src: window.cdn + scriptName});
+      body.appendChild(s);
 
-      node.onload = function() {
+      s.onload = function() {
         loadedScripts.push(name);
         return resolve();
       };
     });
   };
-
 
   var gotoPage = function(path) {
     navigate(path, 'normal');
