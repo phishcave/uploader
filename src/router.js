@@ -17,7 +17,7 @@ var Router = function(container) {
         return resolve();
       }
 
-      var s = script({type: 'text/javascript', src: window.cdn + scriptName});
+      var s = script({type: 'text/javascript', src: window.cdn + '/' + scriptName});
       body.appendChild(s);
 
       s.onload = function() {
