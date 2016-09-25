@@ -1,47 +1,27 @@
-@import "mixins.scss";
+@import "mixins";
 
 $height: $header-height;
-$bg: #5ba504;
-$fg: white;
 
 #header {
-  @include user-select(none);
+  background-color: $header-bg;
+  color: white;
 
-  width: 100%;
-  margin-top: 10px;
+  padding: 10px 0;
 
-  .left {
-    flex-grow: 1;
-  }
-
-  .right {
-  }
-
-  .container {
-    display: flex;
-    flex-direction: row;
-  }
-
-  // The ZQZ
   .banner {
     font-weight: bold;
     margin-right: 10px;
+    @include user-select(none);
     cursor: pointer;
   }
 
   // The current part of the website the user is on.
-  .section {
-
-  }
-
+  .section { }
   // Menu Items.
   .menu {
-
+    @include user-select(none);
   }
-
   // User info
-  .auth {
-
-  }
+  .auth { }
 }
 

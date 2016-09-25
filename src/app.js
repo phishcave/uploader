@@ -30,6 +30,7 @@ var App = function() {
   });
 
   router.add("file", [
+    "date.js",
     "file_view.js",
     "file_view_component.js"
   ], function() {
@@ -37,6 +38,7 @@ var App = function() {
   });
 
   router.add("files", [
+    "date.js",
     "file_list.js",
     "file_list_component.js"
   ], function() {
@@ -73,9 +75,11 @@ var App = function() {
 
   router.add("upload2", [
     "new/sha.js",
+    "new/paste.js",
     "new/xhr.js",
     "new/upload.js",
     "new/file_component.js",
+    "new/upload_settings_component.js",
     "new/upload_component.js",
     "new/upload_handler.js",
     "new/upload_worker.js",

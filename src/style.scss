@@ -6,20 +6,25 @@ $input-border-color: #cdcdcd;
   box-sizing: border-box;
 }
 
+a {
+  color: white;
+}
+
 input[type=text], input[type=password] {
   $border-size: 3px;
   $bottom-padding: (5px - $border-size);
 
   background-color: $bg-color;
-  color: lighten($border-hover-color, 30%);
+  color: $text-color;
   outline: none;
   outline-style:none;
   box-shadow:none;
 	border: solid 1px $border-color;
-  border-radius: 2px;
-  padding: 0;
+  padding: 2px 5px;
   margin: 0;
   display: block;
+  font-family: monospace;
+  line-height: 10px;
   box-sizing: border-box;
 
   &:focus {
@@ -33,6 +38,7 @@ body, html {
   margin: 0;
   width: 100%;
   min-height: 100%;
+  background-color: $bg-color;
 }
 
 html {
@@ -45,7 +51,7 @@ body {
 
   font-family: monospace, sans-serif;
   background-color: $bg-color;
-  color: white;
+  color: $text-color;
 }
 
 .container {
@@ -92,6 +98,7 @@ body {
 .btn {
   @include user-select(none);
 
+  background-color: $header-bg;
   text-transform: uppercase;
   border-radius: 0px;
   line-height: $btn-height - 2px;
@@ -99,11 +106,6 @@ body {
   padding: 0px 5px;
   display: inline-block;
   vertical-align: middle;
-  border: solid 1px $border-color;
-
-  &:hover {
-    color: red;
-  }
 
   .material-icons {
     position: relative;
@@ -120,7 +122,7 @@ body {
 }
 
 .btn-group {
-  $btn-spacing: 5px;
+  $btn-spacing: 10px;
 
   .btn {
     &:first-child {
@@ -182,7 +184,14 @@ body {
   float: right;
 }
 
-#graph { 
-  width: 500px;
-  height: 400px;
+.bar {
+  width: 100%;
+  .left {
+    flex-grow: 1;
+  }
+  .right {}
+  .container {
+    display: flex;
+    flex-direction: row;
+  }
 }

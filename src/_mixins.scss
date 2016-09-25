@@ -1,4 +1,7 @@
-$bg-color: #131914;
+$bg-color: #001317;
+$text-color: white;
+$header-bg: #00303B;
+
 $inner-bg: #080A08;
 $border-color: #364737;
 $border-hover-color: #455C47;
@@ -13,16 +16,12 @@ $colorb: #523478;
 $colorc: #07a1d8;
 
 $link-color: #268bd2;
-$text-color: darken(black, 20%);
 $background-color: white;
-//$header-bg: #1F5846;
-$header-bg: #4A90E2;
-$header-fg: white;
 
 $text-shadow: darken($colorb, 20%);
 
 $btn-bg: lighten($background-color, 5%);
-$btn-height: 30px;
+$btn-height: 25px;
 
 @mixin user-select($val) {
   cursor: default;

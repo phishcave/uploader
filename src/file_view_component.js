@@ -25,6 +25,16 @@ var FileViewComponent = function(args) {
 
   var dom = div({id: 'file'});
   var file_view = new FileView(args);
+  var url = dominate.tags.input({type: 'text', cls:''}, 'hello');
+
+  var renderInfo = function(file) {
+
+    var size = div('Size: ', filesize(file.size));
+    var date = div('Date: ', localized_date(file.created_at));
+    var hash = div('Hash: ', file.hash);
+
+    return div(size, date, hash);
+  };
 
   var update = function(file) {
     var paths = FilePaths(file);
@@ -60,6 +70,9 @@ var FileViewComponent = function(args) {
 
     dom.appendChild(download);
     dom.appendChild(deleteBtn);
+    dom.appendChild(url);
+
+    dom.appendChild(renderInfo(file));
   };
 
   file_view.onLoad = update;

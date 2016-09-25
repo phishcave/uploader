@@ -1,16 +1,19 @@
-@import "mixins.scss";
-
 #files {
   width: 100%;
   min-width: 800px;
   .table {
     .name {
       flex-grow: 1;
-      min-width: 50%;
+      min-width: 45%;
+      max-width: 45%;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
       cursor: pointer;
+    }
+
+    .created_at {
+      max-width: 26%;
     }
 
     .size {

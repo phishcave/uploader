@@ -2,10 +2,11 @@ var FileListComponent = function(id) {
   var table = new TableComponent({columns: [
     {name: 'File Name', property: 'name'},
     {name: 'Size', property: 'size', align: 'center'},
-    {name: 'Options', property: 'options', align: 'right'},
+    {name: 'Created At', property: 'created_at', align: 'right'},
+    {name: 'Options', property: 'options', align: 'right'}
   ]});
 
-  var fileList = new FileList(0, 5);
+  var fileList = new FileList(0, 150);
   var pagination = div("pagination");
   var dom = div({id: 'files'});
 
@@ -28,6 +29,7 @@ var FileListComponent = function(id) {
       var fileEntry = {
         name: showFile,
         size: filesize(file.size),
+        created_at: localized_date(file.created_at),
         options: 'DEL HIDE'
       };
 

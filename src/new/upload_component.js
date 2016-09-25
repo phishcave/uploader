@@ -1,5 +1,5 @@
 var UploaderButtonsComponent = function(uploader) {
-  var dom = div({cls: 'buttons'});
+  var dom = div({cls: 'buttons btn-group left'});
   var state = 'initial';
 
   // When the file input changes this is called. This is not called when a user
@@ -59,7 +59,9 @@ var UploaderButtonsComponent = function(uploader) {
     var browse = div({cls:'btn', onclick: clickBrowse}, 'Browse');
     var clear = div({cls:'btn', onclick: clickClear}, 'Clear');
 
-    dom.appendChild(div(hidden, browse, start, clear));
+    document.body.appendChild(hidden);
+
+    dom.appendChild(div(browse, start, clear));
 
     return dom;
   };
@@ -158,7 +160,8 @@ var UploaderComponent = function() {
   };
 
   var render = function() {
-    return div(buttonsNode.render(), dom, "hello");
+    var bar = div({cls: 'bar'}, div({cls: 'container'}, buttonsNode.render(), settingsNode.render()));
+    return div({id: 'uploader'}, bar, dom);
   };
 
   var u = Uploader(onmessage);
@@ -166,10 +169,12 @@ var UploaderComponent = function() {
   var dom = div({cls: 'uploads'});
   var fileNodes = {}; // Keep track of file nodes
   var buttonsNode = new UploaderButtonsComponent(u);
+  var settingsNode = new UploaderSettingsComponent(u);
 
   return {
     init: init,
-    render: render
+    render: render,
+    title: function() { return 'upload'; }
   };
 };
 

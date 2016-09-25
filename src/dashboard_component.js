@@ -8,8 +8,11 @@ var DashboardEntryComponent = function(data) {
   var created_at = span(data.created_at);
   var slug = data.slug;
 
-  var onClick = function() {
-    window.gotoPage("#file/" + slug);
+  var href = "/file/" + slug;
+
+  var onClick = function(e) {
+    e.preventDefault();
+    window.gotoPage(href);
   };
 
   var content = div({cls: 'content'}, title);
@@ -19,9 +22,11 @@ var DashboardEntryComponent = function(data) {
     style = { backgroundImage: thumbnail_url };
   }
 
-  return div({
+  return dominate.tags.a({
     cls: 'entry',
+    title: data.name,
     style: style,
+    href: href,
     onclick: onClick
   }, content);
 };

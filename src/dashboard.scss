@@ -1,3 +1,5 @@
+@import "mixins";
+
 $width: 800px;
 $height: 100px;
 $padding: 5px;
@@ -17,16 +19,12 @@ $rows: 5;
     height: $height;
     margin-bottom: 2*$padding;
     cursor: pointer;
-    background-color: red;
     background-position: center center;
-
-    // -webkit-filter: grayscale(100%);
-    // filter: grayscale(100%);
+    background-color: #000608;
+    border-radius: 1px;
 
     &:hover {
       background-color: red;
-      // -webkit-filter: none;
-      // filter: none;
       background-scale: cover;
 
       .content {

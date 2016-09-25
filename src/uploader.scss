@@ -1,5 +1,42 @@
 @import 'mixins.scss';
 
+// This is the input field which is used to fetch files.
+.upload-input {
+  display: none;
+}
+
+.checkbox-container {
+  margin-left: 10px;
+  line-height: 25px;
+  @include user-select(none);
+}
+
+.checkbox {
+  margin-left: 10px;
+  position: relative;
+  top: -2px;
+  $size: 20px;
+  background-color: $header-bg;
+  color: white;
+  width: $size;
+  height: $size;
+  display: inline-block;
+  vertical-align: middle;
+  cursor: pointer;
+
+  &.active {
+    &:after {
+      float: left;
+      width: $size;
+      height: $size;
+      line-height: $size;
+      text-align: center;
+      content: '✓';
+      font-size: 20px;
+    }
+  }
+}
+
 #uploader {
   min-width: 800px;
 
@@ -10,7 +47,18 @@
   }
 }
 
-// This is the input field which is used to fetch files.
-.upload-input {
-  display: none;
+#uploader {
+  min-width: 800px;
+
+  .bar {
+    .container {
+      flex-direction: row;
+    }
+  }
+  .buttons {
+  }
+
+  .settings {
+    text-align: right;
+  }
 }

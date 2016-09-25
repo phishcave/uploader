@@ -13,7 +13,7 @@ var HeaderComponent = function(options) {
   var right = div({cls:'right'}, menu.render(), user);
   var container = div({cls: 'container'}, left, right);
 
-  var dom = div({id: 'header'}, container);
+  var dom = div({id: 'header', cls: 'bar'}, container);
 
   // todo don't expose this on window. expose it on app
   window.setSection = function(title) {
