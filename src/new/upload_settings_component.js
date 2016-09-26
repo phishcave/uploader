@@ -1,7 +1,8 @@
 var UploaderSettingsComponent = function(uploader) {
+  var settings = uploader.settings;
 
-  var checkBox = function(name, value) {
-    var currentValue = value;
+  var checkBox = function(name, initialValue, onChange) {
+    var currentValue = initialValue;
 
     var update = function() {
       if (currentValue) {
@@ -13,6 +14,7 @@ var UploaderSettingsComponent = function(uploader) {
 
     var onClick = function() {
       currentValue = !currentValue;
+      onChange(currentValue);
       update();
     };
 
@@ -22,8 +24,19 @@ var UploaderSettingsComponent = function(uploader) {
     return element;
   };
 
-  var instantUpload = div({cls:'checkbox'});
-  var dom = div({cls: 'settings right'}, checkBox('Instant Upload', true), checkBox('Redirect', true));
+  var instant = checkBox(
+    'Instant Upload',
+    settings.instant(),
+    settings.setInstant
+  );
+
+  var redirect = checkBox(
+    'Redirect',
+    settings.redirect(),
+    settings.setRedirect
+  );
+
+  var dom = div({cls: 'settings right'}, instant, redirect);
 
   //instant upload
   //redirect

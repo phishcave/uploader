@@ -129,6 +129,11 @@ var UploaderComponent = function() {
     fileNodes[id].finishChunk(chunk);
   };
 
+  var chunkProgress = function(id, chunk) {
+    console.log(id)
+    console.log(chunk)
+  };
+
   var onmessage = function(id, type, payload) {
     switch(type) {
       case 'file:removed':
@@ -148,6 +153,9 @@ var UploaderComponent = function() {
         break;
       case 'chunk:created':
         chunkCreated(id, payload);
+        break;
+      case 'chunk:progress':
+        chunkProgress(id, payload);
         break;
       case 'chunk:finished':
         chunkFinished(id, payload);
@@ -182,7 +190,7 @@ var ChunkComponent = function(chunk) {
   var dom = div({cls:'chunk'}, 'a chunk');
 
   var set_progress = function(percent) {
-
+    console.log("chunk progress", percent);
   };
 
   var render = function() {

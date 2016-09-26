@@ -1,16 +1,8 @@
-var FilePaths = function(file) {
-  var slug = file.slug;
-
+var FilePaths = function(slug) {
   return {
-    download: function() {
-      return '/d/' + file.slug;
-    },
-    preview: function() {
-      return '/d/' + file.slug;
-    },
-    delete: function() {
-      return app.root + 'files/' + slug + '/delete';
-    }
+    download: '/d/' + slug,
+    preview: '/d/' + slug,
+    delete: app.root + 'files/' + slug + '/delete'
   };
 };
 
@@ -23,46 +15,47 @@ var FileViewComponent = function(args) {
   console.log("Arguments");
   console.dir(args);
 
+  var slug = args[0];
+  var paths = new FilePaths(slug);
+
   var dom = div({id: 'file'});
-  var file_view = new FileView(args);
   var url = dominate.tags.input({type: 'text', cls:''}, 'hello');
 
-  var renderInfo = function(file) {
-
+  var fileInfoNode = function(file) {
+    var name = div('Name: ', file.name);
     var size = div('Size: ', filesize(file.size));
     var date = div('Date: ', localized_date(file.created_at));
     var hash = div('Hash: ', file.hash);
+    var url = div('URL:  ', paths.download);
+    var views = div('Views: ', 0);
 
-    return div(size, date, hash);
+    return div(name, size, date, hash, url, views);
   };
 
-  var update = function(file) {
-    var paths = FilePaths(file);
-    var slug = file.url;
+  var previewNode = function(file) {
+    var type = mime2name(file.type);
 
-    // Since the file is loaded async the title must be set here
+    if (type == 'image') {
+      return dominate.tags.img({cls: 'preview', src: paths.download});
+    } else {
+      return div('No preview available for ' + type);
+    }
+  };
+
+  var onResponse = function(file) {
     window.setSection(file.name);
 
-    console.dir(file);
+    dom.appendChild(previewNode(file));
 
-    var previewType = mime2name(file.type);
-
-    if (previewType == 'image') {
-      var preview = dominate.tags.img({cls: 'preview', src: paths.download()});
-      dom.appendChild(preview);
-    } else {
-      dom.appendChild(div("No Preview Availabile"));
-    }
-
-    var download = dominate.tags.a({cls: 'download', href: paths.download(), target: '_blank'}, 'DOWNLOAD');
+    var download = dominate.tags.a({cls: 'download', href: paths.download, target: '_blank'}, 'DOWNLOAD');
 
     var deleteFile = function() {
       console.log("deleting file");
-      deleteRequest(paths.delete(), function(status, response) {
+      deleteRequest(paths.delete, function(status, response) {
         if (status == 204) {
-          console.log("file deleted!");
+          console.log('file deleted!');
         } else {
-          console.log("error deleting file");
+          console.log('error deleting file');
         }
       });
     };
@@ -72,17 +65,28 @@ var FileViewComponent = function(args) {
     dom.appendChild(deleteBtn);
     dom.appendChild(url);
 
-    dom.appendChild(renderInfo(file));
+    dom.appendChild(fileInfoNode(file));
   };
 
-  file_view.onLoad = update;
+  var onError = function(status) {
+    dom.appendChild(div('Failed with error ', status));
+  };
+
+  var getData = function() {
+    get('/api/v1/files/' + args[0], function(status, data) {
+      if (status === 200) {
+        onResponse(data);
+      } else {
+        onError(status);
+      }
+    });
+  };
 
   return {
     render: function() {
-      file_view.fetch();
+      getData();
       return dom;
     },
-    update: update,
-    title: function() { return "loading data"; },
+    title: function() { return 'loading data'; },
   };
 };

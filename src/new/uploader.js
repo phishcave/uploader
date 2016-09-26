@@ -1,4 +1,5 @@
 var Uploader = function(callback) {
+  var settings = new UploaderSettings();
   var handlers = {};
   var options = {
     concurrency: 5,
@@ -48,6 +49,7 @@ var Uploader = function(callback) {
       file.num_chunks = calcNumChunks(file);
       h.add();
     },
-    options: options
+    options: options,
+    settings: settings
   };
 };

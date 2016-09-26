@@ -79,6 +79,7 @@ var App = function() {
     "new/xhr.js",
     "new/upload.js",
     "new/file_component.js",
+    "new/upload_settings.js",
     "new/upload_settings_component.js",
     "new/upload_component.js",
     "new/upload_handler.js",
