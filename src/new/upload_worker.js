@@ -54,9 +54,18 @@ var UploadCommands = function(file, emit) {
         console.log("file does not exist");
       } else if ( status ===  200 ) {
         emit('file:state', response);
+
+        if (response.state === 'finished') {
+          emit('file:finished', response);
+        }
+
         console.log("file exists");
       }
     };
+
+    if (file.instant === true) {
+      startFile();
+    }
 
     get(url, existsCallback);
   };
@@ -64,6 +73,7 @@ var UploadCommands = function(file, emit) {
   var startFile = function() {
     if (file.state === 'finished') {
       console.log("File already uploaded");
+      finishFile();
       return;
     }
 

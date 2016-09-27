@@ -3,7 +3,7 @@ var FileComponent = function(uploader, file) {
   var titleNode = div({cls: 'name'}, file.name);
   var hashNode = div({cls: 'hash'}, file.hash);
   var stateNode = div({cls: 'state'}, file.state);
-  var buttonsContainer = div({cls:'x'});
+  var buttonsContainer = div({cls:'btn-group'});
   var chunksContainerNode = div({cls: 'chunks'});
   var chunkComponents = {};
 
@@ -103,6 +103,17 @@ var FileComponent = function(uploader, file) {
     return dom;
   };
 
+  var finishFile = function(payload) {
+    var clickView = function() {
+      window.gotoPage('/file/' + payload.slug);
+    };
+
+    var viewBtn = div({cls:'btn', onclick: clickView}, 'View');
+    buttonsContainer.appendChild(viewBtn);
+    console.log("file finished");
+    console.log(payload.slug);
+  };
+
   var remove = function() {
     dom.parentNode.removeChild(dom);
   };
@@ -124,6 +135,7 @@ var FileComponent = function(uploader, file) {
     setState: setState,
     setHash: setHash,
     remove: remove,
-    render: render
+    render: render,
+    finish: finishFile
   };
 };

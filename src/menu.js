@@ -22,7 +22,7 @@ var Menu = function() {
     items = [];
 
     addLink("All Files", "/files");
-    addLink("Upload", "/upload");
+    addLink("Upload", "/upload2");
 
     //     if ( auth.loggedIn() ) {
     //       addLink("Sign Out", "/logout");

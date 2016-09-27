@@ -89,8 +89,8 @@ var UploaderComponent = function() {
       blob: new Blob(["ddawdawdadw"], { type: 'text/plain' })
     };
 
-    u.add(f);
-    u.add(f2);
+    // u.add(f);
+    // u.add(f2);
     //u.start();
   };
 
@@ -112,6 +112,14 @@ var UploaderComponent = function() {
     fileNodes[id].setState();
   };
 
+  var fileFinished = function(id, payload) {
+    var numFiles = Object.keys(fileNodes).length;
+    if (uploader.settings.redirect() && numFiles === 1) {
+      window.gotoPage("#file/"+payload.slug);
+    }
+    fileNodes[id].finish(payload);
+  };
+
   var fileRemoved = function(id, payload) {
     var node = fileNodes[id].remove();
     delete fileNodes[id];
@@ -130,8 +138,8 @@ var UploaderComponent = function() {
   };
 
   var chunkProgress = function(id, chunk) {
-    console.log(id)
-    console.log(chunk)
+    console.log(id);
+    console.log(chunk);
   };
 
   var onmessage = function(id, type, payload) {
@@ -147,6 +155,9 @@ var UploaderComponent = function() {
         break;
       case 'file:state':
         fileStateChange(id, payload);
+        break;
+      case 'file:finished':
+        fileFinished(id, payload);
         break;
       case 'file:uploading':
         fileUploading(id);

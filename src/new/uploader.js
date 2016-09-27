@@ -47,6 +47,7 @@ var Uploader = function(callback) {
       file.state = 'new'; // default state.
       file.chunk_size = options.chunk_size;
       file.num_chunks = calcNumChunks(file);
+      file.instant = settings.instant();
       h.add();
     },
     options: options,
