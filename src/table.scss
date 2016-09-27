@@ -20,7 +20,7 @@
       flex-direction: row;
       align-items: flex-start;
       justify-content: center;
-      border-bottom: solid 1px $border-color;
+      border-bottom: solid 1px $header-bg;
       padding: 1px;
     }
 
@@ -30,8 +30,8 @@
 
     .tr {
       &:hover {
-        background-color: $border-color;
-        border-bottom: solid 1px $border-hover-color;
+        background-color: $header-bg;
+        border-bottom: solid 1px lighten($header-bg, 5%);
         color: white;
       }
 
