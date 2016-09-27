@@ -12,24 +12,27 @@ var FileViewComponent = function(args) {
     return;
   }
 
-  console.log("Arguments");
-  console.dir(args);
-
   var slug = args[0];
   var paths = new FilePaths(slug);
-
   var dom = div({id: 'file'});
-  var url = dominate.tags.input({type: 'text', cls:''}, 'hello');
+
+  var downloadNode = function(file) {
+    var downloadBtn = dominate.tags.a(
+      {cls: 'download', href: paths.download, target: '_blank'},
+      'CLICK TO DOWNLOAD'
+    );
+    var url = div('URL: ', paths.download);
+    var downloads = div('Downloads: ', 0);
+    return div(url, downloads, downloadBtn);
+  };
 
   var fileInfoNode = function(file) {
     var name = div('Name: ', file.name);
     var size = div('Size: ', filesize(file.size));
     var date = div('Date: ', localized_date(file.created_at));
     var hash = div('Hash: ', file.hash);
-    var url = div('URL:  ', paths.download);
-    var views = div('Views: ', 0);
 
-    return div(name, size, date, hash, url, views);
+    return div(name, size, date, hash);
   };
 
   var previewNode = function(file) {
@@ -47,8 +50,6 @@ var FileViewComponent = function(args) {
 
     dom.appendChild(previewNode(file));
 
-    var download = dominate.tags.a({cls: 'download', href: paths.download, target: '_blank'}, 'DOWNLOAD');
-
     var deleteFile = function() {
       console.log("deleting file");
       deleteRequest(paths.delete, function(status, response) {
@@ -61,11 +62,11 @@ var FileViewComponent = function(args) {
     };
     var deleteBtn = div({onclick: deleteFile}, 'delete');
 
-    dom.appendChild(download);
-    dom.appendChild(deleteBtn);
-    dom.appendChild(url);
+    var left = div({cls:'column half'}, h2('Download'), downloadNode(file));
+    var right = div({cls: 'column half'}, h2('Information'), fileInfoNode(file));
+    var columns = div({cls:'columns'},left,right);
 
-    dom.appendChild(fileInfoNode(file));
+    dom.appendChild(columns);
   };
 
   var onError = function(status) {

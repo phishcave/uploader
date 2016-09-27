@@ -11,24 +11,20 @@ a {
 }
 
 input[type=text], input[type=password] {
-  $border-size: 3px;
-  $bottom-padding: (5px - $border-size);
-
-  background-color: $bg-color;
+  background-color: $header-bg;
   color: $text-color;
   outline: none;
   outline-style:none;
   box-shadow:none;
-	border: solid 1px $border-color;
-  padding: 2px 5px;
-  margin: 0;
+	border: none;
+  padding: 5px 0px;
   display: block;
   font-family: monospace;
   line-height: 10px;
   box-sizing: border-box;
 
   &:focus {
-		border: solid 1px $border-hover-color;
+		border: none;
     box-shadow: 0 0 20px -5px $box-shadow-color;
   }
 }
