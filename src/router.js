@@ -62,6 +62,8 @@ var Router = function(container) {
       scriptsToLoad.push(loadScript(dep));
     });
 
+    var start = new Date().getTime();
+
     Promise.all(scriptsToLoad).then(function() {
       var loadFunc = new routeInfo.func();
       var component = new loadFunc(args);
@@ -75,9 +77,16 @@ var Router = function(container) {
       }
 
       callback(component);
+
+      var finish = new Date().getTime();
+      renderDebugInfo(finish-start, scriptsToLoad.length);
     });
   };
 
+  var renderDebugInfo = function(duration, calls) {
+    var ms = (duration);
+    window.setDetails(ms + "ms (" + calls + ")" );
+  };
   // When the user goes back.
   var onpopstate = function(e) {
     if (e.state) {
