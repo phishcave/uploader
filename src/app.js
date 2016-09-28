@@ -1,6 +1,12 @@
 var App = function() {
   var root = div({cls:'foo'}, "hello");
   var body = document.body;
+  var ws = new WS();
+
+  ws.addHandler('open', function() {
+    window.setConnectionInfo();
+    console.log("on connectorino");
+  });
 
   var menu     = new Menu();
   var header   = new HeaderComponent({menu: menu});
@@ -102,7 +108,9 @@ var App = function() {
   return {
     addAlert: alerts.addAlert,
     addError: alerts.addError,
-    boot: function() {},
+    boot: function() {
+      ws.connect();
+    },
     root: '/api/v1/'
   };
 };

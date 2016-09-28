@@ -5,4 +5,14 @@ $bg: #363636;
 #footer {
   padding: 10px 0;
   overflow: hidden;
+
+  .ws {
+    &.connected {
+      color: #00ff00;
+    }
+
+    &.disconnected {
+      color: #ff0000;
+    }
+  }
 }
