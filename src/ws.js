@@ -1,6 +1,6 @@
 var WS = function() {
   var socket = null;
- 
+  var id = null;
 
   var send = function(data) {
     socket.send(JSON.stringify(data));
@@ -17,6 +17,7 @@ var WS = function() {
   // Handle events /from/ the server.
   var handlers = {
     register: function(payload) {
+      id = payload.id;
       console.log("registering: ", payload.id);
     }
   };
@@ -48,7 +49,6 @@ var WS = function() {
     }
   };
 
-
   return {
     connect: function() {
       socket = new WebSocket(window.ws_url);
@@ -59,5 +59,8 @@ var WS = function() {
     addHandler: function(event, handlerFunc) {
       handlers[event] = handlerFunc;
     },
+    getID: function() {
+      return id;
+    }
   };
 };

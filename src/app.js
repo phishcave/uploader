@@ -8,6 +8,8 @@ var App = function() {
     console.log("on connectorino");
   });
 
+  window.getID = ws.getID;
+
   var menu     = new Menu();
   var header   = new HeaderComponent({menu: menu});
   var footer   = new FooterComponent();

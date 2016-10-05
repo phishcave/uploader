@@ -122,7 +122,7 @@ var UploadCommands = function(file, emit) {
         id: Math.random(),
         file_id: file.file_id,
         position: i,
-        blob: blob
+        blob: blob,
       };
 
       file.chunks.push(chunk);
@@ -156,7 +156,7 @@ var UploadCommands = function(file, emit) {
       return;
     }
 
-    var url = '/api/v1/files/' + c.file_id + '/chunks/' + c.position + '/' + c.hash;
+    var url = '/api/v1/files/' + c.file_id + '/chunks/' + c.position + '/' + c.hash + '/' + window.getID();
     var chunkProgress = function(progress) {
       console.log("progress");
       console.dir(progress);

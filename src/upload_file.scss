@@ -1,135 +1,135 @@
-@import "mixins.scss";
+// @import "mixins.scss";
 
-$preview-size: 64px;
+// $preview-size: 64px;
 
-#queue {
-  .upload-file {
-    display: flex;
-    min-height: $preview-size;
-    position: relative;
+// #queue {
+//   .upload-file {
+//     display: flex;
+//     min-height: $preview-size;
+//     position: relative;
 
-    .preview {
-      border-radius: 3px;
-      height: $preview-size;
-      width: $preview-size;
-      background-color: #171717;
-      margin-right: 5px;
-      @include user-select(none);
+//     .preview {
+//       border-radius: 3px;
+//       height: $preview-size;
+//       width: $preview-size;
+//       background-color: #171717;
+//       margin-right: 5px;
+//       @include user-select(none);
 
-      .image-preview {
-        height: $preview-size;
-        width: $preview-size;
-        background-size: cover;
-        background-position: center;
-      }
+//       .image-preview {
+//         height: $preview-size;
+//         width: $preview-size;
+//         background-size: cover;
+//         background-position: center;
+//       }
 
-      text-align: center;
-      line-height: $preview-size;
+//       text-align: center;
+//       line-height: $preview-size;
 
-      i {
-        font-size: $preview-size - 10px;
-      }
-    }
+//       i {
+//         font-size: $preview-size - 10px;
+//       }
+//     }
 
-    .container {
-      flex-grow: 1;
+//     .container {
+//       flex-grow: 1;
 
-      .label {
-        .name {
-          font-size: 1.2em;
-          font-weight: 600;
-          border-bottom: solid 1px darken($border-color, 5%);
-          color: $text-color;
-          padding-bottom: 5px;
-        }
-      }
+//       .label {
+//         .name {
+//           font-size: 1.2em;
+//           font-weight: 600;
+//           border-bottom: solid 1px darken($border-color, 5%);
+//           color: $text-color;
+//           padding-bottom: 5px;
+//         }
+//       }
 
-      .info {
-        padding: 5px 0;
-        .plaintext { // size is temp
-          font-family: monospace;
-          white-space: pre;
-        }
-        border-bottom: solid 1px darken($border-color, 5%);
-        margin-bottom: 5px;
-      }
-    }
+//       .info {
+//         padding: 5px 0;
+//         .plaintext { // size is temp
+//           font-family: monospace;
+//           white-space: pre;
+//         }
+//         border-bottom: solid 1px darken($border-color, 5%);
+//         margin-bottom: 5px;
+//       }
+//     }
 
-    .btn-group {
-      text-align: right;
-    }
+//     .btn-group {
+//       text-align: right;
+//     }
 
-    .state {
-      position: absolute;
-      right: 5px;
-      top: 5px;
-    }
+//     .state {
+//       position: absolute;
+//       right: 5px;
+//       top: 5px;
+//     }
 
-    padding: 5px;
-    border-radius: 4px;
-    margin-bottom: 5px;
-  }
-}
+//     padding: 5px;
+//     border-radius: 4px;
+//     margin-bottom: 5px;
+//   }
+// }
 
-.xchunks {
-  text-transform: uppercase;
-  font-size: 0.7em;
-  margin-top: 5px;
-  border-top: solid 1px darken($border-color, 5%);
-  padding-top: 5px;
+// .xchunks {
+//   text-transform: uppercase;
+//   font-size: 0.7em;
+//   margin-top: 5px;
+//   border-top: solid 1px darken($border-color, 5%);
+//   padding-top: 5px;
 
-  $bar-size: 20px;
+//   $bar-size: 20px;
 
-  .chunk {
-    border-radius: 3px;
-    color: white;
-    box-sizing: border-box;
-    height: $bar-size;
-    margin-bottom: 5px;
-    background-image: linear-gradient(
-      180deg,
-      lighten($background-color, 6%), lighten($background-color, 1%)
-    );
+//   .chunk {
+//     border-radius: 3px;
+//     color: white;
+//     box-sizing: border-box;
+//     height: $bar-size;
+//     margin-bottom: 5px;
+//     background-image: linear-gradient(
+//       180deg,
+//       lighten($background-color, 6%), lighten($background-color, 1%)
+//     );
 
-    &:last-child {
-      margin-bottom: 0;
-    }
+//     &:last-child {
+//       margin-bottom: 0;
+//     }
 
-    .text {
-      padding: 3px;
-      text-align: center;
-    }
+//     .text {
+//       padding: 3px;
+//       text-align: center;
+//     }
 
-    &.error {
-      background-image: linear-gradient(
-      180deg,
-      desaturate(darken(red, 20%), 30%),
-      desaturate(darken(red, 30%), 30%)
-      );
-    }
+//     &.error {
+//       background-image: linear-gradient(
+//       180deg,
+//       desaturate(darken(red, 20%), 30%),
+//       desaturate(darken(red, 30%), 30%)
+//       );
+//     }
 
-    .progress {
-      position: relative;
+//     .progress {
+//       position: relative;
 
-      .val {
-        padding: 4px 3px;
-        position: absolute;
-        right: 0;
-        top: 0;
-        z-index: 5;
-      }
+//       .val {
+//         padding: 4px 3px;
+//         position: absolute;
+//         right: 0;
+//         top: 0;
+//         z-index: 5;
+//       }
 
-      .bar {
-        border-radius: 3px;
-        z-index: 0;
-        height: $bar-size;
-        position: absolute;
-        transition: width 0.2s ease;
-        background-image: linear-gradient(
-          0deg,
-          darken($link-color, 26%), darken($link-color, 10%)
-        );
-      }
-    }
-  }
-}
+//       .bar {
+//         border-radius: 3px;
+//         z-index: 0;
+//         height: $bar-size;
+//         position: absolute;
+//         transition: width 0.2s ease;
+//         background-image: linear-gradient(
+//           0deg,
+//           darken($link-color, 26%), darken($link-color, 10%)
+//         );
+//       }
+//     }
+//   }
+// }

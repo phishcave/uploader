@@ -18,6 +18,7 @@ var UploadHandler = function(file, worker) {
     return states[stateInt];
   };
 
+  // responsible for changing file data.
   var onmessage = function(type, payload) {
     switch(type) {
       case 'file:created':

@@ -40,7 +40,6 @@ var Uploader = function(callback) {
       file.handler.remove();
     },
     add: function(file) {
-      // var h = Upload(file, callback);
       var h = buildUploadHandler(file);
       handlers[file.id] = h;
       file.handler = h;
