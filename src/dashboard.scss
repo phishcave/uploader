@@ -22,9 +22,19 @@ $rows: 5;
     background-position: center center;
     background-color: #000608;
     border-radius: 1px;
+    position: relative;
+
+    .text {
+      position: absolute;
+      left: 0;
+      top: 40%;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+    }
 
     &:hover {
-      background-color: red;
+      background-color: $header-bg;
       background-scale: cover;
 
       .content {

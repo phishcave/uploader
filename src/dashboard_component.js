@@ -17,9 +17,12 @@ var DashboardEntryComponent = function(data) {
 
   var content = div({cls: 'content'}, title);
   var style = null;
+  var text = div({cls: 'text'});
 
   if (data.thumb_id !== null) {
     style = { backgroundImage: thumbnail_url };
+  } else {
+    text.appendChild(span("No Preview"));
   }
 
   return dominate.tags.a({
@@ -28,7 +31,7 @@ var DashboardEntryComponent = function(data) {
     style: style,
     href: href,
     onclick: onClick
-  }, content);
+  }, text, content);
 };
 
 var DashboardComponent = function(args) {
