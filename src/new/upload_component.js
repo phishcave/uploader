@@ -89,8 +89,8 @@ var UploaderComponent = function() {
       blob: new Blob(["ddawdawdadw"], { type: 'text/plain' })
     };
 
-    // u.add(f);
-    // u.add(f2);
+    u.add(f);
+    u.add(f2);
     //u.start();
   };
 
@@ -137,7 +137,8 @@ var UploaderComponent = function() {
     fileNodes[id].finishChunk(chunk);
   };
 
-  var chunkProgress = function(id, chunk) {
+  var chunkProgress = function(id, chunk, progress) {
+    fileNodes[id].updateChunk(chunk, progress);
     console.log(id);
     console.log(chunk);
   };
@@ -166,7 +167,8 @@ var UploaderComponent = function() {
         chunkCreated(id, payload);
         break;
       case 'chunk:progress':
-        chunkProgress(id, payload);
+        console.log("chunk progress");
+        chunkProgress(id, payload.chunk, payload.progress);
         break;
       case 'chunk:finished':
         chunkFinished(id, payload);
@@ -198,13 +200,21 @@ var UploaderComponent = function() {
 };
 
 var ChunkComponent = function(chunk) {
-  var dom = div({cls:'chunk'}, 'a chunk');
+  var dom = div({cls:'chunk'});
+  var bar = div({cls:'bar'});
+  var text = div({cls:'text'});
+  var progress = div({cls:'progress'}, text, bar);
 
-  var set_progress = function(percent) {
+  var setProgress = function(percent) {
+    H.empty(text);
+    text.appendChild(span(percent));
+    bar.style.width = "" + percent + "%";
     console.log("chunk progress", percent);
   };
 
   var render = function() {
+    H.empty(dom);
+    dom.appendChild(progress);
     return dom;
   };
 
@@ -213,6 +223,6 @@ var ChunkComponent = function(chunk) {
     finish: function() {
       dom.appendChild(div('finished'));
     },
-    set_progress: set_progress
+    setProgress: setProgress
   };
 };

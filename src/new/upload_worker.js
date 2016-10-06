@@ -158,6 +158,8 @@ var UploadCommands = function(file, emit) {
 
     var url = '/api/v1/files/' + c.file_id + '/chunks/' + c.position + '/' + c.hash + '/' + window.getID();
     var chunkProgress = function(progress) {
+
+      emit("chunk:progress", { chunk: c, progress: progress });
       console.log("progress");
       console.dir(progress);
     };

@@ -34,6 +34,7 @@ var FileComponent = function(uploader, file) {
   var clickResume = function() {
     console.log("Resuming File");
     alert('resuming file');
+    file.handler.start();
   };
 
   // The user clicked the details view.
@@ -42,16 +43,26 @@ var FileComponent = function(uploader, file) {
     alert('viewing details');
   };
 
+  var clickView = function() {
+    window.gotoPage('/file/' + file.slug);
+  };
+
   var removeButton = div({cls:'btn', onclick: clickRemove}, 'X');
   var startButton = div({cls:'btn', onclick: clickStart}, 'Start');
   var stopButton = div({cls:'btn', onclick: clickStop}, 'Stop');
   var resumeButton = div({cls:'btn', onclick: clickResume}, 'Resume');
   var detailsButton = div({cls:'btn', onclick: clickDetails}, 'Details');
   var pauseButton = div({cls:'btn', onclick: clickPause}, 'Pause');
+  var viewButton = div({cls:'btn', onclick: clickView}, 'View');
 
   var setState = function() {
     H.empty(stateNode);
     stateNode.appendChild(div(file.state));
+
+    if (file.state === 'finished') {
+      stateNode.classList.add('finished');
+    }
+
     renderButtons();
   };
 
@@ -63,7 +74,7 @@ var FileComponent = function(uploader, file) {
   var renderButtons = function() {
     H.empty(buttonsContainer);
 
-    var canStart = file.state !== 'finished' && file.state !== 'uploading';
+    var canStart = file.state === 'new';
     if (canStart) {
       buttonsContainer.appendChild(startButton);
     }
@@ -78,12 +89,15 @@ var FileComponent = function(uploader, file) {
       buttonsContainer.appendChild(pauseButton);
     }
 
-    var canResume = file.state === 'paused';
+    var canResume = file.state === 'paused' || file.state === 'incomplete';
     if (canResume) {
       buttonsContainer.appendChild(resumeButton);
     }
 
-    buttonsContainer.appendChild(detailsButton);
+    var canView = file.state === 'finished';
+    if (canView) {
+      buttonsContainer.appendChild(viewButton);
+    }
 
     var canRemove = file.state === 'finished' || file.state == 'new';
     if (canRemove) {
@@ -96,22 +110,23 @@ var FileComponent = function(uploader, file) {
 
     renderButtons();
 
+    var left = div({cls: 'left'}, titleNode, hashNode);
+    var right = div({cls: 'right'}, stateNode);
+
     dom.appendChild(
-      div(titleNode, hashNode, stateNode, chunksContainerNode, buttonsContainer)
+      div(
+        div({cls: 'header'},left, right),
+        chunksContainerNode,
+        buttonsContainer
+      )
     );
 
     return dom;
   };
 
   var finishFile = function(payload) {
-    var clickView = function() {
-      window.gotoPage('/file/' + payload.slug);
-    };
-
-    var viewBtn = div({cls:'btn', onclick: clickView}, 'View');
-    buttonsContainer.appendChild(viewBtn);
-    console.log("file finished");
-    console.log(payload.slug);
+    file.slug = payload.slug;
+    renderButtons();
   };
 
   var remove = function() {
@@ -129,9 +144,15 @@ var FileComponent = function(uploader, file) {
     c.finish();
   };
 
+  var updateChunk = function(chunk, progress) {
+    var c = chunkComponents[chunk.hash];
+    c.setProgress(progress.percent);
+  };
+
   return {
     addChunk: addChunk,
     finishChunk: finishChunk,
+    updateChunk: updateChunk,
     setState: setState,
     setHash: setHash,
     remove: remove,
