@@ -127,6 +127,7 @@ var FileComponent = function(uploader, file) {
   var finishFile = function(payload) {
     file.slug = payload.slug;
     renderButtons();
+    setState();
   };
 
   var remove = function() {

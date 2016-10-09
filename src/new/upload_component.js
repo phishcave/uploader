@@ -221,7 +221,7 @@ var ChunkComponent = function(chunk) {
   return {
     render: render,
     finish: function() {
-      dom.appendChild(div('finished'));
+      bar.classList.add('done');
     },
     setProgress: setProgress
   };

@@ -1,4 +1,31 @@
 var Uploader = function(callback) {
+  var wsHandler = function(payload) {
+    var keys = Object.keys(handlers);
+    var uploadId = null;
+    for (var k in handlers) {
+      var h = handlers[k];
+      if (h.file.file_id === payload.id) {
+        uploadId = k;
+        console.log("got a match");
+      }
+    }
+
+    if (uploadId === null) {
+      console.log("cant find upload id");
+      return;
+    }
+
+    var e = {
+      id: uploadId,
+      type: 'file:finished',
+      payload: payload
+    };
+
+    onmessage(e);
+  };
+
+  window.ws.addHandler('file:completed', wsHandler);
+
   var settings = new UploaderSettings();
   var handlers = {};
   var options = {

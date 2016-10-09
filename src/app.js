@@ -8,6 +8,7 @@ var App = function() {
     console.log("on connectorino");
   });
 
+  window.ws = ws;
   window.getID = ws.getID;
 
   var menu     = new Menu();

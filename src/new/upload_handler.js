@@ -49,6 +49,10 @@ var UploadHandler = function(file, worker) {
       case 'file:uploading':
         file.state = 'uploading';
         break;
+      case 'file:finished':
+        file.state = 'finished';
+        file.slug = payload.slug;
+        break;
       default:
         console.log("Ignoring", type);
         break;
@@ -69,6 +73,7 @@ var UploadHandler = function(file, worker) {
     remove: function() {
       emit('remove', file);
     },
-    onmessage: onmessage
+    onmessage: onmessage,
+    file: file
   };
 };
