@@ -79,18 +79,18 @@ var UploaderButtonsComponent = function(uploader) {
 
 var UploaderComponent = function() {
   var init = function() {
-    var f = {
-      name: 'foobar',
-      blob: new Blob(["ddawd"], { type: 'text/plain' })
-    };
+    // var f = {
+    //   name: 'foobar',
+    //   blob: new Blob(["ddawd"], { type: 'text/plain' })
+    // };
 
-    var f2 = {
-      name: 'foobar2',
-      blob: new Blob(["ddawdawdadw"], { type: 'text/plain' })
-    };
+    // var f2 = {
+    //   name: 'foobar2',
+    //   blob: new Blob(["ddawdawdadw"], { type: 'text/plain' })
+    // };
 
-    u.add(f);
-    u.add(f2);
+    // u.add(f);
+    // u.add(f2);
     //u.start();
   };
 
