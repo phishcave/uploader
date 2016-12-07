@@ -60,6 +60,14 @@ var DashboardComponent = function(args) {
     get('/api/v1/dashboard?per_page=70', onLoad);
   };
 
+  var addEntry = function(data) {
+    var firstEntry = entries.children[0];
+    var e = new DashboardEntryComponent(data);
+    entries.insertBefore(e, firstEntry);
+  };
+
+  window.addEntry = addEntry;
+
   return {
     init: function() {
       fetch();

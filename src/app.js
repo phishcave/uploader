@@ -8,6 +8,12 @@ var App = function() {
     console.log("on connectorino");
   });
 
+  ws.addHandler('file:added', function(f) {
+    console.log('file added');
+    console.log(f);
+    window.addEntry(f);
+  });
+
   window.ws = ws;
   window.getID = ws.getID;
 
@@ -40,7 +46,6 @@ var App = function() {
 
   router.add("file", [
     "date.js",
-    "file_view.js",
     "file_view_component.js"
   ], function() {
     return FileViewComponent;

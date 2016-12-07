@@ -156,7 +156,8 @@ var UploadCommands = function(file, emit) {
       return;
     }
 
-    var url = '/api/v1/files/' + c.file_id + '/chunks/' + c.position + '/' + c.hash + '/' + window.getID();
+    var url = '/api/v1/chunks?file_id=' + c.file_id + '&position=' + c.position + '&hash=' + c.hash + '&ws_id=' + window.getID();
+    // var url = '/api/v1/files/' + c.file_id + '/chunks/' + c.position + '/' + c.hash + '/' + window.getID();
     var chunkProgress = function(progress) {
 
       emit("chunk:progress", { chunk: c, progress: progress });

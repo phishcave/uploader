@@ -22,7 +22,7 @@ var FileViewComponent = function(args) {
       'CLICK TO DOWNLOAD'
     );
     var url = div('URL: ', paths.download);
-    var downloads = div('Downloads: ', 0);
+    var downloads = div('Downloads: ', file.downloads);
     return div(url, downloads, downloadBtn);
   };
 

@@ -10,7 +10,7 @@ var Alerts = function(text) {
     for(var i = 0; i < alerts.length; i++) {
       var a = alerts[i];
 
-      if (a.category == entry.category && a.type == entry.type) {
+      if (a.category === entry.category && a.type === entry.type) {
         return i;
       }
     }
@@ -22,13 +22,12 @@ var Alerts = function(text) {
     H.empty(alertsNode);
 
     for(var i = 0; i < alerts.length; i++) {
-
       var a = alerts[i];
       var ico = null;
 
-      if (a.type == 'alert') {
+      if (a.type === 'alert') {
         ico = icon('info');
-      } else if (a.type == 'error') {
+      } else if (a.type === 'error') {
         ico = icon('warning');
       }
 
@@ -69,5 +68,5 @@ var Alerts = function(text) {
 
   this.render = function() {
     return alertsNode;
-  }
+  };
 };
