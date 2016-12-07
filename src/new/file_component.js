@@ -99,7 +99,7 @@ var FileComponent = function(uploader, file) {
       buttonsContainer.appendChild(viewButton);
     }
 
-    var canRemove = file.state === 'finished' || file.state == 'new';
+    var canRemove = file.state === 'finished' || file.state === 'new';
     if (canRemove) {
       buttonsContainer.appendChild(removeButton);
     }

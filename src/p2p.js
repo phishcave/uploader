@@ -76,7 +76,7 @@ var P2PComponent = function(sessionID) {
   };
 
   var isSender = function() {
-    return sessionID.length == 0;
+    return sessionID.length === 0;
   };
 
   var drawStatus = function() {
@@ -108,7 +108,7 @@ var P2PComponent = function(sessionID) {
     } else {
       container.appendChild(
         div('Attempting to receive file with id ' + sessionID)
-      )
+      );
     }
     return container;
   };
